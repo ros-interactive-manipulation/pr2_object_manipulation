@@ -1,0 +1,9 @@
+<launch>
+
+    <!-- RGB-D Assembler Node -->
+    <node name="rgbd_assembler" type="rgbd_assembler"
+          pkg="rgbd_assembler" output="screen" respawn="false">
+      <remap from="/narrow_stereo_textured/left/camera_info" to="/narrow_stereo/left/camera_info" />
+    </node>
+
+</launch>

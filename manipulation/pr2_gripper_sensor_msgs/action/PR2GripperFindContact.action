@@ -1,0 +1,13 @@
+# Contact action used to close fingers and find object contacts 
+# quickly while still stopping fast in real-time to not damage 
+# objects
+
+#goal
+PR2GripperFindContactCommand command
+---
+#results
+PR2GripperFindContactData data
+---
+# feedback
+PR2GripperFindContactData data
+

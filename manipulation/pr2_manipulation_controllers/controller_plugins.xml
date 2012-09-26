@@ -1,0 +1,14 @@
+<library path="lib/libpr2_manipulation_controllers">
+  <class name="pr2_manipulation_controllers/JinvTeleopController7" type="pr2_manipulation_controllers::JinvTeleopController<7>"
+         base_class_type="pr2_controller_interface::Controller" />
+  
+  <class name="pr2_manipulation_controllers/JinvExperimentalController7" type="pr2_manipulation_controllers::JinvExperimentalController<7>"
+         base_class_type="pr2_controller_interface::Controller" />
+
+  <class name="pr2_manipulation_controllers/JTTaskController" type="pr2_manipulation_controllers::JTTaskController"
+         base_class_type="pr2_controller_interface::Controller" />
+  
+  <class name="pr2_manipulation_controllers/CartesianTrajectoryController" type="pr2_manipulation_controllers::CartesianTrajectoryController" 
+	 base_class_type="pr2_controller_interface::Controller" />
+
+</library>

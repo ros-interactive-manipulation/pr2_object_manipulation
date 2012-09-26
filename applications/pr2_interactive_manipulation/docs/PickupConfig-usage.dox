@@ -1,0 +1,9 @@
+\subsubsection usage Usage
+\verbatim
+<node name="interactive_manipulation_marker_node" pkg="pr2_interactive_manipulation" type="interactive_manipulation_marker_node">
+  <param name="reactive_grasping" type="bool" value="False" />
+  <param name="lift_steps" type="int" value="10" />
+  <param name="lift_vertically" type="bool" value="True" />
+</node>
+\endverbatim
+

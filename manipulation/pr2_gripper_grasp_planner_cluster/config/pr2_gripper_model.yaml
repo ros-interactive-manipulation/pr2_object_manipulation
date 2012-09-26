@@ -1,0 +1,47 @@
+#xyz bounding box ranges for the parts of the gripper model placed at 
+#3-list pos and 3x3 scipy matrix rot
+#uses a really simple model of the fully-open gripper as three boxes 
+#(2 fingers and a palm), with a box for the empty space in-between 
+#gripper_boxes is a list of boxes, each of which is a 2-list (min, max) 
+#of 3-lists (x,y,z) of corner coords 
+#space boxes is a list of lists of box ranges; there must be points 
+#contained in each box-list for the grasp to be valid 
+#(points are summed within lists) 
+#origin of gripper is at the ?_wrist_roll_link 
+#palm_box = [[.04, -0.0755, -0.026], [.138, .0755, .026]]
+#left_finger_box = [[.138, .0425, -0.0115], [.185, .0755, .0115]]
+#right_finger_box = [[.138, -0.0755, -0.0115], [.185, -0.0425, .0115]]
+#space_box = [[.138, -0.0405, -0.005], [.180, .0405, .005]]
+#gripper_boxes = [palm_box, left_finger_box, right_finger_box]
+#space_boxes = [[space_box,],]
+
+gripper_boxes: [[[.04, -0.0755, -0.026], [.138, .0755, .026]], [[.138, .0425, -0.0115], [.185, .0755, .0115]], [[.138, -0.0755, -0.0115], [.185, -0.0425, .0115]]]
+space_boxes: [[ [[.138, -0.0405, -0.005], [.180, .0405, .005]] ]]
+
+joint_names: 
+  right_arm: ['r_gripper_l_finger_joint', 'r_gripper_r_finger_joint', 'r_gripper_r_finger_tip_joint', 'r_gripper_l_finger_tip_joint']
+  left_arm: ['l_gripper_l_finger_joint', 'l_gripper_r_finger_joint', 'l_gripper_r_finger_tip_joint', 'l_gripper_l_finger_tip_joint']
+pregrasp_joint_angles:
+  right_arm: [0.5, 0.5, 0.5, 0.5]
+  left_arm: [0.5, 0.5, 0.5, 0.5]
+grasp_joint_angles: 
+  right_arm: [0.0, 0.0, 0.0, 0.0]
+  left_arm: [0.0, 0.0, 0.0, 0.0]
+pregrasp_joint_efforts:
+  right_arm: [100.0, 100.0, 100.0, 100.0]
+  left_arm: [100.0, 100.0, 100.0, 100.0]
+grasp_joint_efforts:
+  right_arm: [50.0, 50.0, 50.0, 50.0]
+  left_arm: [50.0, 50.0, 50.0, 50.0]
+
+#?_wrist_roll_link is the same as the gripper model origin frame
+actual_wrist_frame_in_model_frame: [[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]]
+
+default_pregrasp_dist: 0.10
+min_good_grasp_points: 15
+wrist_to_fingertip_dist: 0.185
+wrist_to_palm_dist: 0.143
+gripper_opening: 0.083 
+height_good_for_side_grasps: 0.05
+side_grasp_start_height: 0.04
+

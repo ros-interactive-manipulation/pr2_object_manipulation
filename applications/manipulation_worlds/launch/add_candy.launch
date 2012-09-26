@@ -1,0 +1,30 @@
+<launch>
+
+  <!-- send plug.urdf to param server and spawn robot-->
+  <param name="table_description" command="$(find xacro)/xacro.py '$(find manipulation_worlds)/urdf/table.urdf.xacro'" />
+
+  <!-- new plug location -->
+  <node name="spawn_table1" pkg="gazebo" type="spawn_model" args="-urdf -param table_description -model table_1 -namespace table_1 -x -3.1 -y 3.9 -z 0.0 -R 0.0 -P 0.0 -Y 0.0 -wait 'pr2' -reference_frame 'world'" respawn="false" output="screen" />
+
+  <!-- send cylinder_object.xml to param server -->
+  <param name="candy1_description" textfile="$(find manipulation_worlds)/urdf/candy1.urdf" />
+  <param name="candy2_description" textfile="$(find manipulation_worlds)/urdf/candy2.urdf" />
+  <param name="shelf_description" textfile="$(find manipulation_worlds)/urdf/shelf.urdf" />
+  <param name="candy_container_description" textfile="$(find manipulation_worlds)/urdf/candy_container.urdf" />
+
+  <!-- spawn shelf and candy in gazebo -->
+  <node name="spawn_shelf_1" pkg="gazebo" type="spawn_model" args="-urdf -param shelf_description -x -1.3 -y 5.0 -z 0 -model shelf_1 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy1_1" pkg="gazebo" type="spawn_model" args="-urdf -param candy1_description -x -1.36 -y 5.0 -z 0.55 -model candy1_1 -wait 'shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy1_2" pkg="gazebo" type="spawn_model" args="-urdf -param candy1_description -x -1.39 -y 5.08 -z 0.55 -model candy1_2 -wait 'shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy1_3" pkg="gazebo" type="spawn_model" args="-urdf -param candy1_description -x -1.38 -y 4.90 -z 0.55 -model candy1_3 -wait 'shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy1_4" pkg="gazebo" type="spawn_model" args="-urdf -param candy1_description -x -1.35 -y 4.905 -z 0.58 -model candy1_4 -wait 'candy1_3'" respawn="false" output="screen" /> 
+  <node name="spawn_candy2_1" pkg="gazebo" type="spawn_model" args="-urdf -param candy2_description -x -1.22 -y 5.1 -z 0.55 -model candy2_1 -wait 'shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy2_2" pkg="gazebo" type="spawn_model" args="-urdf -param candy2_description -x -1.22 -y 5.0 -z 0.55 -model candy2_2 -wait 'shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_candy2_3" pkg="gazebo" type="spawn_model" args="-urdf -param candy2_description -x -1.22 -y 4.9 -z 0.55 -model candy2_3 -wait 'shelf_1'" respawn="false" output="screen" />
+
+  <node name="spawn_candy_container_1" pkg="gazebo" type="spawn_model" args="-urdf -param candy_container_description -x -1.8 -y 4.2 -z 0.7 -model candy_container_1 -wait 'table_1'" respawn="false" output="screen" /> 
+
+
+</launch>
+
+

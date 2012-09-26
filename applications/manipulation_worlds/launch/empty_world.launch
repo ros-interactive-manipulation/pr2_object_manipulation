@@ -1,0 +1,16 @@
+<launch>
+
+  <arg name="gui" default="false"/>
+
+  <param name="/use_sim_time" value="true" />
+  
+  <!-- start empty world -->
+  <node name="gazebo" pkg="gazebo" type="gazebo" 
+	args="-u $(find manipulation_worlds)/worlds/empty.world" respawn="false" output="screen"/>
+
+  <!-- start gui -->
+  <group if="$(arg gui)">
+    <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/>
+  </group>
+
+</launch>

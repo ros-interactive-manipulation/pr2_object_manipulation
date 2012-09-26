@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="kinect_frame_prefix" default="/head_mount_kinect" />
+  <arg name="kinect_camera_name" default="head_mount_kinect" />
+
+  <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="camera" value="$(arg kinect_camera_name)" />
+    <arg name="rgb_frame_id" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
+    <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_ir_optical_frame" />
+    <arg name="publish_tf" value="false"/>
+    <arg name="respawn" value="true"/>
+    <arg name="depth_registration" value="true"/>
+    <!--arg name="depth_registered" value="rgb"/-->
+
+  </include>
+
+</launch>

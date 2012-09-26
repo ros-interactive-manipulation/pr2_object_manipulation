@@ -1,0 +1,31 @@
+<robot name="sushi_shelf_model">
+  <link name="sushi_shelf">
+    <inertial>
+      <mass value="3.0" />
+      <!-- center of mass (com) is defined w.r.t. link local coordinate system -->
+      <origin xyz="0 0 0.10" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <!-- visual origin is defined w.r.t. link local coordinate system -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://manipulation_worlds/meshes/sushi_shelf.dae" scale="1.0 1.0 1.0" />
+      </geometry>
+    </visual>
+    <collision>
+      <!-- collision origin is defined w.r.t. link local coordinate system -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://manipulation_worlds/meshes/sushi_shelf.dae" scale="1.0 1.0 1.0" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="sushi_shelf">
+    <material>Gazebo/Yellow</material>
+    <turnGravityOff>false</turnGravityOff>
+    <genTexCoord>true</genTexCoord>
+    <kp>100000000.0</kp>
+    <kd>1000000.0</kd>
+  </gazebo>
+</robot>

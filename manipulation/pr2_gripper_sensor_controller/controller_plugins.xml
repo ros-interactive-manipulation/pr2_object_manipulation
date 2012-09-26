@@ -1,0 +1,5 @@
+<library path="lib/libpr2_gripper_sensor_controller_lib">
+  <class name="pr2_gripper_sensor_controller/PR2GripperSensorController" 
+         type="pr2_gripper_sensor_controller::PR2GripperSensorController"           
+         base_class_type="pr2_controller_interface::Controller" />
+</library>

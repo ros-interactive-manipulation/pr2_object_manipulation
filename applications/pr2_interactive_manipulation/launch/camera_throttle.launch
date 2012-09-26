@@ -1,0 +1,34 @@
+<launch>
+
+  <arg name="in_camera_namespace"/>
+  <arg name="in_camera_name"/>
+  <arg name="out_camera_namespace"/>
+  <arg name="out_camera_name"/>
+  <arg name="rate"/>
+  
+  <node name="$(anon throttle_cameras)" pkg="topic_tools" type="throttle" 
+	args="messages $(arg in_camera_namespace)/$(arg in_camera_name) 0.0 
+	      $(arg out_camera_namespace)/$(arg out_camera_name)">    
+    <param name="lazy" value="true"/>
+  </node>
+  <node name="$(anon throttle_cameras)" pkg="topic_tools" type="throttle" 
+	args="messages $(arg in_camera_namespace)/camera_info $(arg rate) 
+	      $(arg out_camera_namespace)/camera_info">    
+    <param name="lazy" value="true"/>
+  </node>
+  <node name="$(anon throttle_cameras)" pkg="topic_tools" type="throttle" 
+	args="messages $(arg in_camera_namespace)/$(arg in_camera_name)/compressed $(arg rate) 
+	      $(arg out_camera_namespace)/$(arg out_camera_name)/compressed">    
+    <param name="lazy" value="true"/>
+  </node>
+  <node name="$(anon throttle_cameras)" pkg="topic_tools" type="throttle" 
+	args="messages $(arg in_camera_namespace)/$(arg in_camera_name)/compressed/parameter_descriptions $(arg rate) 
+	      $(arg out_camera_namespace)/$(arg out_camera_name)/compressed/parameter_descriptions">    
+    <param name="lazy" value="true"/>
+  </node>
+  <node name="$(anon throttle_cameras)" pkg="topic_tools" type="throttle" 
+	args="messages $(arg in_camera_namespace)/$(arg in_camera_name)/compressed/parameter_updates $(arg rate) 
+	      $(arg out_camera_namespace)/$(arg out_camera_name)/compressed/parameter_updates">    
+    <param name="lazy" value="true"/>
+  </node>
+</launch>

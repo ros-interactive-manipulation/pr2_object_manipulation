@@ -1,0 +1,13 @@
+# Action to launch the gripper into force servoing mode 
+
+#goals
+PR2GripperForceServoCommand command
+---
+
+#result
+PR2GripperForceServoData data
+
+---
+
+#feedback
+PR2GripperForceServoData data

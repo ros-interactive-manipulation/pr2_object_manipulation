@@ -1,0 +1,3 @@
+string arm_name
+sensor_msgs/PointCloud2 cluster
+string collision_name

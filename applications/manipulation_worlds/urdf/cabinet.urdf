@@ -1,0 +1,148 @@
+<robot name="cabinet_model">
+  <link name="cabinet_bottom_plate">
+    <inertial>
+      <mass value="20.0" />
+      <origin xyz="0 0 -1.0" /> 
+      <inertia  ixx="2" ixy="0.0"  ixz="0.0"  iyy="2"  iyz="0.0"  izz="2" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.01" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.01" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_middle_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_top_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 1.01" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 1.01" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.45 0.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_left_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0.235 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.02 1.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0.235 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.02 1.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_right_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 -0.235 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.02 1.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.235 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.45 0.02 1.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_back_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 -5" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0.235 0 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.45 1.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.235 0 0.51" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.45 1.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="middle_plate" type="fixed">
+    <parent link="cabinet_bottom_plate"/>
+    <child link="cabinet_middle_plate"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <joint name="top_plate" type="fixed">
+    <parent link="cabinet_bottom_plate"/>
+    <child link="cabinet_top_plate"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <joint name="left_plate" type="fixed">
+    <parent link="cabinet_bottom_plate"/>
+    <child link="cabinet_left_plate"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <joint name="right_plate" type="fixed">
+    <parent link="cabinet_bottom_plate"/>
+    <child link="cabinet_right_plate"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <joint name="back_plate" type="fixed">
+    <parent link="cabinet_bottom_plate"/>
+    <child link="cabinet_back_plate"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <gazebo reference="cabinet_bottom_plate">
+    <mu1>100.0</mu1>
+    <mu2>100.0</mu2>
+  </gazebo>
+  <gazebo>
+    <static>true</static>
+  </gazebo>
+</robot>

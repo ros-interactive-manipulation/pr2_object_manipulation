@@ -1,0 +1,80 @@
+im_camera_placements:
+  overhead: 
+    eye:
+      frame_id: "base_link"
+      point:    [-0.02, 0.0, 20.0]
+    focus:
+      frame_id: "base_link"
+      point:    [0.0, 0.0, 0.0]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  left: 
+    eye:
+      frame_id: "base_link"
+      point:    [0.25, 2.64, 0.8]
+    focus:
+      frame_id: "base_link"
+      point:    [0.35, 0.0, 0.8]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  right: 
+    eye:
+      frame_id: "base_link"
+      point:    [0.25, -2.64, 0.8]
+    focus:
+      frame_id: "base_link"
+      point:    [0.3, 0.0, 0.8]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  top: 
+    eye:
+      frame_id: "torso_lift_link"
+      point:    [0.6, 0.0, 1.5]
+    focus:
+      frame_id: "torso_lift_link"
+      point:    [0.65, 0.0, 0.0]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  front: 
+    eye:
+      frame_id: "torso_lift_link"
+      point:    [0.11, 0.0, 0.1]
+    focus:
+      frame_id: "torso_lift_link"
+      point:    [0.75, 0.0, -0.1]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  facing: 
+    eye:
+      frame_id: "torso_lift_link"
+      point:    [2.8, -0.15, 0.2]
+    focus:
+      frame_id: "torso_lift_link"
+      point:    [0.4, 0.0, 0.0]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+  kinect: 
+    eye:
+      frame_id: "head_mount_kinect_rgb_link"
+      point:    [-0.0001, 0.0, 0.0]
+    focus:
+      frame_id: "head_mount_kinect_rgb_link"
+      point:    [0.0001, 0.0, 0.0]
+    up:
+      frame_id: "base_link"
+      vector:   [0.0, 0.0, 1.0] 
+
+# deprecated
+im_camera_configurations:
+  left:   [0.0, 1.57, 2.64, 0.25, 0.0, 0.8]
+  right:  [0.0, 4.72, 2.64, 0.25, 0.0, 0.8]
+  front:  [0.23, 3.14, 0.45,  0.5, 0.0, 0.8]
+  top:    [1.57, 3.14, 1.5,  0.6, 0.0, 0.8]
+  overhead: [1.57, 3.14, 20.0,  0.0, 0.0, 0.0]
+  facing: [0.0, 0.0, 2.64, 0.2, 0.0, 0.8]

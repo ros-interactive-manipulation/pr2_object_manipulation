@@ -1,0 +1,38 @@
+<package>
+  <description brief="pr2_object_manipulation_launch">
+
+    Contains launch and configuration files for starting the
+    manipulation pipeline, along with all needed controllers,
+    planners, etc., on the PR2 robot.
+
+  </description>
+  <author>Matei Ciocarlie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_object_manipulation_launch</url>
+
+  <depend package="dynamic_reconfigure"/>
+
+  <!-- arm navigation -->
+  <depend package="pr2_arm_navigation_perception"/>
+  <depend package="pr2_arm_navigation_planning"/>
+  <depend package="pr2_arm_navigation_actions"/>
+  <depend package="pr2_arm_navigation_filtering"/>
+  <depend package="pr2_arm_navigation_kinematics"/>
+  <depend package="interpolated_ik_motion_planner"/>
+  <depend package="trajectory_filter_server"/>
+  <depend package="pr2_manipulation_controllers"/>
+  <!--depend package="current_state_validator"/-->
+  
+
+  <!-- manipulation -->
+  <depend package="object_manipulator"/>
+  <!--depend package="probabilistic_grasp_planner"/-->
+  <!--depend package="bayesian_grasp_planner"/-->
+  <depend package="pr2_gripper_grasp_controller"/>
+  <!--depend package="pr2_gripper_reactive_approach"/-->
+  <depend package="pr2_gripper_grasp_planner_cluster"/>
+
+</package>
+
+

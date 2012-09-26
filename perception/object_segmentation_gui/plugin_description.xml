@@ -1,0 +1,10 @@
+<library path="lib/libobject_segmentation_gui_rviz_plugin">
+  <class name="object_segmentation_gui/ObjectSegmentation"
+         type="object_segmentation_gui::ObjectSegmentationDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Creates a popup window in case the robot needs assistance with
+      the segmentation of objects.
+    </description>
+  </class>
+</library>

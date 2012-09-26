@@ -1,0 +1,22 @@
+# empty request, as the node listens for incoming sensor messages on its own
+
+---
+
+# The point cloud reconstructed from narrow stereo,
+# containing rgb information from wide field and 	
+# pixel coordinates of narrow stereo in wide field	
+sensor_msgs/PointCloud2 point_cloud
+
+# narrow stereo image
+sensor_msgs/Image image 
+
+# narrow stereo disparity image
+stereo_msgs/DisparityImage disparity_image 
+
+# narrow stereo camera information
+sensor_msgs/CameraInfo camera_info
+
+# Whether the assembly has succeeded or failed
+int32 OTHER_ERROR = 1	
+int32 SUCCESS = 2
+int32 result

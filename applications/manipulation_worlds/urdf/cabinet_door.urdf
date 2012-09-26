@@ -1,0 +1,61 @@
+<robot name="cabinet_door_model">
+  <link name="world"/>
+  <link name="cabinet_door_plate">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="-0.01 -0.245 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.49 1.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.01 -0.245 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.02 0.49 1.02"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="cabinet_door_handle">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0 0.0" /> 
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.15"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.15"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="cabinet_door_hinge" type="revolute">
+    <parent link="world"/>
+    <child link="cabinet_door_plate"/>
+    <!-- x = -0.235 + offset
+         y =  0.245 + offset
+         z =  0.510 + offset -->
+    <origin xyz="-0.545 -0.755 1.43" rpy="0 0 -1.5707"/>
+    <axis xyz="0 0 1"/>
+    <limit upper="0" lower="-2.3561944" velocity="100" effort="100"/>
+  </joint>
+  <joint name="cabinet_door_handle_hinge" type="fixed">
+    <parent link="cabinet_door_plate"/>
+    <child link="cabinet_door_handle"/>
+    <origin xyz="-0.07 -0.40 -0.3"/>
+    <limit upper="0" lower="-2.3561944" velocity="100" effort="100"/>
+  </joint>
+  <gazebo reference="cabinet_door_plate">
+    <dampingFactor>0.3</dampingFactor>
+  </gazebo>
+
+</robot>

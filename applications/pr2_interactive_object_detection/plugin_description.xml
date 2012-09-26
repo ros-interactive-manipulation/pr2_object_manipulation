@@ -1,0 +1,10 @@
+<library path="lib/libinteractive_object_detection_display">
+  <class name="pr2_interactive_object_detection/InteractiveObjectDetection"
+         type="pr2_interactive_object_detection::InteractiveObjectDetectionDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Allows you to trigger the interactive segmentation
+      of tabletop scenes as well as object recognition.
+    </description>
+  </class>
+</library>

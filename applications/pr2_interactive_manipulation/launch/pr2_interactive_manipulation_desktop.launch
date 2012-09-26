@@ -1,0 +1,84 @@
+<launch>
+  
+    <arg name="stereo" default="false"/>
+    <arg name="joy" default="false" />
+    <arg name="haptics" default="false" />
+    <arg name="nav" default="false" />
+    <arg name="nav_local" default="false" />
+    <arg name="tf_throttled" default="true" /> 
+    <arg name="rviz_args" default=""/>
+    <arg name="rviz_debug" default="false"/>
+    <arg name="large_menus" default="false"/>
+    <arg name="sim" default="false"/>
+    <arg name="throttle_cameras" default="true" />
+    <arg name="rviz_config_file_base" 
+	 default="$(find pr2_interactive_manipulation)/config/rviz_config.yaml" />
+    <arg name="compress_point_clouds" default="false" />
+
+    <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
+    <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
+    <arg name="kinect_camera_name" default="head_mount_kinect" />
+    
+    <!-- set the name of the main camera; ONLY matters if throttle_cameras is false -->
+    <arg if="$(arg stereo)" name="main_camera_namespace" value="/wide_stereo/left"/>
+    <arg if="$(arg stereo)" name="main_camera_name" value="image_color"/>
+    <arg unless="$(arg sim)" name="tmp_camera_namespace" value="$(arg kinect_camera_name)/rgb"/>
+    <arg unless="$(arg sim)" name="tmp_camera_name" value="image_color"/>
+    <arg if="$(arg sim)" name="tmp_camera_namespace" value="/kinect_rgb/rgb"/>
+    <arg if="$(arg sim)" name="tmp_camera_name" value="image_raw"/>
+    <arg unless="$(arg stereo)" name="main_camera_namespace" value="$(arg tmp_camera_namespace)"/>
+    <arg unless="$(arg stereo)" name="main_camera_name" value="$(arg tmp_camera_name)"/>
+    <arg name="main_camera" value="$(arg main_camera_namespace)/$(arg main_camera_name)"/>
+
+    <!-- local joystick node, remapped to publish to joy_local -->
+    <include if="$(arg joy)" file="$(find pr2_interactive_manipulation)/launch/joy.launch"/>
+
+    <!-- create a temporary rviz file... hopefully $HOME is defined on all the systems we use... --> 
+    <arg name="rviz_config_file" value="$(env HOME)/.ros/pr2_interactive_manipulation_temp.rviz"/>
+    <node pkg="pr2_interactive_manipulation" type="adjust_rviz_config.py" 
+	  args="$(arg rviz_config_file_base) $(arg rviz_config_file) 
+		$(arg stereo) $(arg nav) $(arg nav_local) $(arg sim)" 
+	  name="rviz_config_adjuster" output="screen" />
+    
+    <!-- tf republish; the throttler gets launched on the robot side and the republisher on the desktop side -->
+    <include if="$(arg tf_throttled)" file="$(find tf_throttle)/launch/tf_republished.launch"/>
+
+    <!-- point cloud decompression -->
+    <include if="$(arg compress_point_clouds)" file="$(find compressed_pointcloud_transport)/launch/decompress.launch"/>
+
+    <!-- rviz -->
+    <arg if="$(arg rviz_debug)" name="rviz_prefix" value="xterm -e gdb -ex run --args"/>
+    <arg unless="$(arg rviz_debug)" name="rviz_prefix" value=""/>
+
+    <arg if="$(arg large_menus)" name="large_menu_arg" 
+	 value="-stylesheet $(find pr2_interactive_manipulation)/launch/big-menus.style"/>
+    <arg unless="$(arg large_menus)" name="large_menu_arg" value=""/>  
+
+    <node pkg="rviz" launch-prefix="$(arg rviz_prefix)" name="$(anon rviz-1)" type="rviz" respawn="false" output="screen"
+	  args="-d $(arg rviz_config_file) -s $(find pr2_interactive_manipulation)/images/splash.png $(arg rviz_args) 
+		$(arg large_menu_arg)"> 
+
+      <remap if="$(arg tf_throttled)" from="tf" to="tf_republished"/>
+
+      <remap unless="$(arg throttle_cameras)" to="$(arg main_camera)" 
+	     from="/interactive_manipulation_camera/image"/>
+      <remap unless="$(arg throttle_cameras)" to="$(arg main_camera_namespace)/camera_info" 
+	     from="/interactive_manipulation_camera/camera_info"/>
+      <remap unless="$(arg throttle_cameras)" to="$(arg main_camera_namespace)/compressed" 
+	     from="/interactive_manipulation_camera/compressed"/>
+      <remap unless="$(arg throttle_cameras)" to="$(arg main_camera_namespace)/compressed/parameter_descriptions" 
+	     from="/interactive_manipulation_camera/compressed/parameter_descriptions"/>
+      <remap unless="$(arg throttle_cameras)" to="$(arg main_camera_namespace)/compressed/parameter_updates" 
+	     from="/interactive_manipulation_camera/compressed/parameter_updates"/>
+    </node>
+
+    <!--
+    <include file="$(find haptic_ghosted_gripper)/launch/haptics.launch" >
+      <arg name="haptics" value="$(arg haptics)" />
+      <arg name="stereo" value="$(arg stereo)" />
+    </include>
+
+    <node pkg="pr2_interactive_manipulation" type="grasp_caller" name="grasp_caller" output="screen" />
+    -->
+
+</launch>

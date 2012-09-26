@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<robot name="plug"
+       xmlns:xi="http://www.w3.org/2001/XInclude"
+       xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz"
+       xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
+       xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom"
+       xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
+       xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics">
+
+  <property name="M_PI" value="3.1415926535897931" />
+
+  <property name="checkerboard_x_size" value="0.0428" />
+  <property name="checkerboard_y_size" value="0.0447" />
+  <property name="checkerboard_z_size" value="0.0010" />
+  <property name="plug_x_size" value="0.0428" />
+  <property name="plug_y_size" value="0.0447" />
+  <property name="plug_z_size" value="0.0428" />
+
+  <property name="prong_width" value="0.003" />
+  <property name="prong_height" value="0.008" />
+  <property name="prong_length" value="0.02" />
+  <property name="prong_z_offset" value="-0.003" />
+
+  <!-- link blocks -->
+  <link name="plug_link">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0 0.0" />
+      <inertia ixx="0.01" ixy="0"  ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.01" />
+    </inertial> 
+    <visual>
+      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${plug_x_size} ${plug_y_size} ${plug_z_size}" />
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${plug_x_size} ${plug_y_size} ${plug_z_size}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="plug_link">
+    <material>Gazebo/Black</material>
+    <mu1>50000.0</mu1>
+    <mu2>50000.0</mu2>
+    <kp>100000000.0</kp>
+    <kd>1.0</kd>
+    <turnGravityOff>false</turnGravityOff>
+    <dampingFactor>0.01</dampingFactor>
+  </gazebo>
+
+  <!-- link blocks -->
+  <joint name="checkerboard_joint" type="fixed" >
+    <parent link="plug_link" />
+    <origin xyz="${-plug_x_size/2} 0 0" rpy="0 ${-M_PI/2} 0" />
+    <child link="checkerboard_link" />
+  </joint>
+  <link name="checkerboard_link">
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0.0" />
+      <inertia ixx="0.001" ixy="0"  ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001" />
+    </inertial> 
+    <visual>
+      <origin xyz="0 0 0.0" rpy="0 0 ${-M_PI}" />
+      <geometry>
+        <box size="${checkerboard_x_size} ${checkerboard_y_size} ${checkerboard_z_size}" />
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${checkerboard_x_size} ${checkerboard_y_size} ${checkerboard_z_size}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="checkerboard_link">
+    <material>PlugIn/Plug</material>
+    <mu1>50000.0</mu1>
+    <mu2>50000.0</mu2>
+    <kp>100000000.0</kp>
+    <kd>1.0</kd>
+    <turnGravityOff>false</turnGravityOff>
+    <dampingFactor>0.001</dampingFactor>
+  </gazebo>
+
+  <!-- joint blocks -->
+  <joint name="prong_1_joint" type="fixed" >
+    <parent link="plug_link" />
+    <origin xyz="0 ${plug_y_size/2} ${-0.009+prong_z_offset}" rpy="0 0 0" />
+    <child link="prong_1_link" />
+  </joint>
+
+  <!-- link blocks -->
+  <link name="prong_1_link">
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0.01 0.0" />
+      <inertia ixx="0.001" ixy="0"  ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001" />
+    </inertial> 
+    <visual>
+      <origin xyz="0 0.01 0.0" rpy="${-M_PI/2} 0 0" />
+      <geometry>
+        <cylinder radius="0.0025" length="0.02" />
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0.01 0.0" rpy="${-M_PI/2} 0 0" />
+      <geometry>
+        <cylinder radius="0.0025" length="0.02" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="prong_1_link">
+    <material>Gazebo/PioneerBody</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>100000000.0</kp>
+    <kd>1.0</kd>
+    <turnGravityOff>false</turnGravityOff>
+    <dampingFactor>0.001</dampingFactor>
+  </gazebo>
+
+  <!-- joint blocks -->
+  <joint name="prong_2_joint" type="fixed" >
+    <parent link="plug_link" />
+    <origin xyz="0.0065 ${plug_y_size/2} ${0.003+prong_z_offset}" rpy="0 0 0" />
+    <child link="prong_2_link" />
+  </joint>
+
+  <!-- link blocks -->
+  <link name="prong_2_link">
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0.01 0.0" />
+      <inertia ixx="0.001" ixy="0"  ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001" />
+    </inertial> 
+    <visual>
+      <origin xyz="0 0.01 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${prong_width} ${prong_length} ${prong_height}" />
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0.01 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${prong_width} ${prong_length} ${prong_height}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="prong_2_link">
+    <material>Gazebo/PioneerBody</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>100000000.0</kp>
+    <kd>1.0</kd>
+    <turnGravityOff>false</turnGravityOff>
+    <dampingFactor>0.001</dampingFactor>
+  </gazebo>
+
+  <!-- joint blocks -->
+  <joint name="prong_3_joint" type="fixed" >
+    <parent link="plug_link" />
+    <origin xyz="-0.0065 ${plug_y_size/2} ${0.003+prong_z_offset}" rpy="0 0 0" />
+    <child link="prong_3_link" />
+  </joint>
+
+  <!-- link blocks -->
+  <link name="prong_3_link">
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0.01 0.0" />
+      <inertia ixx="0.001" ixy="0"  ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001" />
+    </inertial> 
+    <visual>
+      <origin xyz="0 0.01 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${prong_width} ${prong_length} ${prong_height}" />
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0.01 0.0" rpy="0 0 0" />
+      <geometry>
+        <box size="${prong_width} ${prong_length} ${prong_height}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="prong_3_link">
+    <material>Gazebo/PioneerBody</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>100000000.0</kp>
+    <kd>1.0</kd>
+    <turnGravityOff>false</turnGravityOff>
+    <dampingFactor>0.001</dampingFactor>
+  </gazebo>
+
+  <gazebo>
+    <controller:gazebo_ros_force name="plug_force_controller" plugin="libgazebo_ros_force.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>100.0</updateRate>
+        <bodyName>plug_link</bodyName>
+        <topicName>plug_force</topicName>
+    </controller:gazebo_ros_force>
+    <!-- gazebo_ros_p3d for position groundtruth -->
+    <controller:gazebo_ros_p3d name="p3d_plug_controller" plugin="libgazebo_ros_p3d.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>100.0</updateRate>
+        <bodyName>plug_link</bodyName>
+        <topicName>plug_pose_ground_truth</topicName>
+        <frameName>base_link</frameName>
+    </controller:gazebo_ros_p3d>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,16 @@
+<launch>
+	<!-- This launch file starts, segmentation, recognition. and the database communication node. -->
+        <!-- It is meant for standalone use, not as part of the manipulation pipeline -->
+
+	<arg name="tabletop_segmentation_points_input" default="narrow_stereo_textured/points2" />
+
+        <include file="$(find tabletop_object_detector)/launch/tabletop_complete.launch">
+          <arg name="tabletop_segmentation_points_input" value="$arg(tabletop_segmentation_points_input)"/>
+        </include>	
+	
+	<!-- load the database parameters -->
+	<rosparam command="load" file="$(find household_objects_database)/config/wgs36.yaml"/>
+	<!-- start the database wrapper node -->
+	<node pkg="household_objects_database" name="objects_database_node" type="objects_database_node" 
+	respawn="true" output="screen"/>
+</launch>

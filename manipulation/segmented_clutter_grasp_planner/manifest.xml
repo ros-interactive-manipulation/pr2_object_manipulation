@@ -1,0 +1,20 @@
+<package>
+  <description brief="segmented_clutter_grasp_planner">
+
+     segmented_clutter_grasp_planner: segments clutter into clusters by removing points whose normals are parallel to a given grasp direction, and then running the point cluster grasp planner on the resulting clusters
+
+  </description>
+  <author>Kaijen Hsiao</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/segmented_clutter_grasp_planner</url>
+  <depend package="object_manipulation_msgs" />
+  <depend package="object_manipulator" />
+  <depend package="tf" />
+  <depend package="pr2_gripper_grasp_planner_cluster" />
+  <depend package="roscpp"/>
+  <depend package="pcl"/>
+  <depend package="sensor_msgs"/>
+</package>
+
+

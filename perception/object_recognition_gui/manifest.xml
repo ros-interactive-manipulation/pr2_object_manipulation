@@ -1,0 +1,31 @@
+<package>
+  <description brief="object_detection_gui">
+
+     A package for user-aided object detection and pose estimation
+     on pre-segmented point clouds.
+
+  </description>
+  <author>David Gossow</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/object_detection_gui</url>
+
+  <depend package="roscpp"/>
+  
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
+  
+  <depend package="rviz"/>
+  
+  <depend package="rviz_interaction_tools"/>
+  
+  <depend package="sensor_msgs"/>
+  <depend package="stereo_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="arm_navigation_msgs"/>
+  
+  <export>
+    <rviz plugin="${prefix}/plugin_description.xml"/>
+  </export>
+
+</package>

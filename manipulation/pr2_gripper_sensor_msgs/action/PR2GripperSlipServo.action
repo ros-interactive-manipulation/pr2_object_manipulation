@@ -1,0 +1,13 @@
+# Action to launch the gripper into slip servoing mode 
+
+#goals
+PR2GripperSlipServoCommand command
+---
+
+#result
+PR2GripperSlipServoData data
+
+---
+
+#feedback
+PR2GripperSlipServoData data

@@ -1,0 +1,13 @@
+	
+bool reactive_grasping
+bool reactive_force	
+bool reactive_place
+int32 lift_steps
+int32 retreat_steps
+int32 lift_direction_choice
+int32 desired_approach
+int32 min_approach
+float32 max_contact_force
+bool find_alternatives
+bool always_plan_grasps
+bool cycle_gripper_opening

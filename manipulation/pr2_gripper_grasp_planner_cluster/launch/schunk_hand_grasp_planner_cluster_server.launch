@@ -1,0 +1,9 @@
+<launch>
+
+  <node name="schunk_hand_grasp_planner_cluster" pkg="pr2_gripper_grasp_planner_cluster" 
+    type="point_cluster_grasp_planner_server.py" respawn="false" output="screen">
+    <rosparam command="load" file="$(find pr2_gripper_grasp_planner_cluster)/config/schunk_hand_virtual_gripper_model.yaml" />
+	<param name="z_up_frame" value="/base_link"/>
+  </node>  
+
+</launch>

@@ -1,0 +1,12 @@
+
+IMGUIOptions options
+IMGUICommand command
+
+---
+
+#empty result
+object_manipulation_msgs/ManipulationResult result
+
+---
+
+string status

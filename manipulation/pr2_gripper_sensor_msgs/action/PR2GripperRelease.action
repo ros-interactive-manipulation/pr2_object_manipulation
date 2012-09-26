@@ -1,0 +1,9 @@
+#goal
+PR2GripperReleaseCommand command
+---
+#result
+PR2GripperReleaseData data
+---
+
+#feedback
+PR2GripperReleaseData data

@@ -1,0 +1,130 @@
+<launch>
+ 
+    <arg name="use_slip_controllers" default="false"/>
+    <arg name="stereo" default="false"/>
+    <arg name="use_right_arm" default="true"/>
+    <arg name="use_left_arm" default="true"/>
+    <arg name="use_state_validator" default="false"/>
+    <arg name="kinect_frame_prefix" default="/head_mount_kinect" />
+    <arg name="kinect_camera_name" default="head_mount_kinect" />
+    <arg name="slow_movement" default="false"/>
+    <arg name="nav_local" default="false" />
+    <arg name="nav_3d" default="false" />
+    <arg name="planar_marker_only" default="false" />
+    <arg name="interactive_marker_frame" default="base_link" />
+
+    <arg name="lcg_left_gripper" default="false"/>
+    <arg name="lcg_right_gripper" default="false"/>
+
+    <arg if="$(arg stereo)" name="head_pointing_frame" value="/narrow_stereo_optical_frame"/>
+    <arg unless="$(arg stereo)" name="head_pointing_frame" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
+
+    <node pkg="pr2_marker_control" name="pr2_marker_control" type="pr2_marker_control" respawn="true" output="screen">
+          
+      <remap if="$(arg stereo)" from="snapshot_input_topic" 
+	     to="/narrow_stereo_textured/object_modeling_points_filtered" />      
+      <remap unless="$(arg stereo)" from="snapshot_input_topic" 
+	     to="/$(arg kinect_camera_name)/rgb/object_modeling_points_filtered" />
+
+      <remap from="right_arm/constraint_aware_ik" to="/pr2_right_arm_kinematics/get_constraint_aware_ik" />
+      <remap from="left_arm/constraint_aware_ik" to="/pr2_left_arm_kinematics/get_constraint_aware_ik" />
+
+      <remap from="right_arm/get_ik_solver_info" to="/pr2_right_arm_kinematics/get_ik_solver_info" />
+      <remap from="left_arm/get_ik_solver_info" to="/pr2_left_arm_kinematics/get_ik_solver_info" />
+
+      <remap from="right_arm/get_state_validity" to="/environment_server_right_arm/get_state_validity" />
+      <remap from="left_arm/get_state_validity" to="/environment_server_left_arm/get_state_validity" />
+
+      <remap from="right_arm/move_arm" to="/move_right_arm" />
+      <remap from="left_arm/move_arm" to="/move_left_arm" />
+
+      <remap from="right_arm/hand_posture_execution" to="/r_gripper_grasp_posture_controller" />
+      <remap from="left_arm/hand_posture_execution" to="/l_gripper_grasp_posture_controller" />
+
+      <remap from="right_arm/grasp_status" to="/r_gripper_grasp_status" />
+      <remap from="left_arm/grasp_status" to="/l_gripper_grasp_status" />
+
+      <remap from="right_arm/joint_trajectory" to="/r_arm_controller/joint_trajectory_action" />
+      <remap from="left_arm/joint_trajectory" to="/l_arm_controller/joint_trajectory_action" />
+
+      <remap from="switch_controller" to="pr2_controller_manager/switch_controller"/>
+      <remap from="list_controllers" to="pr2_controller_manager/list_controllers"/>
+      <remap from="right_arm/cart/command_pose" to="/r_cart/command_pose" />
+      <remap from="left_arm/cart/command_pose" to="/l_cart/command_pose" />
+      <remap from="right_arm/cart/command_posture" to="/r_cart/command_posture" />
+      <remap from="left_arm/cart/command_posture" to="/l_cart/command_posture" />
+      <param name="right_arm_cartesian_controller" value="r_cart" />
+      <param name="left_arm_cartesian_controller" value="l_cart" />
+      <param name="right_arm_joint_controller" value="r_arm_controller" />
+      <param name="left_arm_joint_controller" value="l_arm_controller" />
+
+      <remap unless="$(arg use_slip_controllers)" from="left_arm/gripper_action"
+                                                to="/l_gripper_controller/gripper_action"/>
+      <remap unless="$(arg use_slip_controllers)" from="right_arm/gripper_action"
+                                                to="/r_gripper_controller/gripper_action"/>
+
+      <remap if="$(arg use_slip_controllers)" from="left_arm/gripper_action"
+                                            to="/l_gripper_sensor_controller/gripper_action"/>
+      <remap if="$(arg use_slip_controllers)" from="right_arm/gripper_action"
+                                            to="/r_gripper_sensor_controller/gripper_action"/>
+
+      <param name="use_right_arm" value="$(arg use_right_arm)" />
+      <param name="use_left_arm"  value="$(arg use_left_arm)" />
+      
+      <param name="use_state_validator" value="$(arg use_state_validator)" />
+      <param name="gripper_control_linear_deadband"  value="0.0005" />
+      <param name="gripper_control_angular_deadband"  value="0.005" />
+      <param name="update_period"  value="0.05" />
+      <param name="planar_only" value="$(arg planar_marker_only)" />
+      <param name="marker_frame" value="$(arg interactive_marker_frame)" />
+      <param unless="$(arg slow_movement)" name="cartesian_clip_distance"  value="2" />
+      <param unless="$(arg slow_movement)" name="cartesian_clip_angle"  value="6" />
+      <param if="$(arg slow_movement)" name="cartesian_clip_distance"  value="0.75" />
+      <param if="$(arg slow_movement)" name="cartesian_clip_angle"  value="3" />
+      <param name="voxel_size"  value="0.003" />
+      <param if="$(arg nav_3d)" name="nav_3d" value="true" />
+
+      <param name="head_pointing_frame" value="$(arg head_pointing_frame)"/>
+
+      <remap from="right_click_point" to="/cloud_click_point" />
+      <remap from="/pr2_interactive_nav_action" to="/pr2_interactive_nav_action" /> 
+    
+      <param name="max_direct_nav_radius" value="0.75"/>
+
+      <remap unless="$(arg nav_local)" from="/move_base/clear_costmaps" to="/move_base_node/clear_costmaps" />
+      <remap if="$(arg nav_local)" from="/move_base/clear_costmaps" to="/move_base_local_node/clear_costmaps" />
+      <remap if="$(arg nav_local)" from="/move_base" to="/move_base_local" />
+      <remap if="$(arg nav_local)" from="/move_base/status" to="/move_base_local/status" />
+      <remap if="$(arg nav_local)" from="/move_base_node/set_parameters" to="/move_base_local_node/set_parameters" />
+      <param if="$(arg nav_local)" name="move_base_node_name" value="move_base_local_node"/>
+      <param unless="$(arg nav_local)" name="move_base_node_name" value="move_base_node"/>
+
+      <!-- For the marker control itself, which makes the difference between l_ and r_gripper_type-->
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_type" value="pr2"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_type" value="lcg"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_type" value="pr2"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_type" value="lcg"/>
+
+      <!-- For the gripper client -->
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_open_gap_value" value="0.086"/>
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_closed_gap_value" value="0.0"/>
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_max_effort" value="50.0"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_open_gap_value" value="0.135"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_closed_gap_value" value="0.0"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_max_effort" value="10.0"/>
+
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_open_gap_value" value="0.086"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_closed_gap_value" value="0.0"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_max_effort" value="50.0"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_open_gap_value" value="0.135"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_closed_gap_value" value="0.0"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_max_effort" value="10.0"/>
+
+    </node>
+
+
+    <!-- pr2_interactive_nav_action -->
+    <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_nav_action.launch" >
+    </include>
+
+</launch>

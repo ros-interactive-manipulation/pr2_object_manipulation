@@ -1,0 +1,8 @@
+<launch>
+
+    <!-- RGB-D Assembler Node -->
+    <node name="rgbd_assembler" type="rgbd_assembler"
+          pkg="rgbd_assembler" output="screen" respawn="false">
+    </node>
+
+</launch>

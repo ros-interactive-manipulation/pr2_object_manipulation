@@ -1,0 +1,20 @@
+<package>
+  <description brief="pr2_gripper_grasp_controller">
+
+    Implementation of the hand posture grasp controller for the PR2
+    gripper.
+
+  </description>
+  <author>Matei Ciocarlie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_gripper_grasp_controller</url>
+
+  <depend package="actionlib"/>
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="object_manipulation_msgs"/>
+  <depend package="sensor_msgs"/>
+
+</package>
+
+

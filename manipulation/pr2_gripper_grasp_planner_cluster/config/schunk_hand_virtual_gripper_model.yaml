@@ -1,0 +1,46 @@
+#making gripper x out of palm, y towards the 2-finger side
+#three space-box lists--points need to be both in the center slice
+#and in both side boxes on the 2-finger side for the grasp to be valid
+
+#single finger (2 boxes)
+#finger1 = [[[12.5, -11.25, -1.75], [15, -4.75, 1.75]], [[15, -11.25, -1.75], [21, -8.25, 1.75]]]
+#two opposite fingers (2 boxes each)
+#finger2 = [[[12.5, 4.75, 2.15], [15.0, 11.25, 4.65]], [[15.0, 8.25, 2.15], [21.0, 11.25, 4.65]]]
+#finger3 = [[[12.5, 4.75, -4.65], [15.0, 11.25, 2.15]], [[15.0, 8.25, -4.65], [21.0, 11.25, 2.15]]]
+#palm box (1 box)
+#palm = [[[0.0, -11.25, -6.0], [12.5, 11.25, 6.0]]]
+#center space box
+#center_space = [[[15.0, -8.25, -1.75], [21.0, 8.25, 1.75]]]
+#finger2 space box
+#side_space1 = [[[15., 0, 2.15], [21., 8.25, 4.65]]]
+#finger3 space box
+#side_space2 = [[[15., 0, -4.65], [21., 8.25, 2.15]]]
+#gripper_boxes = finger1+finger2+finger3+palm
+#space_boxes = [center_space, side_space1, side_space2] 
+
+gripper_boxes: [[[0.125, -0.1125, -0.0175], [0.15, -0.0475, 0.0175]], [[0.15, -0.1125, -0.0175], [0.21, -0.0825, 0.0175]], [[0.125, 0.0475, 0.0215], [0.15, 0.1125, 0.0465]], [[0.150, 0.0825, 0.0215], [0.21, 0.1125, 0.0465]], [[0.125, 0.0475, -0.0465], [0.150, 0.1125, 0.0215]], [[0.150, 0.0825, -0.0465], [0.210, 0.1125, 0.0215]], [[0.0, -0.1125, -0.060], [0.125, 0.1125, 0.060]]]
+
+space_boxes: [[[[0.150, -0.0825, -0.0175], [0.210, 0.0825, 0.0175]]], [[[0.15, 0.0, 0.0215], [0.21, 0.0825, 0.0465]]], [[[0.15, 0.0, -0.0465], [0.21, 0.0825, 0.0215]]]]
+
+joint_names: 
+  arm: ["sdh_knuckle_joint", "sdh_thumb_2_joint", "sdh_thumb_3_joint", "sdh_finger_12_joint", "sdh_finger_13_joint", "sdh_finger_22_joint", "sdh_finger_23_joint"]
+
+pregrasp_joint_angles: 
+  arm: [0.0,-0.9854,0.9472,-0.9854,0.9472,-0.9854,0.9472]
+grasp_joint_angles: 
+  arm: [0.0,0.0,1.0472,0.0,1.0472,0.0,1.0472]
+pregrasp_joint_efforts: 
+  arm: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+grasp_joint_efforts: 
+  arm: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+#sdh_palm_link has x towards the two fingers (model y), z out of the palm (model x), y to the side (model z)
+actual_wrist_frame_in_model_frame: [[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[1.0,0.0,0.0,0.0],[0.0,0.0,0.0,1.0]]
+
+default_pregrasp_dist: 0.225
+min_good_grasp_points: 15
+wrist_to_fingertip_dist: 0.195
+wrist_to_palm_dist: 0.151
+gripper_opening: 0.1625
+height_good_for_side_grasps: 0.10
+side_grasp_start_height: 0.065

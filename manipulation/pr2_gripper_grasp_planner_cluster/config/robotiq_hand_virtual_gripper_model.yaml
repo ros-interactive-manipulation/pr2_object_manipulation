@@ -1,0 +1,53 @@
+#making gripper x out of palm, y towards the 2-finger side
+#three space-box lists--points need to be both in the center slice
+#and in both side boxes on the 2-finger side for the grasp to be valid
+#origin at bottom of palm chunk
+
+#single finger (2 boxes)
+#finger1 = [[[9.0, -10.05, -1.75], [16.0, -4.5, 1.75]], [[16.0, -10.05, -1.75], [21.0, -6.75, 1.75]]]
+#two opposite fingers (glommed together, 2 boxes)
+#fingers23 = [[[9.0, 4.5, -5.25], [16.0, 10.05, 5.25]], [[16.0, 6.75, -5.25], [21.0, 10.05, 5.25]]]
+#palm box (1 box)
+#palm = [[[0.0, -10.05, -6.5], [9, 10.05, 6.5]]]
+#center space box (2 boxes)
+#center_space = [[[16.0, -6.75, -1.75], [21.0, 6.75, 1.75]], [[9.0, -4.5, -1.75],[16.0, 4.5, 1.75]]]
+#finger2 space box (2 boxes)
+#side_space1 = [[[16.0, 0.0, 1.75], [21.0, 6.75, 5.25]], [[9.0, 0.0, 1.75],[16.0, 4.5, 5.25]]]
+#finger3 space box (2 boxes)
+#side_space2 = [[[16.0, 0.0, -5.25], [21.0, 6.75, -1.75]], [[9.0, 0.0, -5.25],[16.0, 4.5, -1.75]]]
+#gripper_boxes = finger1+fingers23+palm
+#space_boxes = [center_space, side_space1, side_space2]
+
+gripper_boxes: [[[0.090, -0.1005, -0.0175], [0.160, -0.045, 0.0175]], 
+               [[0.160, -0.1005, -0.0175], [0.210, -0.0675, 0.0175]],
+               [[0.090, 0.045, -0.0525], [0.16, 0.1005, 0.0525]], 
+               [[0.160, 0.0675, -0.0525], [0.210, 0.1005, 0.0525]],
+               [[0.0, -0.1005, -0.065], [0.09, 0.1005, 0.065]]]
+
+space_boxes: [[[[0.160, -0.0675, -0.0175], [0.210, 0.0675, 0.0175]], [[0.090, -0.045, -0.0175],[0.160, 0.045, 0.0175]]],
+              [[[0.160, 0.0, 0.0175], [0.210, 0.0675, 0.0525]], [[0.090, 0.0, 0.0175],[0.160, 0.045, 0.0525]]],
+              [[[0.160, 0.0, -0.0525], [0.210, 0.0675, -0.0175]], [[0.090, 0.0, -0.0525],[0.160, 0.045, -0.0175]]]]
+
+joint_names: 
+  manipulator: ["joint_1", "joint_2", "joint_3"]
+
+pregrasp_joint_angles: 
+  manipulator: [0.0,0.0,0.0]
+grasp_joint_angles: 
+  manipulator: [0.0,0.0,0.0]
+pregrasp_joint_efforts: 
+  manipulator: [0.0,0.0,0.0]
+grasp_joint_efforts: 
+  manipulator: [0.0,0.0,0.0]
+
+#<name of tool frame> has x towards the single finger (model -y), z out of the palm (model x), y to the side (model -z)
+#and origin 5.113 cm above the palm, 14.113 cm above the virtual model origin  (model +x)
+actual_wrist_frame_in_model_frame: [[0.0,-1.0,0.0,0.0],[0.0,0.0,-1.0,0.0],[1.0,0.0,0.0,0.0],[0.14113,0.0,0.0,1.0]]
+
+default_pregrasp_dist: 0.21
+min_good_grasp_points: 15
+wrist_to_fingertip_dist: 0.225
+wrist_to_palm_dist: 0.09
+gripper_opening: 0.165
+height_good_for_side_grasps: 0.11
+side_grasp_start_height: 0.075

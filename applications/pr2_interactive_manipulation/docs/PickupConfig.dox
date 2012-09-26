@@ -1,0 +1,8 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~reactive_grasping" : \b [bool] Reactive Grasping min: False, default: False, max: True
+- \b "~lift_steps" : \b [int] Lift After Grasp (cm) min: 0, default: 10, max: 10
+- \b "~lift_vertically" : \b [bool] Lift Vertically min: False, default: True, max: True
+

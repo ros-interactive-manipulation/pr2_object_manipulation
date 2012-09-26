@@ -1,0 +1,74 @@
+<launch>
+  <arg name="stereo" default="true" />
+  <arg name="kinect_camera_name" default="head_mount_kinect" />
+
+  <!-- Cartesian controller -->
+  <!--include file="$(find pr2_object_manipulation_launch)/launch/c_jt.launch"/-->
+
+  <!-- Object in hand segmenter -->
+  <node name="segment_object_in_hand" pkg="tabletop_object_detector"
+    type="segment_object_in_hand" respawn="false" output="screen">
+    <param name="self_filtered_cloud_name" value="/narrow_stereo_textured/object_modeling_points_filtered" if="$(arg stereo)" />
+    <param name="self_filtered_cloud_name" value="/$(arg kinect_camera_name)/rgb/object_modeling_points_filtered" unless="$(arg stereo)" />
+  </node>
+
+  <!-- Server for creating a model of the object in the hand -->
+  <node name="create_object_model_server" pkg="pr2_create_object_model"
+    type="create_object_model_server" respawn="false" output="screen">
+
+	  <param name="stereo" value="$(arg stereo)"/>
+	
+      <remap from="right_arm/constraint_aware_ik" to="/pr2_right_arm_kinematics/get_constraint_aware_ik" />    
+      <remap from="left_arm/constraint_aware_ik" to="/pr2_left_arm_kinematics/get_constraint_aware_ik" />    
+
+      <remap from="right_arm/get_fk" to="/pr2_right_arm_kinematics/get_fk" />    
+      <remap from="left_arm/get_fk" to="/pr2_left_arm_kinematics/get_fk" />    
+
+      <remap from="right_arm/interpolated_ik" to="/r_interpolated_ik_motion_plan" />    
+      <remap from="left_arm/interpolated_ik" to="/l_interpolated_ik_motion_plan" />    
+
+      <remap from="right_arm/interpolated_ik_set_params" to="/r_interpolated_ik_motion_plan_set_params" />    
+      <remap from="left_arm/interpolated_ik_set_params" to="/l_interpolated_ik_motion_plan_set_params" />    
+
+      <remap from="right_arm/get_ik_solver_info" to="/pr2_right_arm_kinematics/get_ik_solver_info" />    
+      <remap from="left_arm/get_ik_solver_info" to="/pr2_left_arm_kinematics/get_ik_solver_info" />    
+
+      <remap from="right_arm/get_state_validity" to="/environment_server/get_state_validity" />    
+      <remap from="left_arm/get_state_validity" to="/environment_server/get_state_validity" />    
+
+      <remap from="right_arm/move_arm" to="/move_right_arm" />    
+      <remap from="left_arm/move_arm" to="/move_left_arm" />    
+
+      <remap from="right_arm/joint_trajectory" to="/r_arm_controller/joint_trajectory_action" />    
+      <remap from="left_arm/joint_trajectory" to="/l_arm_controller/joint_trajectory_action" />    
+
+      <remap from="right_arm/hand_posture_execution" to="/r_gripper_grasp_posture_controller" />    
+      <remap from="left_arm/hand_posture_execution" to="/l_gripper_grasp_posture_controller" />
+
+      <remap from="right_arm/grasp_status" to="/r_gripper_grasp_status" />
+      <remap from="left_arm/grasp_status" to="/l_gripper_grasp_status" />
+
+      <remap from="right_arm/cart/command_pose" to="/r_cart/command_pose" />
+      <remap from="left_arm/cart/command_pose" to="/l_cart/command_pose" />
+      <remap from="right_arm/cart/command_posture" to="/r_cart/command_posture" />
+      <remap from="left_arm/cart/command_posture" to="/l_cart/command_posture" />
+      <remap from="right_arm/cart/gains" to="/r_cart/gains" />
+      <remap from="left_arm/cart/gains" to="/l_cart/gains" />
+
+      <remap from="switch_controller" to="pr2_controller_manager/switch_controller"/>
+      <remap from="list_controllers" to="pr2_controller_manager/list_controllers"/>
+
+      <param name="default_cluster_planner" value="/plan_point_cluster_grasp" />
+      <param name="default_database_planner" value="/objects_database_node/database_grasp_planning" />     
+      <param name="default_probabilistic_planner" value="/probabilistic_grasp_planning" />
+
+      <param name="randomize_grasps" value="false" />
+
+      <param name="right_arm_cartesian_controller" value="r_cart" />
+      <param name="left_arm_cartesian_controller" value="l_cart" />
+      <param name="right_arm_joint_controller" value="r_arm_controller" />
+      <param name="left_arm_joint_controller" value="l_arm_controller" />
+
+  </node>
+
+</launch>

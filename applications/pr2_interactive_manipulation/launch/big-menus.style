@@ -1,0 +1,27 @@
+QMenu::item {
+  padding: 20px;
+  color: black;
+  background-color: white;
+}
+
+QMenu::item:selected {
+  background: #CCDDFF;
+}
+
+* {
+  font: 22px;
+}
+
+QPushButton {
+padding: 20px;
+margin: 20px;
+min-width: 32px
+min-height: 32px
+}
+
+QToolButton {
+padding: 20px;
+margin: 20px;
+min-width: 32px
+min-height: 32px
+}

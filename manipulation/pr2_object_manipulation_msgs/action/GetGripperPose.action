@@ -1,0 +1,26 @@
+
+# for which arm are we requesting a pose
+# useful for knowing which arm to initialize from when seed is empty
+string arm_name
+
+# a seed position for the ghosted gripper. If emtpy (quaternion of norm 0)
+# the ghosted gripper will be initialized at the current position of the gripper
+geometry_msgs/PoseStamped gripper_pose
+float32 gripper_opening
+
+# An object that the gripper is holding. May be empty.
+object_manipulation_msgs/GraspableObject object
+
+# how we are holding the object, if any.
+object_manipulation_msgs/Grasp grasp
+
+---
+# the returned gripper pose, assuming the user has clicked "accept"
+# if the user clicks "cancel" the action aborts
+geometry_msgs/PoseStamped gripper_pose
+float32 gripper_opening
+---
+
+# the feedback gripper pose, which is basically raw and unfiltered but may be useful
+geometry_msgs/PoseStamped gripper_pose
+float32 gripper_opening

@@ -1,0 +1,53 @@
+<launch>
+  <arg name="use_right_arm" default="true" />
+  <arg name="use_left_arm" default="true" />
+
+  <arg name="lcg_left_gripper" default="false"/>
+  <arg name="lcg_right_gripper" default="false"/>
+
+  <node if="$(arg use_right_arm)" pkg="pr2_gripper_grasp_controller" name="r_gripper_grasp_posture_controller" 
+	type="pr2_gripper_grasp_controller" respawn="true" output="screen">
+    <remap from="gripper_action_name" to="/r_gripper_controller/gripper_action" />
+    <remap from="posture_action_name" to="/r_gripper_grasp_posture_controller" />
+    <remap from="grasp_query_name" to="/r_gripper_grasp_status" />
+    <param name="gripper_virtual_joint_name" value="r_gripper_joint" />
+    <!-- the object presence threshold has been changed from the old default of 0.0021 so we can grab very
+	 thin objects-it's up to the application to decide when the grasp failed, and to remove the attached
+	 collision object if any --> 
+    <param name="gripper_object_presence_threshold" value="-.01" />
+  </node> 
+  <group unless="$(arg lcg_right_gripper)">
+    <param name="r_gripper_grasp_posture_controller/gripper_type" value="pr2"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_open_gap_value" value="0.086"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_closed_gap_value" value="0.0"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_max_effort" value="100.0"/>
+  </group>
+  <group if="$(arg lcg_right_gripper)">
+    <param name="r_gripper_grasp_posture_controller/gripper_type" value="lcg"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_open_gap_value" value="0.13"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_closed_gap_value" value="0.0"/>
+    <param name="r_gripper_grasp_posture_controller/gripper_max_effort" value="10.0"/>
+  </group>
+ 
+  <node if="$(arg use_left_arm)" pkg="pr2_gripper_grasp_controller" name="l_gripper_grasp_posture_controller" 
+	type="pr2_gripper_grasp_controller" respawn="true" output="screen">
+    <remap from="gripper_action_name" to="/l_gripper_controller/gripper_action" />
+    <remap from="posture_action_name" to="/l_gripper_grasp_posture_controller" />
+    <remap from="grasp_query_name" to="/l_gripper_grasp_status" />
+    <param name="gripper_virtual_joint_name" value="l_gripper_joint" />
+    <param name="gripper_object_presence_threshold" value="-.01" />    
+  </node>
+  <group unless="$(arg lcg_left_gripper)">
+    <param name="l_gripper_grasp_posture_controller/gripper_type" value="pr2"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_open_gap_value" value="0.086"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_closed_gap_value" value="0.0"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_max_effort" value="100.0"/>
+  </group>
+  <group if="$(arg lcg_left_gripper)">
+    <param name="l_gripper_grasp_posture_controller/gripper_type" value="lcg"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_open_gap_value" value="0.13"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_closed_gap_value" value="0.0"/>
+    <param name="l_gripper_grasp_posture_controller/gripper_max_effort" value="10.0"/>
+  </group>
+
+</launch>

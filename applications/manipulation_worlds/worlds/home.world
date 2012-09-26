@@ -1,0 +1,107 @@
+<?xml version ='1.0'?>
+<gazebo version ='1.0'>
+<world name='default'>
+  <scene>
+    <ambient rgba="0.3 0.3 0.3 1"/>
+    <background rgba="0.5 0.5 0.5 1"/>
+    <shadows enabled='0'/>
+  </scene>
+
+  <physics type='ode'>
+    <gravity xyz='0 0 -9.8'/>
+    <ode>
+      <solver type='quick' dt='0.001' iters='50' sor='1.0'/>
+      <constraints cfm='0.0' erp='0.2' contact_max_correcting_vel='100.0' contact_surface_layer='0.001'/>
+    </ode>
+  </physics>
+
+    <model name='plane1_model' static='true'>
+      <link name='body'>
+        <collision name='geom_1'>
+          <geometry>
+            <plane normal='0 0 1'/>
+          </geometry>
+          <surface>
+            <friction>
+              <ode mu='10.0' mu2='10.0' fdir1='0 0 0' slip1='0' slip2='0'/>
+            </friction>
+            <bounce restitution_coefficient='0' threshold='1000000.0'/>
+            <contact>
+              <ode soft_cfm='0' soft_erp='0.2' kp='1e10' kd='1' max_vel='100.0' min_depth='0.0001'/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual_1' cast_shadows='false'>
+          <geometry>
+            <plane normal='0 0 1'/>
+          </geometry>
+          <material script='Gazebo/Grey'/>
+        </visual>
+      </link>
+    </model>
+
+  <model name='home' static='1'>
+    <origin pose='1.000000 -2.000000 0.000000 0.000000 -0.000000 0.000000'/>
+    <link name='home_body' gravity='1' self_collide='0' kinematic='0'>
+      <origin pose='0.000000 0.000000 0.000000 0.000000 -0.000000 0.000000'/>
+      <collision name='home_geom' laser_retro='0.000000'>
+        <origin pose='0.000000 0.000000 0.000000 0.000000 -0.000000 0.000000'/>
+        <geometry>
+          <mesh filename='home_with_bedroom.dae' scale='1.000000 1.000000 1.000000'/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode mu='0.500000' mu2='0.500000' fdir1='0.000000 0.000000 0.000000' slip1='0.000000' slip2='0.000000'/>
+          </friction>
+          <bounce restitution_coefficient='0.000000' threshold='100000.000000'/>
+          <contact>
+            <ode soft_cfm='0.000000' soft_erp='0.200000' kp='1000000000000.000000' 
+		 kd='1.000000' max_vel='100.000000' min_depth='0.000000'/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='home_geom_visual' cast_shadows='1' laser_retro='0.000000' transparency='0.000000'>
+        <origin pose='0.000000 0.000000 0.000000 0.000000 -0.000000 0.000000'/>
+        <geometry>
+          <mesh filename='home_with_bedroom.dae' scale='1.000000 1.000000 1.000000'/>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+
+  <light name='point_white' type='point' cast_shadows='0'>
+    <origin pose='3.000000 3.000000 5.000000 0.000000 -0.000000 0.000000'/>
+    <diffuse rgba='0.300000 0.300000 0.300000 1.000000'/>
+    <specular rgba='0.100000 0.100000 0.100000 1.000000'/>
+    <attenuation range='1000.000000' linear='0.100000' constant='0.200000' quadratic='0.000000'/>
+    <direction xyz='0.000000 0.000000 -1.000000'/>
+  </light>
+
+  <light name='point_white2' type='point' cast_shadows='0'>
+    <origin pose='-2.000000 0.000000 5.000000 0.000000 -0.000000 0.000000'/>
+    <diffuse rgba='0.300000 0.300000 0.300000 1.000000'/>
+    <specular rgba='0.100000 0.100000 0.100000 1.000000'/>
+    <attenuation range='1000.000000' linear='0.100000' constant='0.200000' quadratic='0.000000'/>
+    <direction xyz='0.000000 0.000000 -1.000000'/>
+  </light>
+
+  <light name='point_white3' type='point' cast_shadows='0'>
+    <origin pose='-10.000000 12.000000 5.000000 0.000000 -0.000000 0.000000'/>
+    <diffuse rgba='0.300000 0.300000 0.300000 1.000000'/>
+    <specular rgba='0.100000 0.100000 0.100000 1.000000'/>
+    <attenuation range='1000.000000' linear='0.100000' constant='0.200000' quadratic='0.000000'/>
+    <direction xyz='0.000000 0.000000 -1.000000'/>
+  </light>
+
+  <state world_name='default' time='0 0'>
+    <model name='home'>
+      <pose>1.000000 -2.000000 0 0.000000 -0.000000 0.000000</pose>
+      <link name='home_body'>
+        <pose>0.000000 0.000000 0.000000 0.000000 -0.000000 0.000000</pose>
+        <velocity>0.000000 0.000000 0.000000 0.000000 -0.000000 0.000000</velocity>
+      </link>
+    </model>
+  </state>
+
+</world>
+</gazebo>
