@@ -1,0 +1,13 @@
+
+#the original sensor data (depth/disparity image)
+sensor_msgs/Image image
+sensor_msgs/CameraInfo camera_info
+
+#list of mesh/pose hypotheses for each recognized point cluster
+ModelHypothesisList[] model_hypotheses
+---
+
+#the index of the model hypothesis that the user has selected for each cluster
+#values below 0 mean 'reject all hypotheses'
+int32[] selected_hypothesis_indices
+---

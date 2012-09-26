@@ -1,0 +1,5 @@
+geometry_msgs/PoseStamped[] gripper_poses
+float32[] gripper_openings
+---
+bool[] valid
+---

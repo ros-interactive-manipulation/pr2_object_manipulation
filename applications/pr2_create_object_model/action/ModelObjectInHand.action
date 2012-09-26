@@ -1,0 +1,39 @@
+# which arm to use
+string arm_name
+
+# the relative motion in which to move the gripper to get it clear of objects 
+#(if left unfilled, will not move)
+geometry_msgs/Vector3Stamped clear_move
+
+# the pose to go to for rotating (if left unfilled, will not go)
+geometry_msgs/PoseStamped rotate_pose
+
+# whether to rotate the object at rotate_pose to build up the model
+uint8 rotate_object
+
+# whether to add the object to the collision map 
+uint8 add_to_collision_map
+
+# whether to keep the object level while rotating
+uint8 keep_level
+
+---
+
+# the resulting object point cloud
+sensor_msgs/PointCloud2 cluster
+
+# the resulting collision name, if added to the collision map
+string collision_name
+
+---
+
+# which phase the process is in
+int32 phase
+int32 BEFORE_MOVE=0
+int32 CLEAR_MOVE=1
+int32 MOVE_TO_ROTATE_POSE=2
+int32 ROTATING=3
+int32 DONE=4
+
+# how many rotate-poses have we gone to/are we in now
+int32 rotate_ind

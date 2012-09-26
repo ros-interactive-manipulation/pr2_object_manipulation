@@ -1,0 +1,10 @@
+<launch>
+  <node name="joy_node_local" pkg="joy" type="joy_node" >
+  <remap from="joy" to="joy_local" />
+    <rosparam>
+      autorepeat_rate: 10
+      deadzone: 0.12
+      dev: "/dev/input/js0"
+    </rosparam>
+  </node>
+</launch>

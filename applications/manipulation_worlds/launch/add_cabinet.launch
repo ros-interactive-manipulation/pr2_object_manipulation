@@ -1,0 +1,9 @@
+<launch>
+
+  <node name="spawn_cabinet" pkg="gazebo" type="spawn_model" args="-urdf -file $(find manipulation_worlds)/urdf/cabinet.urdf -model cabinet_1 -namespace cabinet_1 -x -0.8 -y -1 -z 0.92 -R 0.0 -P 0.0 -Y -1.5707" respawn="false" output="screen" />
+
+  <node name="spawn_cabinet_door" pkg="gazebo" type="spawn_model" args="-urdf -file $(find manipulation_worlds)/urdf/cabinet_door.urdf -model cabinet_door_1 -namespace cabinet_door_1 " respawn="false" output="screen" />
+
+</launch>
+
+

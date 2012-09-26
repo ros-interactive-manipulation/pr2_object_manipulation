@@ -1,0 +1,34 @@
+<package>
+  <description brief="object_segmentation_gui">
+
+     A package for interactive object segmentation.
+
+  </description>
+  <author>Jeannette Bohg</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/object_segmentation_gui</url>
+
+  <depend package="rviz"/>
+  <depend package="actionlib"/>
+  <depend package="tf"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="stereo_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="roscpp"/>
+  <depend package="tabletop_object_detector"/>
+  <depend package="active_realtime_segmentation"/>
+  <depend package="rviz_interaction_tools"/>
+  
+  <depend package="image_transport"/>
+  <depend package="rgbd_assembler"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib `rosboost-cfg --lflags thread,signals`"/>
+    <rviz plugin="${prefix}/plugin_description.xml"/>
+  </export>
+
+</package>
+
+

@@ -1,0 +1,32 @@
+<library path="lib/libinteractive_manipulation_plugin">
+  <class name="pr2_interactive_manipulation/CameraFocusFrontend"
+         type="pr2_interactive_manipulation::CameraFocusFrontend"
+         base_class_type="rviz::Display">
+    <description>
+      (NEW) Allows the user to focus the 3D camera at pre-defined locations.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation/InteractiveManipulationFrontend"
+         type="pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Allows the user to request and assist with manipulation tasks.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation/PointHeadCamera"
+         type="pr2_interactive_manipulation::PointHeadCameraDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Displays an image from a camera, with the visualized world rendered behind it.
+      A click into the display window will make the robot look in that direction.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation/PublishClickCamera"
+         type="pr2_interactive_manipulation::PublishClickCameraDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Displays an image from a camera, with the visualized world rendered behind it.
+      A click into the display window publish the coordinates of the point on a specified topic.
+    </description>
+  </class>
+</library>

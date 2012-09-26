@@ -1,0 +1,31 @@
+<package>
+  <description brief="pr2_gripper_sensor_controller">
+
+     The pr2_gripper_sensor_controller package is a real-time controller that integrates signals from the PR2 hand-mounted accelerometer and finger-mounted pressure sensors with motor control of the gripper joint to do highly responsive sensing and low-latency closed-loop control.
+
+  </description>
+  <author>Joe Romano</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_gripper_sensor_controller</url>
+  <depend package="pr2_controller_interface"/>
+  <depend package="pr2_mechanism_model"/>
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="realtime_tools"/>
+  <depend package="pluginlib"/>
+  <depend package="actionlib_msgs" />
+  <depend package="roscpp"/>
+  <depend package="rosrt"/>
+  <depend package="roslib"/>
+  <depend package="std_msgs"/>
+  <depend package="std_srvs"/>
+  <depend package="pr2_gripper_sensor_msgs"/>
+
+  <export>
+      <cpp cflags="-I${prefix}/msg/cpp" />
+      <pr2_controller_interface plugin="${prefix}/controller_plugins.xml" />
+  </export>  
+
+</package>
+
+

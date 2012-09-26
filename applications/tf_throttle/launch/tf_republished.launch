@@ -1,0 +1,13 @@
+<launch>
+
+    <node pkg="tf_throttle" name="$(anon tf_republish)" type="tf_republish" respawn="true" output="screen">
+
+    	<!-- the rate at which everything gets republished -->
+	<param name="rate" value="100.0" />
+
+	<!-- time before dropping a transform that has not been received in a while -->
+	<param name="expiration_time" value="1.5" />
+
+    </node>
+
+</launch>

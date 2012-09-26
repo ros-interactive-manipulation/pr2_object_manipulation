@@ -1,0 +1,12 @@
+# Event Detector action used to tell detect events happening on the 
+# palm mounted accelerometer and finger pressure sensors
+
+#goal
+PR2GripperEventDetectorCommand command
+---
+#results
+PR2GripperEventDetectorData data
+---
+# feedback
+PR2GripperEventDetectorData data
+

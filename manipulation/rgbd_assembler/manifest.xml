@@ -1,0 +1,28 @@
+<package>
+  <description brief="rgbd_assembler">
+
+    Upon a request, this service collects the necessary 
+    sensory data to transfer the colour information from 
+    the wide field to the narrow field camera image. 
+
+    Since the narrow field cameras of the PR2 are monochrome,
+    this can be useful for any algorithm that does, e.g., 
+    segmentation or recognition based partially on colour information.
+
+  </description>
+  <author>Jeannette Bohg</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rgbd_assembler</url>
+
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="sensor_msgs"/>
+  <depend package="stereo_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="rviz_interaction_tools"/>
+  <depend package="pcl_ros"/>
+
+</package>
+
+

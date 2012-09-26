@@ -1,0 +1,25 @@
+<package>
+  <description brief="pr2_create_object_model">
+
+     pr2_create_object_model
+
+  </description>
+  <author>Kaijen Hsiao</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_create_object_model</url>
+
+  <depend package="actionlib"/>
+  <depend package="tf"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tabletop_object_detector"/>
+  <depend package="object_manipulator"/>
+  <depend package="tabletop_collision_map_processing"/>
+
+  <depend package="common_rosdeps" />
+
+</package>
+
+

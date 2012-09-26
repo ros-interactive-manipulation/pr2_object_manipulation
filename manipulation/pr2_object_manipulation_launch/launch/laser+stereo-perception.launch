@@ -1,0 +1,146 @@
+<launch>
+  <arg name="stereo" default="false" />
+  <arg name="use_right_arm" default="true" />
+  <arg name="use_left_arm" default="true" />
+  <arg name="use_both_arms" default="true" />
+  <arg name="use_camera_in_collider" default="false" />
+  <arg name="kinect_frame_prefix" default="/head_mount_kinect" />
+  <arg name="kinect_camera_name" default="head_mount_kinect" />
+  <arg name="high_res" default="false" />
+  <arg name="sim" default="false" />
+
+  <arg if="$(arg use_right_arm)"      name="right_arm_text" value="right" />
+  <arg unless="$(arg use_right_arm)"  name="right_arm_text" value="" />
+  <arg if="$(arg use_left_arm)"       name="left_arm_text" value="left" />
+  <arg unless="$(arg use_left_arm)"   name="left_arm_text" value="" />
+  <arg name="arm_config" value="$(arg right_arm_text)_$(arg left_arm_text)" />
+
+  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
+  
+  <!-- send additional description parameters -->
+  <include file="$(find pr2_arm_navigation_config)/launch/pr2_planning_environment.launch" />
+
+  <node pkg="pr2_mechanism_controllers" type="send_periodic_cmd_srv.py" name="laser_tilt_controller_3dnav_params" 
+     args="laser_tilt_controller linear 10 1.02 .31" />
+    
+  <node name="$(anon dynparam)" pkg="dynamic_reconfigure" type="dynparam" args="set_from_parameters tilt_hokuyo_node">
+    <param name="intensity" type="bool" value="false" />
+    <param name="min_ang" type="double" value="-1.15" />
+    <param name="max_ang" type="double" value="1.15" />
+  </node>
+
+  <!-- convert tilt laser scan to pointcloud -->
+  <node pkg="laser_filters" type="scan_to_cloud_filter_chain" output="screen" 
+    name="scan_to_cloud_filter_chain_tilt_laser">
+    <remap from="scan" to="/tilt_scan"/>
+    <remap from="cloud_filtered" to="/tilt_scan_cloud"/>
+    <param name="target_frame" type="string" value="base_footprint"/>
+    <param name="incident_angle_correction" value="false"/>
+    <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/shadow_filter.yaml" />
+  </node>
+<!--
+  <node pkg="point_cloud_converter" name="point_cloud_converter_preself" type="point_cloud_converter">
+        <remap from="/points_in" to="/tilt_scan_cloud" />
+        <remap from="/points2_out" to="/tilt_scan_cloud2" />
+  </node>
+-->
+  <!-- self filter laser scans -->
+  <node pkg="robot_self_filter" type="self_filter" respawn="true" name="laser_self_filter" output="screen" machine="c2">
+     <remap from="cloud_in" to="/tilt_scan_cloud" />
+     <remap from="cloud_out" to="/tilt_scan_cloud_filtered2" />
+     <param name="sensor_frame" type="string" value="laser_tilt_link" />        
+     <param name="subsample_value" type="double" value=".01"/>
+     <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
+</node>
+
+
+  <!-- Stereo or Kinect processing -->
+
+  <group if="$(arg stereo)">
+    <group if="$(arg use_camera_in_collider)">
+      <!-- self filter stereo points -->
+      <node pkg="robot_self_filter" type="self_filter" respawn="false" name="stereo_self_filter" 
+        output="screen">
+        <remap from="cloud_in" to="/narrow_stereo_textured/points2" />
+        <remap from="cloud_out" to="/narrow_stereo_textured/points2_filtered" />     
+        <param name="sensor_frame" type="string" value="narrow_stereo_optical_frame" />
+        <param name="subsample_value" type="double" value=".02"/>
+        <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
+      </node>
+    </group>
+
+    <!-- separate self filter stereo points for creating object models with higher resolution-->
+    <node pkg="robot_self_filter_color" type="self_filter_color" respawn="false" name="object_modeling_stereo_self_filter" 
+      output="screen">
+      <remap from="cloud_in" to="/narrow_stereo_textured/points2" />
+      <remap from="cloud_out" to="/narrow_stereo_textured/object_modeling_points_filtered" />     
+      <param name="sensor_frame" type="string" value="narrow_stereo_optical_frame" />
+      <param name="subsample_value" type="double" value=".005"/>
+      <rosparam command="load" file="$(find pr2_object_manipulation_launch)/config/object_modeling_self_filter.yaml" />
+    </node>
+  </group>
+
+  <group unless="$(arg stereo)">
+
+    <group unless="$(arg sim)">
+      <!-- start the Kinect -->
+      <!-- USING arg use_left_arm IS A TOTALLY AWFUL HACK BECAUSE ROSLAUNCH IS DIFFICULT -->
+      <include if="$(arg use_left_arm)" file="$(find rgbd_assembler)/launch/openni_node.launch">
+        <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+        <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+        <arg name="high_res" value="$(arg high_res)"/>
+      </include>
+
+      <!-- Tim provided this really awesome kinect monitor to kill the openni_node stupidness -->
+      <node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" >
+        <param name="kinect_node_name" value="openni_node1" />
+        <param name="grace_period" value="15" />
+        <remap from="camera_info" to="/$(arg kinect_camera_name)/rgb/camera_info" />
+      </node>
+
+    </group>
+
+    <group if="$(arg use_camera_in_collider)">
+      <!-- self filter Kinect points -->
+      <node pkg="robot_self_filter" type="self_filter" respawn="true" name="stereo_self_filter" 
+        output="screen">
+        <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
+        <remap from="cloud_out" to="/$(arg kinect_camera_name)/rgb/points_filtered" />
+        <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
+        <param name="subsample_value" type="double" value=".02"/>
+        <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
+      </node>
+    </group>
+
+    <!-- separate self filter Kinect points for creating object models with higher resolution-->
+    <node pkg="robot_self_filter_color" type="self_filter_color" respawn="true" name="object_modeling_kinect_self_filter" 
+      output="screen">
+      <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
+      <remap from="cloud_out" to="/$(arg kinect_camera_name)/rgb/object_modeling_points_filtered" />
+      <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
+      <param name="subsample_value" type="double" value=".005"/>
+      <rosparam command="load" file="$(find pr2_object_manipulation_launch)/config/object_modeling_self_filter.yaml" />
+    </node>
+  </group>
+
+  <node pkg="collider" type="collider_node" name="collider_node" respawn="true" output="screen" machine="c2">
+     <param name="fixed_frame" type="string" value="base_link" />
+     <param name="resolution" type="double" value="0.025" />
+     <param name="max_range" type="double" value="2.5" />
+     <param name="publish_static_over_dynamic_map" value="true" />
+     <param name="sensor_model_hit" value= "0.8" />
+     <param name="sensor_model_miss" value= "0.31" />
+     <param name="sensor_model_min" value= "0.12" />
+     <param name="sensor_model_max" value= "0.95" />   
+
+     <remap from="collision_map_out" to="collision_map_occ" />
+     <remap from="point_cloud_out" to="octomap_point_cloud" />
+
+     <rosparam command="load" 
+       file="$(find pr2_object_manipulation_launch)/config/collision_map_sources_laser.yaml"/>
+   
+     <!-- self filtering links -->
+     <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
+  </node>
+
+</launch>

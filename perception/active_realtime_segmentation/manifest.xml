@@ -1,0 +1,21 @@
+<package>
+  <description brief="Active Realtime Segmentation">
+    This package implements a real-time active 3D scene segmentation. 
+    It is based on an implementation of Belief Propagation on the GPU. 
+    Example code for segmenting offline images and of images being published on ros topics is available. 
+  </description>
+  <author>Mårten Björkman. Maintained by Jeannette Bohg</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/active_realtime_segmentation</url>
+  
+  <depend package="roscpp"/>
+  <depend package="sensor_msgs"/>
+  <depend package="stereo_msgs"/>
+
+  <export>
+     <cpp cflags="-I${prefix}/include  -I${prefix}/src" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lfgbgsegment "/>
+    </export>
+</package>
+
+

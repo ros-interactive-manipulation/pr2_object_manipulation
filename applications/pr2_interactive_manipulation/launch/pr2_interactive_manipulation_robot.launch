@@ -1,0 +1,376 @@
+<launch>
+
+  <!-- set stereo to true for narrow stereo, false for kinect -->
+  <arg name="stereo" default="false" />
+  <arg name="cvfh" default="false" />
+  <arg name="tod" default="false" />
+  <arg name="model_set" default="REDUCED_MODEL_SET"/>
+  <arg name="joy" default="false" />
+  <!-- if you want to navigate, use nav:=true -->
+  <arg name="nav" default="false" />
+  <!-- adding wg will broadcast a map of Willow Garage -->
+  <arg name="wg" default="false" />
+  <!-- add nav_local if you have no map and want to just use sensor data -->
+  <arg name="nav_local" default="false" />
+  <!-- add nav_3d if you don't want to switch nav planners (used for sushi) --> 
+  <arg name="nav_3d" default="false" />
+  <!-- use nav_slam if you are making a 2d map -->
+  <arg name="nav_slam" default="false" />
+  <arg name="use_slip_controllers" default="false"/>
+  <arg name="use_probabilistic_grasp_planner" default="false"/>
+  <arg name="log_to_warehouse" default="false"/>
+  <arg name="do_preplan_scan" default="false"/>
+  <arg name="do_monitoring" default="false"/>
+  <arg name="use_right_arm" default="true" />
+  <arg name="use_left_arm"  default="true" />
+  <!-- use sim if you're in simulation and don't want to run openni_node -->
+  <arg name="sim" default="false" />
+  <arg name="flatten_table" default="false"/>	
+  <arg name="tf_throttled" default="true"/>	
+  <arg name="jpeg_quality" default="40"/>	
+  <arg name="use_jinv" default="false" />
+  <arg name="slow_movement" default="false" />
+  <arg name="throttle_cameras" default="true" />
+  <arg name="im_debug" default="false" />
+  <arg name="reactive_grasping" default="true" />		
+  <arg name="compress_point_clouds" default="false" />
+  <arg name="new_object_rec" default="false" />
+
+  <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
+  <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
+  <arg name="kinect_camera_name" default="head_mount_kinect" />
+
+  <!-- set the name of the main camera -->
+  <arg if="$(arg stereo)" name="main_camera_namespace" value="/wide_stereo/left"/>
+  <arg if="$(arg stereo)" name="main_camera_name" value="image_color"/>
+  <arg unless="$(arg sim)" name="tmp_camera_namespace" value="$(arg kinect_camera_name)/rgb"/>
+  <arg unless="$(arg sim)" name="tmp_camera_name" value="image_color"/>
+  <arg if="$(arg sim)" name="tmp_camera_namespace" value="$(arg kinect_camera_name)/rgb"/>
+  <arg if="$(arg sim)" name="tmp_camera_name" value="image_raw"/>
+  <arg unless="$(arg stereo)" name="main_camera_namespace" value="$(arg tmp_camera_namespace)"/>
+  <arg unless="$(arg stereo)" name="main_camera_name" value="$(arg tmp_camera_name)"/>
+  <arg name="main_camera" value="$(arg main_camera_namespace)/$(arg main_camera_name)"/>
+
+  <!-- use the lcg gripper on the pr2 -->
+  <arg name="lcg_left_gripper" default="false"/>
+  <arg name="lcg_right_gripper" default="false"/>
+
+  <!-- tf throttling -->
+  <include if="$(arg tf_throttled)" file="$(find tf_throttle)/launch/tf_throttled.launch"/>
+
+  <!-- camera throttling -->
+  <group if="$(arg throttle_cameras)">
+    <!-- the main camera -->
+    <include file="$(find pr2_interactive_manipulation)/launch/camera_throttle.launch">
+      <arg name="in_camera_namespace" value="$(arg main_camera_namespace)"/>
+      <arg name="in_camera_name" value="$(arg main_camera_name)"/>
+      <arg name="out_camera_namespace" value="/interactive_manipulation_camera"/>
+      <arg name="out_camera_name" value="image"/>
+      <arg name="rate" value="10.0"/>
+    </include>
+    <!-- the forearm cameras -->
+    <include file="$(find pr2_interactive_manipulation)/launch/camera_throttle.launch">
+      <arg name="in_camera_namespace" value="/r_forearm_cam"/>
+      <arg name="in_camera_name" value="image_color_rotated"/>
+      <arg name="out_camera_namespace" value="/r_forearm_cam_throttled"/>
+      <arg name="out_camera_name" value="image"/>
+      <arg name="rate" value="10.0"/>
+    </include>
+    <include file="$(find pr2_interactive_manipulation)/launch/camera_throttle.launch">
+      <arg name="in_camera_namespace" value="/l_forearm_cam"/>
+      <arg name="in_camera_name" value="image_color_rotated"/>
+      <arg name="out_camera_namespace" value="/l_forearm_cam_throttled"/>
+      <arg name="out_camera_name" value="image"/>
+      <arg name="rate" value="10.0"/>
+    </include>
+  </group>
+
+  <!-- point cloud compression -->
+  <include if="$(arg compress_point_clouds)" file="$(find compressed_pointcloud_transport)/launch/compress.launch"/>
+
+  <!-- grasping study -->
+  <arg name="interface" default="0"/>
+  <arg name="task" default="0"/>
+  <param name="interactive_grasping/interface_number" type="int" value="$(arg interface)"/>
+  <param name="interactive_grasping/task_number" type="int" value="$(arg task)"/>
+
+  <!-- rviz camera configurations -->
+  <rosparam command="load" file="$(find pr2_object_manipulation_launch)/config/camera_configurations.yaml"/>
+
+  <arg if="$(arg im_debug)" name="im_prefix" value="xterm -e gdb -ex run --args"/>
+  <arg unless="$(arg im_debug)" name="im_prefix" value=""/>
+
+  <!-- interactive manipulation backend -->
+  <node pkg="pr2_interactive_manipulation" type="interactive_manipulation_backend_node"
+   name="interactive_manipulation_backend_node" respawn="false" output="screen" launch-prefix="$(arg im_prefix)">
+
+    <remap from="right_arm/constraint_aware_ik" to="/pr2_right_arm_kinematics/get_constraint_aware_ik" />    
+    <remap from="left_arm/constraint_aware_ik" to="/pr2_left_arm_kinematics/get_constraint_aware_ik" />    
+      
+    <remap from="right_arm/get_ik_solver_info" to="/pr2_right_arm_kinematics/get_ik_solver_info" />    
+    <remap from="left_arm/get_ik_solver_info" to="/pr2_left_arm_kinematics/get_ik_solver_info" />    
+      
+    <remap from="right_arm/get_state_validity" to="/environment_server_right_arm/get_state_validity" />    
+    <remap from="left_arm/get_state_validity" to="/environment_server_left_arm/get_state_validity" />    
+      
+    <remap from="right_arm/move_arm" to="/move_right_arm" />    
+    <remap from="left_arm/move_arm" to="/move_left_arm" />    
+      
+    <remap from="right_arm/hand_posture_execution" to="/r_gripper_grasp_posture_controller" />    
+    <remap from="left_arm/hand_posture_execution" to="/l_gripper_grasp_posture_controller" />    
+      
+    <remap from="right_arm/grasp_status" to="/r_gripper_grasp_status" />
+    <remap from="left_arm/grasp_status" to="/l_gripper_grasp_status" />
+      
+    <remap from="right_arm/joint_trajectory" to="/r_arm_controller/joint_trajectory_action" />
+    <remap from="left_arm/joint_trajectory" to="/l_arm_controller/joint_trajectory_action" />
+
+    <remap from="switch_controller" to="pr2_controller_manager/switch_controller"/>
+    <remap from="list_controllers" to="pr2_controller_manager/list_controllers"/>      
+    <remap from="right_arm/cart/command_pose" to="/r_cart/command_pose" />
+    <remap from="left_arm/cart/command_pose" to="/l_cart/command_pose" />
+    <remap from="right_arm/cart/command_posture" to="/r_cart/command_posture" />
+    <remap from="left_arm/cart/command_posture" to="/l_cart/command_posture" />
+    <remap from="right_arm/cart/gains" to="/r_cart/gains" />
+    <remap from="left_arm/cart/gains" to="/l_cart/gains" />
+    <param name="right_arm_cartesian_controller" value="r_cart" /> 
+    <param name="left_arm_cartesian_controller" value="l_cart" />
+    <param name="right_arm_joint_controller" value="r_arm_controller" />
+    <param name="left_arm_joint_controller" value="l_arm_controller" />
+
+    <remap unless="$(arg use_slip_controllers)" from="left_arm/gripper_action" 
+                                                to="/l_gripper_controller/gripper_action"/>
+    <remap unless="$(arg use_slip_controllers)" from="right_arm/gripper_action" 
+                                                to="/r_gripper_controller/gripper_action"/>
+
+    <remap if="$(arg use_slip_controllers)" from="left_arm/gripper_action" 
+                                            to="/l_gripper_sensor_controller/gripper_action"/>
+    <remap if="$(arg use_slip_controllers)" from="right_arm/gripper_action" 
+                                            to="/r_gripper_sensor_controller/gripper_action"/>
+
+    <!-- Note: this assumes the database communication node gets started externally, which is not ideal. -->
+    <!-- Right now, that node gets started by the interactive recognition launch file. -->
+    <param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
+
+    <param name="cartesian_dist_tol" value="0.001" />
+    <param name="cartesian_angle_tol" value="0.05" />
+    <param name="cartesian_overshoot_dist" value="0.005" />
+    <param name="cartesian_overshoot_angle" value="0.087" />
+
+    <remap from="/get_pose_server" to="/pr2_interactive_gripper_pose_action" />
+
+    <remap if="$(arg nav_local)" from="/move_base" to="/move_base_local" />
+
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_type" value="pr2"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_type" value="lcg"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_type" value="pr2"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_type" value="lcg"/>
+
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_open_gap_value" value="0.086"/>
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_closed_gap_value" value="0.0"/>
+      <param unless="$(arg lcg_left_gripper)" name="l_gripper_max_effort" value="50.0"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_open_gap_value" value="0.135"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_closed_gap_value" value="0.0"/>
+      <param if="$(arg lcg_left_gripper)" name="l_gripper_max_effort" value="10.0"/>
+
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_open_gap_value" value="0.086"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_closed_gap_value" value="0.0"/>
+      <param unless="$(arg lcg_right_gripper)" name="r_gripper_max_effort" value="50.0"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_open_gap_value" value="0.135"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_closed_gap_value" value="0.0"/>
+      <param if="$(arg lcg_right_gripper)" name="r_gripper_max_effort" value="10.0"/>
+
+
+  </node>
+
+  <group if="$(arg nav)">
+    <!-- navigation with a map -->
+    <group unless="$(arg nav_local)">
+      <include file="$(find pr2_2dnav)/pr2_2dnav.launch"/>
+    </group>
+
+    <!-- navigation without a map (using local sensor-based costmaps only)-->
+    <group if="$(arg nav_local)">
+      <include file="$(find pr2_2dnav_local)/pr2_2dnav.launch"/>
+    </group>
+
+    <!-- broadcast Willow's map -->
+    <group if="$(arg wg)">
+      <node name="map_server" pkg="map_server" type="map_server" 
+            args="$(find willow_maps)/willow-sans-whitelab-2010-02-18-0.025.pgm 0.025" machine="c2" />
+    </group>
+  </group>
+
+  <!-- Nav starts tuckarm action, so if not using nav we need to start our own -->
+  <group unless="$(arg nav)" >
+    <!-- Trajectory generator -->
+    <node pkg="joint_trajectory_generator" type="joint_trajectory_generator" output="screen"
+          name="joint_trajectory_generator" ns="r_arm_controller" >
+      <param name="max_acc" value="2.0" />
+      <param name="max_vel" value="2.5" />
+    </node>
+    <node pkg="joint_trajectory_generator" type="joint_trajectory_generator" output="screen"
+          name="joint_trajectory_generator" ns="l_arm_controller" >
+      <param name="max_acc" value="2.0" />
+      <param name="max_vel" value="2.5" />
+    </node>
+
+    <node pkg="pr2_tuck_arms_action" type="tuck_arms.py" name="tuck_arms_action" output="screen">
+      <param name="r_joint_trajectory_action" value="r_arm_controller/joint_trajectory_generator" />
+      <param name="l_joint_trajectory_action" value="l_arm_controller/joint_trajectory_generator" />
+      <param name="move_duration" value="0.0" />
+    </node>
+  </group>
+
+  <!-- slam + navigation -->
+  <include if="$(arg nav_slam)" file="$(find pr2_2dnav_slam)/pr2_2dnav.launch"/>
+  
+  <!-- manipulation prerequisites -->
+  <include file="$(find pr2_object_manipulation_launch)/launch/pr2_manipulation_prerequisites.launch">
+    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+    <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+    <arg name="log_to_warehouse" value="$(arg log_to_warehouse)"/>
+    <arg name="do_monitoring" value="$(arg do_monitoring)"/>
+    <arg name="do_preplan_scan" value="$(arg do_preplan_scan)"/>
+    <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="tod" value="$(arg tod)"/>
+  </include>
+
+  <!-- manipulation -->
+  <include file="$(find pr2_object_manipulation_launch)/launch/pr2_manipulation.launch">
+    <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
+    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+    <arg name="use_left_arm" value="$(arg use_left_arm)"/> 
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="use_jinv" value="$(arg use_jinv)"/>
+    <arg name="use_probabilistic_grasp_planner" value="$(arg use_probabilistic_grasp_planner)"/>
+    <arg name="reactive_grasping" value="$(arg reactive_grasping)" />
+    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+  </include>
+
+  <!-- run image_rotate for both forearm camera images -->
+  <node type="image_rotate" name="l_forearm_image_rotate" pkg="image_rotate" args="image:=l_forearm_cam/image_color rotated/image:=l_forearm_cam/image_color_rotated"/>
+  <node type="image_rotate" name="r_forearm_image_rotate" pkg="image_rotate" args="image:=r_forearm_cam/image_color rotated/image:=r_forearm_cam/image_color_rotated"/>
+
+  <!-- bring down compression for images, so it works over wifi -->
+  <node name="$(anon foo)" pkg="dynamic_reconfigure" type="dynparam"
+	args="set /$(arg main_camera)/compressed/ 
+	      '{'format': jpeg, 'jpeg_quality': $(arg jpeg_quality)}'"/>
+  <node name="$(anon foo)" pkg="dynamic_reconfigure" type="dynparam"
+	args="set /r_forearm_cam/image_color_rotated/compressed/ 
+	      '{'format': jpeg, 'jpeg_quality': $(arg jpeg_quality)}'"/>
+  <node name="$(anon foo)" pkg="dynamic_reconfigure" type="dynparam"
+	args="set /l_forearm_cam/image_color_rotated/compressed/ 
+	      '{'format': jpeg, 'jpeg_quality': $(arg jpeg_quality)}'"/>
+
+  <!-- Increase the simulated kinect's frame rate -->
+  <!-- Note that the namespace for the parameter is slightly different than the actual camera namespace -->
+  <node if="$(arg sim)" name="dynamic_reconfig_sim_kinect_rate" pkg="dynamic_reconfigure" type="dynparam"
+	args="set /head_mount_kinect_rgb imager_rate 10"/>
+
+  <!-- Start joystick teleop listener (won't work with navigation) -->
+  <group unless="$(arg nav_slam)">
+    <group unless="$(arg nav)">
+      <group if="$(arg joy)">
+        <!-- remap to listen to joy_local coming presumably from remote machine -->
+        <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_right" output="screen">
+          <param name="open_button" type="int" value="13" />
+          <param name="close_button" type="int" value="15" />
+          <remap from="command" to="r_gripper_controller/command" />
+          <remap from="joy" to="joy_local" />
+        </node>
+        <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_left" output="screen">
+          <param name="open_button" type="int" value="5" />
+          <param name="close_button" type="int" value="7" />
+          <remap from="command" to="l_gripper_controller/command" />
+          <remap from="joy" to="joy_local" />
+        </node>
+        <node pkg="pr2_teleop" type="teleop_pr2" name="pr2_teleop" output="screen">
+          <remap from="cmd_vel" to="base_controller/command" />
+          <remap from="joy" to="joy_local" />
+          <rosparam file="$(find pr2_teleop)/config/teleop.yaml" command="load" />
+        </node>
+      </group>
+    </group>
+  </group>
+
+  <!-- Interactive markers for recognized objects -->
+  <node pkg="pr2_interactive_manipulation" name="interactive_marker_node" 
+   type="interactive_marker_node" output="screen">
+    <!-- Note: this assumes the database communication node gets started externally, which is not ideal. -->
+    <!-- Right now, that node gets started by the interactive recognition launch file. -->
+    <param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
+  </node>  
+
+  <!-- Interactive Marker Teleop -->
+  <include file="$(find pr2_marker_control)/launch/marker_control.launch">
+    <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
+    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+    <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+    <arg name="use_state_validator" value="false"/>
+    <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="nav_local" value="$(arg nav_local)"/>
+    <arg name="slow_movement" value="$(arg slow_movement)"/>
+    <arg name="nav_3d" value="$(arg nav_3d)"/>
+    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+  </include>
+
+  <!-- pr2_interactive_gripper_pose_action -->
+  <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_gripper_pose_action.launch" >
+    <arg name="planner_action" value="segmented_clutter_grasp_planner_server" />
+    <!-- <arg name="planner_action" value="grasp_adjust_action_node" /> -->
+  </include>
+
+  <!-- cloud server -->
+  <include file="$(find point_cloud_server)/launch/cloud_server.launch" >
+    <arg name="stereo" value="$(arg stereo)"/>
+  </include>
+  
+<!-- Interactive Object Detection incl. sensor data assembler -->
+  <include file="$(find pr2_interactive_object_detection)/launch/pr2_interactive_object_detection_robot.launch">
+    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="cvfh" value="$(arg cvfh)"/>
+    <arg name="tod" value="$(arg tod)"/>
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="flatten_table" value="$(arg flatten_table)"/>	
+    <arg name="model_set" value="$(arg model_set)"/>
+    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="im_debug" value="$(arg im_debug)"/>
+    <arg name="new_object_rec" value="$(arg new_object_rec)"/>
+    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+  </include>
+
+  <!-- in-hand object modeling -->
+  <include file="$(find pr2_create_object_model)/launch/create_object_model_server.launch">
+    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+  </include>
+
+  <!-- grasp_adjust action server -->
+  <include file="$(find pr2_grasp_adjust)/launch/grasp_adjust_action_server.launch">
+    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+  </include>
+
+  <!-- segmented_clutter_grasp_planner action server -->
+  <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch" />
+
+  <!-- tabletop collision map processing -->
+  <node pkg="tabletop_collision_map_processing" name="tabletop_collision_map_processing" 
+        type="tabletop_collision_map_processing_node" respawn="false" output="screen">
+  	<param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
+  	<param name="static_map_cloud_name" value="full_cloud_filtered" />
+  	<param name="table_thickness" value="0.01" />
+  </node>
+
+  <!-- reachable zones marker broadcaster -->
+  <node pkg="pr2_marker_control" name="draw_reachable_zones" type="draw_reachable_zones.py" />
+
+</launch>

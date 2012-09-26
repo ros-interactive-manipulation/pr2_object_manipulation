@@ -1,0 +1,39 @@
+<stack>
+  <description brief="pr2_object_manipulation">
+    Contains PR2-specific implementations of some of the generic
+    functionality needed for pickup and place tasks. 
+  </description>
+  <author>Maintained by Kaijen Hsiao and Matei Ciocarlie</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_object_manipulation</url>
+  <depend stack="arm_navigation" /> <!-- planning_environment, trajectory_filter_server, geometric_shapes, arm_navigation_msgs -->
+  <depend stack="arm_navigation_experimental" /> <!-- interpolated_ik_motion_planner, distance_field -->
+  <depend stack="bond_core" /> <!-- bond -->
+  <depend stack="bullet" /> <!-- bullet -->
+  <depend stack="common" /> <!-- actionlib -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, stereo_msgs, actionlib_msgs, trajectory_msgs, sensor_msgs, geometry_msgs, visualization_msgs, diagnostic_msgs -->
+  <depend stack="common_rosdeps" /> <!-- common_rosdeps -->
+  <depend stack="driver_common" /> <!-- dynamic_reconfigure -->
+  <depend stack="filters" /> <!-- filters -->
+  <depend stack="geometry" /> <!-- tf, tf_conversions, angles, eigen_conversions -->
+  <depend stack="image_common" /> <!-- image_transport -->
+  <depend stack="navigation" /> <!-- move_base_msgs, nav_core, base_local_planner, costmap_2d -->
+  <depend stack="object_manipulation" /> <!-- household_objects_database_msgs, current_state_validator, rviz_interaction_tools, point_cloud_server, interactive_marker_helpers, object_manipulator, bayesian_grasp_planner, household_objects_database, probabilistic_grasp_planner, object_manipulation_msgs -->
+  <!--depend stack="object_recognition" /--> <!-- object_recognition_server, object_recognition_msgs -->
+  <depend stack="orocos_kinematics_dynamics" /> <!-- kdl -->
+  <depend stack="perception_pcl" /> <!-- flann, pcl, pcl_ros -->
+  <depend stack="pluginlib" /> <!-- pluginlib -->
+  <depend stack="pr2_arm_navigation" /> <!-- pr2_arm_navigation_kinematics, pr2_arm_navigation_perception, pr2_arm_navigation_filtering, pr2_arm_navigation_actions, pr2_arm_navigation_planning -->
+  <depend stack="pr2_common" /> <!-- pr2_msgs, pr2_description -->
+  <depend stack="pr2_common_actions" /> <!-- pr2_common_action_msgs -->
+  <depend stack="pr2_controllers" /> <!-- control_toolbox, joint_trajectory_action, robot_mechanism_controllers, pr2_mechanism_controllers, pr2_gripper_action, pr2_controllers_msgs -->
+  <depend stack="pr2_mechanism" /> <!-- pr2_mechanism_msgs, pr2_controller_manager, pr2_controller_interface, realtime_tools, pr2_mechanism_model -->
+  <depend stack="robot_model" /> <!-- urdf, kdl_parser, resource_retriever -->
+  <depend stack="ros_realtime" /> <!-- rosatomic, lockfree, allocators, rosrt -->
+  <depend stack="sql_database" /> <!-- database_interface -->
+  <depend stack="vision_opencv" /> <!-- opencv2, cv_bridge -->
+  <depend stack="visualization" /> <!-- interactive_markers, rviz -->
+  <depend stack="simulator_gazebo" /> <!-- gazebo, gazebo_worlds -->
+  <depend stack="pr2_simulator" /> <!-- pr2_gazebo, pr2_controller_configuration_gazebo -->
+</stack>

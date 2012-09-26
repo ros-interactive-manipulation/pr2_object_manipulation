@@ -1,0 +1,13 @@
+
+# a seed position for the pose marker. If empty (quaternion of norm 0)
+# the marker will be initialized at the current pose of the header frame.
+geometry_msgs/PoseStamped starting_pose
+
+# The maximum in-plane distance that the action will allow
+float32 max_distance
+---
+# the returned pose, assuming the user has clicked "accept"
+# if the user clicks "cancel" the action aborts
+geometry_msgs/PoseStamped pose
+
+---

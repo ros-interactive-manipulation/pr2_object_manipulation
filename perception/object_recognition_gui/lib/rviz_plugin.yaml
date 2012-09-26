@@ -1,0 +1,10 @@
+name: Object Recognition GUI
+library: object_recognition_gui_rviz_plugin
+displays:
+  - 
+    class_name: object_recognition_gui::ObjectRecognitionDisplay
+    display_name: Object Recognition Pop-Up Window
+    description: |
+      Creates a popup window in case the robot needs assistance with
+      the recognition of objects. It enables the user is able to
+      correct the recognition results. 

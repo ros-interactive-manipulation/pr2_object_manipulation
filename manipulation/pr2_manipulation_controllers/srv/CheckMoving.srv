@@ -1,0 +1,2 @@
+---
+uint8 ismoving #1 if moving, 0 if not moving

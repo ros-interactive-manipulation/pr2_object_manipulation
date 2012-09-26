@@ -1,0 +1,27 @@
+<launch>
+
+  <!-- send table urdf to param server and spawn robot-->
+  <param name="table_description" command="$(find xacro)/xacro.py '$(find manipulation_worlds)/urdf/table.urdf.xacro'" />
+
+  <!-- spawn table -->
+  <node name="spawn_table1" pkg="gazebo" type="spawn_model" args="-urdf -param table_description -model table_1 -namespace table_1 -x -3.1 -y 3.9 -z 0.0 -R 0.0 -P 0.0 -Y 0.0 -wait 'pr2' -reference_frame 'world'" respawn="false" output="screen" />
+
+  <!-- send cylinder_object.xml to param server -->
+  <param name="coke_can_description" textfile="$(find manipulation_worlds)/urdf/coke_can.urdf" />
+  <param name="trash_bin_description" textfile="$(find manipulation_worlds)/urdf/trash_bin.urdf" />
+  <param name="cup_description" textfile="$(find manipulation_worlds)/urdf/cup.urdf" />
+
+  <!-- push coke_can_description to factory and spawn robot in gazebo -->
+  <node name="spawn_coke_can_1" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x -1.7 -y 4.0 -z 0.55 -model coke_can_1 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_2" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x -1.8 -y 3.7 -z 0.55 -model coke_can_2 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_3" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x -2.2 -y -0.85 -z 0.92 -model coke_can_3 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_trash_bin_1" pkg="gazebo" type="spawn_model" args="-urdf -param trash_bin_description -x -3.2 -y 2.2 -z 0 -model trash_bin_1 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_cup_1" pkg="gazebo" type="spawn_model" args="-urdf -param cup_description -x -1.7 -y 3.5 -z 0.55 -model cup_1 -wait 'table_1'" respawn="false" output="screen" /> 
+  <node name="spawn_cup_2" pkg="gazebo" type="spawn_model" args="-urdf -param cup_description -x -1.8 -y 3.1 -z 0.55 -model cup_2 -wait 'table_1'" respawn="false" output="screen" /> 
+
+
+
+
+</launch>
+
+

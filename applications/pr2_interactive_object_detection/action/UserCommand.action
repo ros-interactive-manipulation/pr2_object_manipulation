@@ -1,0 +1,15 @@
+#request constants
+int8 LOOK_AT_TABLE=0
+
+int8 SEGMENT=1
+int8 RECOGNIZE=2
+int8 DETECT=3
+int8 RESET=4
+
+int8 request
+bool interactive
+---
+#no specific result
+---
+#feedback in the form of a status string
+string status

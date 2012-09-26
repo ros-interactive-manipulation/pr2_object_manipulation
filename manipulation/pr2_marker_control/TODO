@@ -1,0 +1,10 @@
+- add seamless switching between cartesian control and joint controller.
+- add head control... (target marker, or possibly drag handle.)
+- Control to send goals to nav stack.
+- Ability to reset head target...
+- Individual joint control
+
+MAKE THE ARM MOVE:
+  - draw mesh instead of points when object model is known
+  - at least figure out why the head action times out
+  - model_object should subscribe only when active (and the filter should be idle when not subscribed-to)

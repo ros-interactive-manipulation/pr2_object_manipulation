@@ -1,0 +1,53 @@
+<launch>
+
+  <arg name="gui" default="false"/>
+
+  <!-- start up empty world -->
+  <include file="$(find manipulation_worlds)/launch/home.launch">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <include file="$(find manipulation_worlds)/launch/add_cabinet.launch" />
+
+  <!-- send pr2 urdf to param server -->
+  <include file="$(find pr2_description)/robots/upload_pr2.launch" />
+
+  <arg name="robot_location" value="-x -0.8 -y 4.0 -Y 3.14159"/>
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_pr2_model" pkg="gazebo" type="spawn_model" 
+	args="$(arg robot_location) -unpause -urdf -param robot_description -model pr2" 
+	respawn="false" output="screen" />
+ 
+  <!-- default bringup script -->
+  <include file="$(find pr2_gazebo)/launch/pr2_bringup.launch" />
+
+  <!-- Load and Start Default Controllers -->
+  <include file="$(find pr2_controller_configuration_gazebo)/pr2_default_controllers.launch" />
+
+  <!-- parameters that give you reasonable physics as well as good speed -->
+  <!-- needed so that gripper joint stops on objects instead of oscillating forever -->
+  <node name="sor_pgs_iters" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_iters 50"/>
+  <node name="sor_pgs_w" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_w 1.0"/>
+  <node name="time_step" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo time_step 0.001"/>
+
+  <!-- send cylinder_object.xml to param server -->
+  <param name="coke_can_description" textfile="$(find manipulation_worlds)/urdf/coke_can.urdf" />
+
+  <!-- push coke_can_description to factory and spawn robot in gazebo -->
+  <node name="spawn_coke_can_1" pkg="gazebo" type="spawn_model" 
+	args="-urdf -param coke_can_description -x -0.7 -y -0.9 -z 0.94 -model coke_can_1 -wait 'cabinet_1'" 
+	respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_2" pkg="gazebo" type="spawn_model" 
+	args="-urdf -param coke_can_description -x -0.9 -y -0.9 -z 0.94 -model coke_can_2 -wait 'cabinet_1'" 
+	respawn="false" output="screen" /> 
+
+  <!-- send table urdf to param server and spawn robot-->
+  <param name="table_description" command="$(find xacro)/xacro.py '$(find manipulation_worlds)/urdf/table.urdf.xacro'" />
+
+  <!-- spawn table -->
+  <node name="spawn_table1" pkg="gazebo" type="spawn_model" args="-urdf -param table_description -model table_1 -namespace table_1 -x -3.5 -y 3.9 -z 0.0 -R 0.0 -P 0.0 -Y 0.0 -wait 'pr2' -reference_frame 'world'" respawn="false" output="screen" />
+
+
+</launch>
+

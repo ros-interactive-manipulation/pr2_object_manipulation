@@ -1,0 +1,23 @@
+<package>
+  <description brief="manipulation_worlds">
+
+     manipulation_worlds
+
+  </description>
+  <author>Matei Ciocarlie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/manipulation_worlds</url>
+
+  <depend package="gazebo"/>
+  <depend package="gazebo_worlds"/>
+  <depend package="pr2_gazebo"/>
+  <depend package="pr2_description"/>
+  <depend package="pr2_controller_configuration_gazebo"/>
+
+  <export>
+    <gazebo gazebo_media_path="${prefix}" />
+  </export>
+</package>
+
+

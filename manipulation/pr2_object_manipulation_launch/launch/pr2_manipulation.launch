@@ -1,0 +1,174 @@
+<launch>
+
+  <arg name="use_slip_controllers" default="false"/>
+  <arg name="use_right_arm" default="true"/>
+  <arg name="use_left_arm"  default="true"/>
+  <arg name="use_task_cartesian" default="false" />		
+  <arg name="sim" default="false" />
+  <arg name="use_probabilistic_grasp_planner" default="false" />
+  <arg name="use_jinv" default="false" />
+  <arg name="use_rmrc" default="false" />		
+  <arg name="reactive_grasping" default="true" />
+  <arg name="lcg_left_gripper" default="false"/>
+  <arg name="lcg_right_gripper" default="false"/>
+
+  <!-- hand descriptions -->
+  <rosparam unless="$(arg lcg_left_gripper)" 
+	    command="load" file="$(find pr2_object_manipulation_launch)/config/pr2_hand_descriptions.yaml"/>
+  <rosparam if="$(arg lcg_left_gripper)" command="load" 
+	    file="$(find pr2_object_manipulation_launch)/config/lcg_left_pr2_hand_descriptions.yaml"/>
+
+  <!-- arm configurations -->
+  <rosparam command="load" file="$(find pr2_object_manipulation_launch)/config/pr2_arm_configurations.yaml"/>
+
+  <!--grasp planners-->
+
+  <!-- database-backed grasp planning is now provided directly by the database wrapper node -->
+  <!-- which must be started separately -->
+  
+  <include file="$(find pr2_gripper_grasp_planner_cluster)/launch/pr2_gripper_grasp_planner_cluster_server.launch"/>
+
+  <include if="$(arg use_probabilistic_grasp_planner)" 
+    file="$(find bayesian_grasp_planner)/launch/bayesian_grasp_planner_node.launch"/>
+
+
+  <!--reactive approach-->
+
+  <group if="$(arg reactive_grasping)">
+    <node if="$(arg use_right_arm)" name="reactive_grasp_node_right" pkg="pr2_gripper_reactive_approach" 
+      type="reactive_grasp_server.py" args="r" respawn="false" output="screen">
+      <param name="use_slip_controller" value="$(arg use_slip_controllers)"/>
+      <param name="use_slip_detection" value="$(arg use_slip_controllers)"/>
+      <param name="use_task_cartesian" value="$(arg use_task_cartesian)"/>
+    </node>
+    <node if="$(arg use_left_arm)" name="reactive_grasp_node_left" pkg="pr2_gripper_reactive_approach" 
+      type="reactive_grasp_server.py" args="l" respawn="false" output="screen">
+      <param name="use_slip_controller" value="$(arg use_slip_controllers)"/>
+      <param name="use_slip_detection" value="$(arg use_slip_controllers)"/>
+      <param name="use_task_cartesian" value="$(arg use_task_cartesian)"/>
+    </node>
+  </group>
+
+
+  <!--gripper grasp posture controllers-->
+
+  <include unless="$(arg use_slip_controllers)" 
+   file="$(find pr2_gripper_grasp_controller)/launch/both_grippers_grasp_posture_action.launch" >
+    <arg name="use_right_arm" value="$(arg use_right_arm)" />
+    <arg name="use_left_arm" value="$(arg use_left_arm)" />
+    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)" />
+    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)" />
+  </include>  
+  <include if="$(arg use_slip_controllers)" 
+   file="$(find pr2_gripper_grasp_controller)/launch/both_grippers_finger_sensor_grasp_posture_action.launch" >
+    <arg name="use_right_arm" value="$(arg use_right_arm)" />
+    <arg name="use_left_arm" value="$(arg use_left_arm)" />
+  </include>
+
+
+  <!-- Cartesian controller -->
+  <include if="$(arg use_task_cartesian)" file="$(find pr2_object_manipulation_launch)/launch/c_jtask.launch">
+    <arg name="use_right_arm" value="$(arg use_right_arm)" />
+    <arg name="use_left_arm" value="$(arg use_left_arm)" />
+	<arg name="sim" value="$(arg sim)" />
+  </include>
+
+  <group unless="$(arg use_rmrc)">
+    <group unless="$(arg use_task_cartesian)">
+      <include if="$(arg use_jinv)" file="$(find pr2_object_manipulation_launch)/launch/c_jinv.launch" >
+        <arg name="use_right_arm" value="$(arg use_right_arm)" />
+        <arg name="use_left_arm" value="$(arg use_left_arm)" />
+	    <arg name="sim" value="$(arg sim)" />
+      </include>
+      <include unless="$(arg use_jinv)" file="$(find pr2_object_manipulation_launch)/launch/c_jt.launch" >
+        <arg name="use_right_arm" value="$(arg use_right_arm)" />
+        <arg name="use_left_arm" value="$(arg use_left_arm)" />
+	    <arg name="sim" value="$(arg sim)" />
+      </include>
+    </group>
+  </group>
+
+  <include if="$(arg use_rmrc)" file="$(find pr2_object_manipulation_launch)/launch/c_rmrc.launch" >
+      <arg name="use_right_arm" value="$(arg use_right_arm)" />
+      <arg name="use_left_arm" value="$(arg use_left_arm)" />
+	    <arg name="sim" value="$(arg sim)" />
+   </include>
+
+  <!--object manipulator-->
+
+  <node name="object_manipulator" pkg="object_manipulator"
+    type="object_manipulator_node" respawn="false" output="screen">
+
+      <remap from="right_arm/constraint_aware_ik" to="/pr2_right_arm_kinematics/get_constraint_aware_ik" />    
+      <remap from="left_arm/constraint_aware_ik" to="/pr2_left_arm_kinematics/get_constraint_aware_ik" />    
+
+      <remap from="right_arm/get_fk" to="/pr2_right_arm_kinematics/get_fk" />    
+      <remap from="left_arm/get_fk" to="/pr2_left_arm_kinematics/get_fk" />    
+
+      <remap from="right_arm/interpolated_ik" to="/r_interpolated_ik_motion_plan" />    
+      <remap from="left_arm/interpolated_ik" to="/l_interpolated_ik_motion_plan" />    
+
+      <remap from="right_arm/interpolated_ik_set_params" to="/r_interpolated_ik_motion_plan_set_params" />    
+      <remap from="left_arm/interpolated_ik_set_params" to="/l_interpolated_ik_motion_plan_set_params" />    
+
+      <remap from="right_arm/get_ik_solver_info" to="/pr2_right_arm_kinematics/get_ik_solver_info" />    
+      <remap from="left_arm/get_ik_solver_info" to="/pr2_left_arm_kinematics/get_ik_solver_info" />    
+
+      <remap from="right_arm/reactive_grasp" to="/reactive_grasp/right" />    
+      <remap from="left_arm/reactive_grasp" to="/reactive_grasp/left" />    
+
+      <remap from="right_arm/reactive_lift" to="/reactive_lift/right" />    
+      <remap from="left_arm/reactive_lift" to="/reactive_lift/left" />
+
+      <remap from="right_arm/reactive_place" to="/reactive_place/right" />    
+      <remap from="left_arm/reactive_place" to="/reactive_place/left" />
+
+      <remap from="right_arm/get_state_validity" to="/environment_server/get_state_validity" />    
+      <remap from="left_arm/get_state_validity" to="/environment_server/get_state_validity" />    
+
+      <remap from="right_arm/move_arm" to="/move_right_arm" />    
+      <remap from="left_arm/move_arm" to="/move_left_arm" />    
+
+      <remap from="right_arm/joint_trajectory" to="/r_arm_controller/joint_trajectory_action" />    
+      <remap from="left_arm/joint_trajectory" to="/l_arm_controller/joint_trajectory_action" />    
+
+      <remap from="right_arm/hand_posture_execution" to="/r_gripper_grasp_posture_controller" />    
+      <remap from="left_arm/hand_posture_execution" to="/l_gripper_grasp_posture_controller" />
+
+      <remap from="right_arm/grasp_status" to="/r_gripper_grasp_status" />
+      <remap from="left_arm/grasp_status" to="/l_gripper_grasp_status" />
+
+      <remap from="switch_controller" to="pr2_controller_manager/switch_controller"/>
+      <remap from="list_controllers" to="pr2_controller_manager/list_controllers"/>
+      <remap from="right_arm/cart/command_pose" to="/r_cart/command_pose" />
+      <remap from="left_arm/cart/command_pose" to="/l_cart/command_pose" />
+      <remap from="right_arm/cart/command_posture" to="/r_cart/command_posture" />
+      <remap from="left_arm/cart/command_posture" to="/l_cart/command_posture" />
+      <remap from="right_arm/cart/gains" to="/r_cart/gains" />
+      <remap from="left_arm/cart/gains" to="/l_cart/gains" />
+      <param name="right_arm_cartesian_controller" value="r_cart" />
+      <param name="left_arm_cartesian_controller" value="l_cart" />
+      <param name="right_arm_joint_controller" value="r_arm_controller" />
+      <param name="left_arm_joint_controller" value="l_arm_controller" />
+
+      <param name="default_cluster_planner" value="/plan_point_cluster_grasp" />
+      <param name="default_database_planner" value="/database_grasp_planning" />  
+      <!-- <param name="default_database_planner" value="/push_grasp_planner_action_server" /> -->
+      <param name="default_probabilistic_planner" value="/probabilistic_grasp_planning" />
+      <param name="use_probabilistic_grasp_planner" value="$(arg use_probabilistic_grasp_planner)" />
+
+      <param name="randomize_grasps" value="false" />
+
+  </node>
+
+  <!-- cluster bounding box finder--> 
+
+  <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
+    type="cluster_bounding_box_finder_server.py" output="screen" respawn="false" >
+	<param name="z_up_frame" value="/base_link" />
+  </node>
+
+  <!-- pad objects when filtering from collision map-->
+  <rosparam param="/robot_description_planning/default_object_padding">0.05</rosparam>
+
+</launch>

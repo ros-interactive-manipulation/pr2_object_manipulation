@@ -1,0 +1,117 @@
+<launch>
+  <arg name="use_right_arm" default="true" />
+  <arg name="use_left_arm" default="true" />
+  <arg name="stereo" default="false"/>
+  <arg name="do_preplan_scan" default="false" />
+  <arg name="do_monitoring" default="false" />
+  <arg name="kinect_frame_prefix" default="/head_mount_kinect" />
+  <arg name="kinect_camera_name" default="head_mount_kinect" />
+  <arg name="log_to_warehouse" default="false" />
+  <arg name="sim" default="false" />
+  <arg name="tod" default="false" />
+
+  <!-- load perception -->
+  <!-- this launch file was moved inside this package in order to change laser settings -->
+  <include file="$(find pr2_object_manipulation_launch)/launch/laser+stereo-perception.launch">
+    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+    <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+    <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="high_res" value="$(arg tod)"/>
+  </include>
+
+  <!-- load planning -->
+  <include file="$(find pr2_arm_navigation_planning)/launch/ompl_planning.launch">
+    <arg name="use_right_arm" value="$(arg use_right_arm)" />
+    <arg name="use_left_arm" value="$(arg use_left_arm)" />
+  </include>
+
+  <param name="warehouse_host" value="localhost"/>
+  <param name="warehouse_port" value="27021"/>
+  <node if="$(arg log_to_warehouse)"
+	name="mongo" type="wrapper.py" pkg="mongodb">
+    <param name="overwrite" value="false"/>
+    <param name="database_path" value="arm_navigation_dbs/pr2_manip_db"/>
+  </node>
+  
+  <!-- load move_arm -->
+  <!--
+  <include file="$(find pr2_arm_navigation_actions)/launch/head_monitor.launch">
+    <arg name="do_preplan_scan" value="$(arg do_preplan_scan)" />
+    <arg name="do_monitoring" value="$(arg do_monitoring)" />
+    <arg name="use_right_arm" value="$(arg use_right_arm)" />
+    <arg name="use_left_arm" value="$(arg use_left_arm)" />
+  </include>
+  -->
+  <include if="$(arg use_right_arm)" file="$(find pr2_arm_navigation_actions)/launch/move_right_arm_warehouse.launch">
+    <arg name="log_to_warehouse" value="$(arg log_to_warehouse)" />
+  </include>
+  <include if="$(arg use_left_arm)" file="$(find pr2_arm_navigation_actions)/launch/move_left_arm_warehouse.launch">
+    <arg name="log_to_warehouse" value="$(arg log_to_warehouse)" />
+  </include>
+
+  <node pkg="move_arm_head_monitor" type="move_arm_head_monitor" name="head_monitor" output="screen" machine="c2">
+     <remap from="cloud_in" to="/narrow_stereo_textured/points2_filtered_attached" />
+     <param name="do_preplan_scan" value="$(arg do_preplan_scan)"/>
+     <param name="do_monitoring" value="$(arg do_monitoring)"/>
+     <param name="use_left_arm" value="$(arg use_left_arm)"/>
+     <param name="use_right_arm" value="$(arg use_right_arm)"/>
+  </node>
+
+
+  <!-- load planning_environment -->
+  <!--include file="$(find planning_environment)/launch/environment_server.launch"/-->
+  <node pkg="planning_environment" type="environment_server" output="screen" name="environment_server" machine="c2">      
+    <param name="use_monitor" type="bool" value="true"/>
+    <param name="use_collision_map" type="bool" value="true"/>
+  </node>
+
+  <node pkg="planning_environment" type="planning_scene_validity_server" output="screen" name="planning_scene_validity_server" 
+        machine="c2"/>      
+
+
+  <!-- load controllers -->
+  <include file="$(find pr2_arm_navigation_filtering)/launch/both_arms_filters.launch"/>
+  <param name="trajectory_filter/object_padd" value="0.04"/>
+
+  <!-- load ik -->
+  <include if="$(arg use_right_arm)" file="$(find pr2_arm_navigation_kinematics)/launch/right_arm_collision_free_ik.launch"/>
+  <include if="$(arg use_left_arm)"  file="$(find pr2_arm_navigation_kinematics)/launch/left_arm_collision_free_ik.launch"/>
+  <param name="pr2_right_arm_kinematics/object_padd" value="0.04"/>
+  <param name="pr2_left_arm_kinematics/object_padd" value="0.04"/>
+
+  <!--trigger mode 3 is on, 4 is off, 5 is alternate projector-->
+  <node if="$(arg stereo)"
+	name="dynamic_reconfigure_stereo" pkg="dynamic_reconfigure" type="dynparam"
+	args="set camera_synchronizer_node '{'projector_mode': 3, 'narrow_stereo_trig_mode': 5, 'wide_stereo_trig_mode': 4}' "/>
+  
+  <node unless="$(arg stereo)"
+	name="projector_off" pkg="dynamic_reconfigure" type="dynparam"
+	args="set camera_synchronizer_node projector_mode 1"/>
+  
+  <!--
+  --> 
+  <node name="change_narrow_stereo_params" pkg="dynamic_reconfigure" type="dynparam"
+    args="set /narrow_stereo_textured/narrow_stereo_textured_proc '{'min_disparity': 16, 'speckle_size': 500}'" />
+
+  <!-- change controller gains -->
+  <!--
+  <node name="change_controller_gains" pkg="pr2_object_manipulation_launch" type="change_joint_controller_gains.py" />
+  -->
+
+  <!-- interpolated IK -->
+  <node  if="$(arg use_right_arm)" name="interpolated_ik_node_right" pkg="interpolated_ik_motion_planner" 
+    type="interpolated_ik_motion_planner.py" args="r" respawn="false" machine="c2"/>
+  <node if="$(arg use_left_arm)" name="interpolated_ik_node_left" pkg="interpolated_ik_motion_planner" 
+    type="interpolated_ik_motion_planner.py" args="l" respawn="false" machine="c2"/>
+
+  <!-- joint trajectory normalization -->
+  <include file="$(find trajectory_filter_server)/launch/trajectory_unnormalize.launch"/>
+
+  <!-- node used to check if current state is in collision or not
+  <include file="$(find arm_navigation_experimental_tools)/launch/current_state_validator.launch"/>
+  -->
+
+</launch>

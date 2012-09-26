@@ -1,0 +1,11 @@
+<library path="lib/libobject_recognition_gui_rviz_plugin">
+  <class name="object_recognition_gui/ObjectRecognition"
+         type="object_recognition_gui::ObjectRecognitionDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Creates a popup window in case the robot needs assistance with
+      the recognition of objects. The user is able to
+      correct the recognition results. 
+    </description>
+  </class>
+</library>

@@ -1,0 +1,22 @@
+<launch>
+
+    <node pkg="tf_throttle" name="tf_throttle" type="tf_throttle" respawn="false" output="screen">
+
+    	<!-- the rate at which everything gets published -->
+	<param name="rate" value="30.0" />
+
+	<!-- whether only transforms that have changed should be sent -->
+	<param name="use_diff" value="true" />
+
+	<!-- time before republishing a transform even if it has not changed -->
+	<param name="republish_time" value="0.5" />
+
+	<!-- when use_diff is true, angular theshold for determining if a transform has changed (radians) -->
+	<param name="angular_change_threshold" value="0.002" />
+
+	<!-- when use_diff is true, linear theshold for determining if a transform has changed (mm) -->
+	<param name="linear_change_threshold" value="0.5" />
+
+    </node>
+
+</launch>

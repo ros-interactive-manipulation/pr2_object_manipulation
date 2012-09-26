@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="segmented_clutter_grasp_planner" name="segmented_clutter_grasp_planner_server" type="segmented_clutter_grasp_planner_server.py" respawn="false" output="screen" />
+
+    <node pkg="segmented_clutter_grasp_planner" name="find_container_action" type="find_container_action" respawn="false" output="screen"/>
+
+</launch>

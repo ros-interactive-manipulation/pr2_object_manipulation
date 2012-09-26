@@ -1,0 +1,10 @@
+<launch>
+  <arg name="use_right_arm" default="true" />
+  <arg name="use_left_arm" default="true" />
+  
+  <rosparam if="$(arg use_right_arm)" file="$(find pr2_gripper_sensor_controller)/launch/pr2_gripper_sensor_controller_right.yaml" command="load" />
+  <rosparam if="$(arg use_left_arm)"  file="$(find pr2_gripper_sensor_controller)/launch/pr2_gripper_sensor_controller_left.yaml" command="load" />
+
+  <node if="$(arg use_right_arm)" pkg="pr2_controller_manager" type="spawner" args="r_gripper_sensor_controller" name="r_gripper_sensor_controller_spawner" />
+  <node if="$(arg use_left_arm)" pkg="pr2_controller_manager" type="spawner" args="l_gripper_sensor_controller" name="l_gripper_sensor_controller_spawner" />
+</launch>

@@ -1,0 +1,19 @@
+<class_libraries>
+
+    <library path="lib/libgoal_passer">
+      <class name="pr2_navigation_controllers/GoalPasser" type="pr2_navigation_controllers::GoalPasser" base_class_type="nav_core::BaseGlobalPlanner">
+        <description>
+          Just passes on a goal to the local planner
+        </description>
+      </class>
+    </library>
+
+    <library path="lib/libpose_follower">
+      <class name="pr2_navigation_controllers/PoseFollower" type="pr2_navigation_controllers::PoseFollower" base_class_type="nav_core::BaseLocalPlanner">
+        <description>
+          A implementation of a local planner that attempts to follow a plan as closely as possible.
+        </description>
+      </class>
+    </library>
+
+</class_libraries>

@@ -1,0 +1,37 @@
+<package>
+  <description brief="pr2_marker_control">
+
+    A PR2 application that uses Interactive Markers to provide
+    a point-and-click inteface for controlling the PR2 in Rviz.
+
+  </description>
+  <author>Adam Leeper</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_marker_control</url>
+
+  <depend package="roscpp"/>
+  <depend package="interactive_markers"/>
+  <depend package="sensor_msgs"/>
+  <depend package="visualization_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tf"/>
+  <depend package="point_cloud_server"/>
+  <depend package="pr2_object_manipulation_msgs"/>
+  <depend package="pr2_navigation_controllers"/>
+
+  <!-- Robot interface -->
+  <depend package="object_manipulator"/>
+  
+  <!-- For joint states stuff -->
+  <depend package="planning_environment"/>
+
+  <depend package="pr2_wrappers"/>
+  <depend package="interactive_marker_helpers"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lpr2_marker_control_lib"/>
+  </export>
+</package>
+
+

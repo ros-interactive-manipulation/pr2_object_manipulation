@@ -1,0 +1,32 @@
+<launch>
+
+  <!-- send table.urdf to param server and spawn it-->
+  <param name="table_description" command="$(find xacro)/xacro.py '$(find manipulation_worlds)/urdf/table.urdf.xacro'" />
+
+  <node name="spawn_table1" pkg="gazebo" type="spawn_model" args="-urdf -param table_description -model table_1 -namespace table_1 -x 0.0 -y 0.0 -z 0.0 -R 0.0 -P 0.0 -Y 0.0 -wait 'pr2' -reference_frame 'world'" respawn="false" output="screen" />
+
+  <!-- send object descriptions to param server -->
+  <param name="coke_can_description" textfile="$(find manipulation_worlds)/urdf/coke_can.urdf" />
+  <param name="small_shelf_description" textfile="$(find manipulation_worlds)/urdf/small_white_shelf.urdf" />
+  <param name="suave_description" textfile="$(find manipulation_worlds)/urdf/suave.urdf" />
+  <param name="peroxide_description" textfile="$(find manipulation_worlds)/urdf/peroxide.urdf" />
+  <param name="trash_bin_description" textfile="$(find manipulation_worlds)/urdf/small_trash_bin.urdf" />
+
+  <!-- spawn stuff -->
+  <node name="spawn_small_shelf_1" pkg="gazebo" type="spawn_model" args="-urdf -param small_shelf_description -x 0.507 -y 0.15 -z 0.55 -Y -1.57 -model small_shelf_1 -wait 'table_1'" respawn="false" output="screen" /> 
+
+  <node name="spawn_suave_1" pkg="gazebo" type="spawn_model" args="-urdf -param suave_description -x 0.58 -y 0.07 -z 0.58 -model suave_1 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_1" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x 0.6 -y 0 -z 0.58 -model coke_can_1 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_peroxide_1" pkg="gazebo" type="spawn_model" args="-urdf -param peroxide_description -x 0.57 -y -0.07 -z 0.58 -model peroxide_1 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_3" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x 0.65 -y -0.09 -z 0.58 -model coke_can_3 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+
+  <node name="spawn_peroxide_2" pkg="gazebo" type="spawn_model" args="-urdf -param peroxide_description -x 0.6 -y 0.08 -z 0.88 -model peroxide_2 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_suave_2" pkg="gazebo" type="spawn_model" args="-urdf -param suave_description -x 0.58 -y -0.03 -z 0.88 -model suave_2 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_2" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x 0.57 -y -0.10 -z 0.88 -model coke_can_2 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+  <node name="spawn_coke_can_4" pkg="gazebo" type="spawn_model" args="-urdf -param coke_can_description -x 0.65 -y 0.04 -z 0.885 -model coke_can_4 -wait 'small_shelf_1'" respawn="false" output="screen" /> 
+
+  <node name="spawn_trash_bin_1" pkg="gazebo" type="spawn_model" args="-urdf -param trash_bin_description -x 0.1 -y -0.75 -z 0 -model trash_bin_1 -wait 'table_1'" respawn="false" output="screen" /> 
+
+</launch>
+
+

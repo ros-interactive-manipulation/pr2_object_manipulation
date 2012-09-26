@@ -1,0 +1,26 @@
+<package>
+  <description brief="pr2_navigation_controllers">
+
+     pr2_navigation_controllers: Some base controllers pulled in from navigation_experimental so that we can use them for manipulation.
+
+  </description>
+  <author>Ported by Adam Leeper, originally by Eitan Marder-Eppstein</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_navigation_controllers</url>
+  <depend package="roscpp"/>
+  <depend package="pluginlib"/>
+  <depend package="nav_core"/>
+  <depend package="base_local_planner"/>
+  <depend package="costmap_2d"/>
+  <depend package="tf"/>
+  <depend package="nav_msgs"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include -I${prefix}/msg/cpp" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lgoal_passer -lpose_follower"/>
+    <nav_core plugin="${prefix}/planner_plugins.xml" />
+  </export>
+
+</package>
+
+

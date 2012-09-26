@@ -1,0 +1,32 @@
+#only want side grasps if the bounding box height is greater than this
+float64 height_good_for_side_grasps
+
+#bounding box "fits in hand" if the relevant dimension is less than this
+float64 gripper_opening
+
+#how far to move the gripper to the side with each step when searching for grasps
+float64 side_step
+
+#how far to move the palm inward with each step when searching for grasps
+float64 palm_step
+
+#set this to true to limit the planner to overhead grasps
+bool overhead_grasps_only
+
+#set this to true to limit the planner to side grasps
+bool side_grasps_only
+
+#set this to false to omit random high-point grasps
+bool include_high_point_grasps
+
+#set this to true to make the pregrasps be just outside the bounding box instead of self.pregrasp_dist away from the grasp
+bool pregrasp_just_outside_box
+
+#how many backing-off-from-the-deepest-possible-grasp grasps to keep for each good grasp found
+int32 backoff_depth_steps
+
+#don't check the neighbors for each grasp (reduces grasps checked, but makes for worse rankings)
+bool disable_grasp_neighbor_check
+
+#set this to true to randomize the order of the first 30 grasps 
+bool randomize_grasps
