@@ -32,7 +32,7 @@
   <arg name="slow_movement" default="false" />
   <arg name="throttle_cameras" default="true" />
   <arg name="im_debug" default="false" />
-  <arg name="reactive_grasping" default="true" />		
+  <arg name="reactive_grasping" default="false" />		
   <arg name="compress_point_clouds" default="false" />
   <arg name="new_object_rec" default="false" />
 
@@ -354,10 +354,12 @@
   </include>
 
   <!-- grasp_adjust action server -->
+  <!-- 
   <include file="$(find pr2_grasp_adjust)/launch/grasp_adjust_action_server.launch">
     <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
     <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
   </include>
+  -->
 
   <!-- segmented_clutter_grasp_planner action server -->
   <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch" />
