@@ -29,6 +29,9 @@
   <depend package="segmented_clutter_grasp_planner"/>
   <depend package="tf_throttle"/>
 
+  <!--needed to get compressed depth images in Groovy rviz-->
+  <!--depend package="image_transport_plugins"/-->
+
   <!-- The straight-up pr2_teleop app built on rviz. We may want to reverse this. -->
   <depend package="pr2_marker_control"/>
 

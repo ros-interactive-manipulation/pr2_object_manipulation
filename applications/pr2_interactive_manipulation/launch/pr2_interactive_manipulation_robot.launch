@@ -354,10 +354,10 @@
   </include>
 
   <!-- grasp_adjust action server -->
-  <include file="$(find pr2_grasp_adjust)/launch/grasp_adjust_action_server.launch">
+  <!--include file="$(find pr2_grasp_adjust)/launch/grasp_adjust_action_server.launch">
     <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
     <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
-  </include>
+  </include-->
 
   <!-- segmented_clutter_grasp_planner action server -->
   <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch" />
