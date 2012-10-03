@@ -1,0 +1,23 @@
+<package>
+  <description brief="interactive_perception_actions">
+
+     interactive_perception_actions
+
+  </description>
+  <author>jbinney</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/interactive_perception_actions</url>
+
+  <depend package="actionlib"/>
+  <depend package="tf"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="stereo_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="arm_navigation_msgs"/>
+  <depend package="tabletop_object_detector"/>
+
+</package>
+
+

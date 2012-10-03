@@ -37,8 +37,17 @@
 #include "pr2_interactive_manipulation/point_head_camera_display.h"
 #include "pr2_interactive_manipulation/camera_focus_frontend.h"
 
+/* move plugins to a unique namespace so they don't conflict with the ones in the old deb installs of pr2_interactive_manipulation */
+namespace pr2_interactive_manipulation_frontend
+{
+  typedef pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay InteractiveManipulationFrontendDisplay;
+  typedef pr2_interactive_manipulation::PointHeadCameraDisplay PointHeadCameraDisplay;
+  typedef pr2_interactive_manipulation::PublishClickCameraDisplay PublishClickCameraDisplay;
+  typedef pr2_interactive_manipulation::CameraFocusFrontend CameraFocusFrontend;
+}
 
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation, InteractiveManipulationFrontend, pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation, PointHeadCamera, pr2_interactive_manipulation::PointHeadCameraDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation, PublishClickCamera, pr2_interactive_manipulation::PublishClickCameraDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation, CameraFocusFrontend, pr2_interactive_manipulation::CameraFocusFrontend, rviz::Display )
+
+PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, InteractiveManipulationFrontend, pr2_interactive_manipulation_frontend::InteractiveManipulationFrontendDisplay, rviz::Display )
+PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, PointHeadCamera, pr2_interactive_manipulation_frontend::PointHeadCameraDisplay, rviz::Display )
+PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, PublishClickCamera, pr2_interactive_manipulation_frontend::PublishClickCameraDisplay, rviz::Display )
+PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, CameraFocusFrontend, pr2_interactive_manipulation_frontend::CameraFocusFrontend, rviz::Display )

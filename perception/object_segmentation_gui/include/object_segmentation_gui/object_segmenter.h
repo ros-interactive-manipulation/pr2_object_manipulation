@@ -30,7 +30,7 @@
 #ifndef SEGMENTATION_INTERFACE
 #define SEGMENTATION_INTERFACE
 
-#include "object_segmentation_gui/ObjectSegmentationGuiAction.h"
+#include "interactive_perception_msgs/ObjectSegmentationGuiAction.h"
 #include "object_segmentation_gui/utils.h"
 
 #include "active_realtime_segmentation/fgbgsegment.h"

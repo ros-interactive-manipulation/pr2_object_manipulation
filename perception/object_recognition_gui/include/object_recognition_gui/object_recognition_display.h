@@ -34,7 +34,7 @@
 
 #include <actionlib/server/simple_action_server.h>
 
-#include "object_recognition_gui/ObjectRecognitionGuiAction.h"
+#include "interactive_perception_msgs/ObjectRecognitionGuiAction.h"
 
 namespace object_recognition_gui
 {
