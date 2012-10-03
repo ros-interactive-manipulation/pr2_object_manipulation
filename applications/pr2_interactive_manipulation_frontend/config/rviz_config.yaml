@@ -347,7 +347,7 @@ Visualization Manager:
       Show Descriptions: true
       Update Topic: /interactive_point_cloud/update
       Value: true
-    - Class: pr2_interactive_manipulation/PublishClickCamera
+    - Class: pr2_interactive_manipulation_frontend/PublishClickCamera
       Enabled: true
       Image Rendering: background
       Image Topic: /interactive_manipulation_camera/image
@@ -423,13 +423,13 @@ Visualization Manager:
         - Class: object_recognition_gui/ObjectRecognition
           Enabled: true
           Name: Object Recognition
-        - Class: pr2_interactive_manipulation/InteractiveManipulationFrontend
+        - Class: pr2_interactive_manipulation_frontend/InteractiveManipulationFrontend
           Enabled: true
           Name: Manipulation
         - Class: pr2_interactive_object_detection/InteractiveObjectDetection
           Enabled: true
           Name: Object Detection
-        - Class: pr2_interactive_manipulation/CameraFocusFrontend
+        - Class: pr2_interactive_manipulation_frontend/CameraFocusFrontend
           Command topic: /rviz/camera_placement
           Enabled: true
           Name: CameraFocusFrontend

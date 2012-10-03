@@ -12,7 +12,7 @@
     <arg name="sim" default="false"/>
     <arg name="throttle_cameras" default="true" />
     <arg name="rviz_config_file_base" 
-	 default="$(find pr2_interactive_manipulation)/config/rviz_config.yaml" />
+	 default="$(find pr2_interactive_manipulation_frontend)/config/rviz_config.yaml" />
     <arg name="compress_point_clouds" default="false" />
 
     <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
@@ -35,7 +35,7 @@
 
     <!-- create a temporary rviz file... hopefully $HOME is defined on all the systems we use... --> 
     <arg name="rviz_config_file" value="$(env HOME)/.ros/pr2_interactive_manipulation_temp.rviz"/>
-    <node pkg="pr2_interactive_manipulation" type="adjust_rviz_config.py" 
+    <node pkg="pr2_interactive_manipulation_frontend" type="adjust_rviz_config.py" 
 	  args="$(arg rviz_config_file_base) $(arg rviz_config_file) 
 		$(arg stereo) $(arg nav) $(arg nav_local) $(arg sim)" 
 	  name="rviz_config_adjuster" output="screen" />
@@ -51,11 +51,11 @@
     <arg unless="$(arg rviz_debug)" name="rviz_prefix" value=""/>
 
     <arg if="$(arg large_menus)" name="large_menu_arg" 
-	 value="-stylesheet $(find pr2_interactive_manipulation)/launch/big-menus.style"/>
+	 value="-stylesheet $(find pr2_interactive_manipulation_frontend)/launch/big-menus.style"/>
     <arg unless="$(arg large_menus)" name="large_menu_arg" value=""/>  
 
     <node pkg="rviz" launch-prefix="$(arg rviz_prefix)" name="$(anon rviz-1)" type="rviz" respawn="false" output="screen"
-	  args="-d $(arg rviz_config_file) -s $(find pr2_interactive_manipulation)/images/splash.png $(arg rviz_args) 
+	  args="-d $(arg rviz_config_file) -s $(find pr2_interactive_manipulation_frontend)/images/splash.png $(arg rviz_args) 
 		$(arg large_menu_arg)"> 
 
       <remap if="$(arg tf_throttled)" from="tf" to="tf_republished"/>
@@ -71,14 +71,5 @@
       <remap unless="$(arg throttle_cameras)" to="$(arg main_camera_namespace)/compressed/parameter_updates" 
 	     from="/interactive_manipulation_camera/compressed/parameter_updates"/>
     </node>
-
-    <!--
-    <include file="$(find haptic_ghosted_gripper)/launch/haptics.launch" >
-      <arg name="haptics" value="$(arg haptics)" />
-      <arg name="stereo" value="$(arg stereo)" />
-    </include>
-
-    <node pkg="pr2_interactive_manipulation" type="grasp_caller" name="grasp_caller" output="screen" />
-    -->
 
 </launch>

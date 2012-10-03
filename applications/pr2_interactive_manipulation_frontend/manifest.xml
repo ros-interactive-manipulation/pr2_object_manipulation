@@ -1,17 +1,22 @@
 <package>
-  <description brief="pr2_interactive_manipulation">
+  <description brief="pr2_interactive_manipulation_frontend">
 
-     A package that allows a remote user to request and assist with
-     grasping and manipulation tasks, primarily using an rviz display.
+     pr2_interactive_manipulation_frontend
 
   </description>
-  <author>Matei Ciocarlie, Kaijen Hsiao, Adam Leeper</author>
+  <author>Jonathan Binney</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/pr2_interactive_manipulation</url>
+  <url>http://ros.org/wiki/pr2_interactive_manipulation_frontend</url>
+
+  <depend package="rviz"/>
+  <depend package="rviz_view_controllers"/>
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="object_manipulator"/>
+  <depend package="pr2_object_manipulation_msgs"/>
+
 
   <depend package="tf"/>
-  <depend package="tabletop_collision_map_processing"/>
   <depend package="object_manipulation_msgs"/>
   <depend package="pr2_controllers_msgs"/>
   <depend package="sensor_msgs"/>
@@ -21,9 +26,7 @@
   <depend package="pr2_interactive_object_detection"/>
   <!--depend package="pr2_grasp_adjust"/-->
   <depend package="pr2_wrappers"/>
-  <depend package="robot_self_filter_color"/>
   <depend package="move_base_msgs"/>
-  <depend package="segmented_clutter_grasp_planner"/>
   <depend package="tf_throttle"/>
 
   <!-- The straight-up pr2_teleop app built on rviz. We may want to reverse this. -->
@@ -32,14 +35,12 @@
   <!-- The formerly so-called "ghosted gripper" --> 
   <depend package="pr2_object_manipulation_msgs"/>
   <depend package="pr2_interactive_gripper_pose_action"/>
-  
-  <!-- for move arm -->
-  <depend package="object_manipulator"/>
 
-  <!-- for included launch files -->
-  <depend package="pr2_object_manipulation_launch"/>
-  
-  <depend package="dynamic_reconfigure"/>
+  <export>
+    <rviz plugin="${prefix}/plugin_description.xml"/>
+    <cpp cflags="-I${prefix}/include -I${prefix}/ui" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib"/>
+  </export>
+
 
 </package>
 
