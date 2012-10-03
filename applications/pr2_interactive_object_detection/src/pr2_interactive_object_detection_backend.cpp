@@ -30,7 +30,7 @@
 #include <ros/ros.h>
 
 #include "pr2_interactive_object_detection/pr2_interactive_object_detection_backend.h"
-#include "pr2_interactive_object_detection/GraspableObjectList.h"
+#include "object_manipulation_msgs/GraspableObjectList.h"
 
 #include <household_objects_database_msgs/GetModelDescription.h>
 #include <household_objects_database_msgs/GetModelMesh.h>
@@ -41,13 +41,14 @@
 
 #include <stereo_msgs/DisparityImage.h>
 
-#include <object_segmentation_gui/ObjectSegmentationGuiAction.h>
+#include <interactive_perception_msgs/ObjectSegmentationGuiAction.h>
 
 #include <tabletop_object_detector/marker_generator.h>
 #include <tabletop_object_detector/TabletopDetection.h>
 
 using namespace tabletop_object_detector;
-using namespace object_recognition_gui;
+using namespace interactive_perception_msgs;
+using namespace object_manipulation_msgs;
 using namespace household_objects_database_msgs;
 using namespace pr2_interactive_object_detection;
 using namespace rgbd_assembler;
@@ -213,8 +214,8 @@ bool InteractiveObjDetBackend::doInteractiveSegmentation( )
   statusFeedback("Waiting for user input .." );
   
   std::string segm_topic("segmentation_popup");
-  object_segmentation_gui::ObjectSegmentationGuiGoal   segm_goal;
-  actionlib::SimpleActionClient<object_segmentation_gui::ObjectSegmentationGuiAction> 
+  interactive_perception_msgs::ObjectSegmentationGuiGoal   segm_goal;
+  actionlib::SimpleActionClient<interactive_perception_msgs::ObjectSegmentationGuiAction> 
     os_gui_action_client(segm_topic, true);
   
   while(!os_gui_action_client.waitForServer(ros::Duration(2.0)) && priv_nh_.ok() 
@@ -249,8 +250,8 @@ bool InteractiveObjDetBackend::doInteractiveSegmentation( )
     return false;
   } 
   
-  object_segmentation_gui::ObjectSegmentationGuiResult segm_result = *(os_gui_action_client.getResult());
-  if (segm_result.result != object_segmentation_gui::ObjectSegmentationGuiResult::SUCCESS) {
+  interactive_perception_msgs::ObjectSegmentationGuiResult segm_result = *(os_gui_action_client.getResult());
+  if (segm_result.result != interactive_perception_msgs::ObjectSegmentationGuiResult::SUCCESS) {
     std::ostringstream s;
     s << "Interactive Segmentation returned error " << (int)segm_result.result;
     abortAction( s.str() );
@@ -409,7 +410,7 @@ bool InteractiveObjDetBackend::doInteractiveRecognition()
     return false;
   }
 
-  object_recognition_gui::ObjectRecognitionGuiResultConstPtr rec_result;
+  interactive_perception_msgs::ObjectRecognitionGuiResultConstPtr rec_result;
   rec_result = or_gui_action_client.getResult();
 
   if ( num_models != (int)rec_result->selected_hypothesis_indices.size() )

@@ -1,0 +1,7 @@
+UserCommandActionFeedback.msg
+UserCommandActionGoal.msg
+UserCommandAction.msg
+UserCommandActionResult.msg
+UserCommandFeedback.msg
+UserCommandGoal.msg
+UserCommandResult.msg

@@ -33,7 +33,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/server/simple_action_server.h>
 
-#include <object_recognition_gui/ObjectRecognitionGuiAction.h>
+#include <interactive_perception_msgs/ObjectRecognitionGuiAction.h>
 
 #include <rgbd_assembler/RgbdAssembly.h>
 
@@ -152,7 +152,7 @@ private:
   ros::Publisher marker_pub_;
 
   // requests a popup where the user refines detection results
-  actionlib::SimpleActionClient<object_recognition_gui::ObjectRecognitionGuiAction> *obj_rec_popup_client_;
+  actionlib::SimpleActionClient<interactive_perception_msgs::ObjectRecognitionGuiAction> *obj_rec_popup_client_;
 
   // receives commands from the gui control interface
   actionlib::SimpleActionServer<pr2_interactive_object_detection::UserCommandAction> *user_command_server_;

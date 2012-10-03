@@ -23,6 +23,8 @@
   <depend package="stereo_msgs"/>
   <depend package="geometry_msgs"/>
   <depend package="arm_navigation_msgs"/>
+
+  <depend package="interactive_perception_msgs">
   
   <export>
     <rviz plugin="${prefix}/plugin_description.xml"/>
