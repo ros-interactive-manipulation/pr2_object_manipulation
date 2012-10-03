@@ -43,7 +43,7 @@
 
 #include <object_manipulation_msgs/GraspableObject.h>
 
-#include <pr2_interactive_object_detection/GraspableObjectList.h>
+#include <object_manipulation_msgs/GraspableObjectList.h>
 
 #include <pr2_interactive_manipulation/PickupConfig.h>
 
@@ -63,7 +63,7 @@ public:
 
 private:
 
-  void processGraspableObjects(const pr2_interactive_object_detection::GraspableObjectListConstPtr &objects);
+  void processGraspableObjects(const object_manipulation_msgs::GraspableObjectListConstPtr &objects);
 
   void processConfig(PickupConfig &config, uint32_t level);
 
