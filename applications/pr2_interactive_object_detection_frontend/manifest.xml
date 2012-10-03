@@ -27,6 +27,7 @@
   <depend package="actionlib_msgs"/>
   <depend package="rgbd_assembler"/>
   <depend package="tabletop_collision_map_processing"/>
+  <depend package="pr2_interactive_object_detection"/>
 
   <export>
     <rviz plugin="${prefix}/plugin_description.xml"/>

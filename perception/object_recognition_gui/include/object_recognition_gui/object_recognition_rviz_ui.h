@@ -35,13 +35,13 @@
 #include <QVBoxLayout>
 #include <QTextBrowser>
 
-#include "object_recognition_gui/ObjectRecognitionGuiAction.h"
+#include "interactive_perception_msgs/ObjectRecognitionGuiAction.h"
 
 #include <boost/thread/mutex.hpp>
 
 #include <actionlib/server/simple_action_server.h>
 
-#include "object_recognition_gui/ObjectRecognitionGuiAction.h"
+#include "interactive_perception_msgs/ObjectRecognitionGuiAction.h"
 
 
 namespace rviz_interaction_tools {
@@ -113,7 +113,7 @@ protected:
   void setupRenderPanel( rviz::DisplayContext* context );
 
   //get meshes from message into ogre
-  void parseMeshes(const std::vector<object_recognition_gui::ModelHypothesisList> &model_hyp_list);
+  void parseMeshes(const std::vector<interactive_perception_msgs::ModelHypothesisList> &model_hyp_list);
 
   //ogre stuff
   MouseEventSignallingRenderPanel* render_panel_;
@@ -129,7 +129,7 @@ protected:
   //displays the model hypothesis meshes
   std::vector< rviz_interaction_tools::MeshObjectSwitcher* > mesh_switchers_;
 
-  actionlib::SimpleActionServer<ObjectRecognitionGuiAction> *object_recognition_server_;
+  actionlib::SimpleActionServer<interactive_perception_msgs::ObjectRecognitionGuiAction> *object_recognition_server_;
 
 private:
   Ui::ObjectRecognitionFrame *ui_; // UI object created by uic from object_recognition_frame.ui
