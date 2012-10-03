@@ -34,7 +34,7 @@
 
 #include <actionlib/server/simple_action_server.h>
 
-#include "object_segmentation_gui/ObjectSegmentationGuiAction.h"
+#include "interactive_perception_msgs/ObjectSegmentationGuiAction.h"
 
 namespace object_segmentation_gui
 {

@@ -1,0 +1,9 @@
+build
+bin
+lib
+*.pyc
+*~
+srv_gen
+msg_gen
+cfg/cpp
+*.cfgc

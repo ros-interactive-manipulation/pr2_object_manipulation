@@ -37,7 +37,7 @@
 
 #include <stereo_msgs/DisparityImage.h>
 
-#include "object_segmentation_gui/ObjectSegmentationGuiAction.h"
+#include "interactive_perception_msgs/ObjectSegmentationGuiAction.h"
 
 
 int main(int argc, char **argv)
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh("~");
   std::string topic("/segmentation_popup");
 
-  actionlib::SimpleActionClient<object_segmentation_gui::ObjectSegmentationGuiAction> client(topic, true);
+  actionlib::SimpleActionClient<interactive_perception_msgs::ObjectSegmentationGuiAction> client(topic, true);
   while(!client.waitForServer(ros::Duration(2.0)) && nh.ok())
   {
     ROS_INFO("Waiting for action client on topic %s", topic.c_str());
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
     if (!nh.ok()) exit(0);
     ROS_INFO("All required messages received; sending goal to gripper click action");
     
-    object_segmentation_gui::ObjectSegmentationGuiGoal os_gui_goal;
+    interactive_perception_msgs::ObjectSegmentationGuiGoal os_gui_goal;
     os_gui_goal.image = *recent_image;
     os_gui_goal.disparity_image = *recent_disparity_image;
     os_gui_goal.camera_info = *recent_camera_info;

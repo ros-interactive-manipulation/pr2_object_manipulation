@@ -1,0 +1,14 @@
+ObjectRecognitionGuiActionFeedback.msg
+ObjectRecognitionGuiActionGoal.msg
+ObjectRecognitionGuiAction.msg
+ObjectRecognitionGuiActionResult.msg
+ObjectRecognitionGuiFeedback.msg
+ObjectRecognitionGuiGoal.msg
+ObjectRecognitionGuiResult.msg
+ObjectSegmentationGuiActionFeedback.msg
+ObjectSegmentationGuiActionGoal.msg
+ObjectSegmentationGuiAction.msg
+ObjectSegmentationGuiActionResult.msg
+ObjectSegmentationGuiFeedback.msg
+ObjectSegmentationGuiGoal.msg
+ObjectSegmentationGuiResult.msg

@@ -1,10 +1,6 @@
 <package>
   <description brief="pr2_interactive_object_detection">
-
-     A package that allows a remote user to request and assist
-     the detection, recognition and pose estimation of tabletop objects,
-     primarily using an rviz display.
-
+    Backend for the interactive object recognition rviz plugin.
   </description>
   <author>David Gossow</author>
   <license>BSD</license>
@@ -12,7 +8,6 @@
   <url>http://ros.org/wiki/pr2_interactive_object_detection</url>
 
   <depend package="roscpp"/>
-  <depend package="rviz"/>
   <depend package="tf"/>
   <depend package="tabletop_object_detector"/>
   <depend package="household_objects_database"/>
@@ -20,18 +15,10 @@
   <depend package="object_manipulator"/>
   <depend package="sensor_msgs"/>
   <depend package="stereo_msgs"/>
-  <depend package="object_recognition_gui"/>
-  <depend package="object_segmentation_gui"/>
   <depend package="actionlib_msgs"/>
   <depend package="rgbd_assembler"/>
   <depend package="tabletop_collision_map_processing"/>
-
-  <!--depend package="object_recognition_server"/-->
-  <!--depend package="object_recognition_msgs"/-->
-  
-  <export>
-    <rviz plugin="${prefix}/plugin_description.xml"/>
-  </export>
+  <depend package="interactive_perception_msgs"/>
 
 </package>
 

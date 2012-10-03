@@ -17,6 +17,9 @@ add_definitions(${EIGEN_DEFINITIONS})
 
 rosbuild_init()
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
 rosbuild_add_boost_directories()
 
 rosbuild_add_library(robot_self_filter_color src/self_mask_color.cpp)

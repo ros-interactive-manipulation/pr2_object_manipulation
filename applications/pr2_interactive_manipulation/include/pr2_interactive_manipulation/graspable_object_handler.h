@@ -38,7 +38,7 @@
 #include <interactive_markers/interactive_marker_server.h>
 #include <interactive_markers/menu_handler.h>
 
-#include <pr2_interactive_object_detection/GraspableObjectList.h>
+#include <object_manipulation_msgs/GraspableObjectList.h>
 
 #include <tabletop_collision_map_processing/collision_map_interface.h>
 

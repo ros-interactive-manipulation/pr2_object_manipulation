@@ -41,7 +41,7 @@
 
 #include <tf/transform_listener.h>
 
-#include "object_segmentation_gui/ObjectSegmentationGuiAction.h"
+#include "interactive_perception_msgs/ObjectSegmentationGuiAction.h"
 
 
 class TabletopObjectSegmenterGui
@@ -59,7 +59,7 @@ private:
 
   tf::TransformListener listener_;
 
-  actionlib::SimpleActionClient<object_segmentation_gui::ObjectSegmentationGuiAction> *os_gui_action_client_;
+  actionlib::SimpleActionClient<interactive_perception_msgs::ObjectSegmentationGuiAction> *os_gui_action_client_;
 
   //! Used to remember the number of markers we publish so we can delete them later
   int num_markers_published_;
@@ -74,7 +74,7 @@ private:
 			   tabletop_object_detector::TabletopSegmentation::Response &response);
 
   //------------------ Individual processing steps -------
-  bool assembleSensorData(object_segmentation_gui::ObjectSegmentationGuiGoal &goal,
+  bool assembleSensorData(interactive_perception_msgs::ObjectSegmentationGuiGoal &goal,
 			  ros::Duration time_out);
 
   //! Converts raw table detection results into a Table message type
@@ -132,10 +132,10 @@ bool TabletopObjectSegmenterGui::segmServiceCallback(tabletop_object_detector::T
     }
 
   if ( os_gui_action_client_ ) delete os_gui_action_client_;
-  os_gui_action_client_ = new actionlib::SimpleActionClient<object_segmentation_gui::ObjectSegmentationGuiAction>
+  os_gui_action_client_ = new actionlib::SimpleActionClient<interactive_perception_msgs::ObjectSegmentationGuiAction>
     ("segmentation_popup", true);
   
-  object_segmentation_gui::ObjectSegmentationGuiGoal segm_goal;
+  interactive_perception_msgs::ObjectSegmentationGuiGoal segm_goal;
   if (!assembleSensorData(segm_goal, ros::Duration(15.0))) return false;
   ROS_INFO("Assembled Sensor Data");
   os_gui_action_client_->sendGoal(segm_goal);
@@ -168,7 +168,7 @@ bool TabletopObjectSegmenterGui::segmServiceCallback(tabletop_object_detector::T
   return true;
 }
 
-bool TabletopObjectSegmenterGui::assembleSensorData(object_segmentation_gui::ObjectSegmentationGuiGoal &goal,
+bool TabletopObjectSegmenterGui::assembleSensorData(interactive_perception_msgs::ObjectSegmentationGuiGoal &goal,
 						    ros::Duration time_out) 
 {
   sensor_msgs::Image::ConstPtr recent_image;

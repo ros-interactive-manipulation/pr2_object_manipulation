@@ -37,7 +37,7 @@
 
 #include <stereo_msgs/DisparityImage.h>
 
-#include "object_recognition_gui/ObjectRecognitionGuiAction.h"
+#include "interactive_perception_msgs/ObjectRecognitionGuiAction.h"
 
 int main(int argc, char **argv)
 {
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh("~");
   std::string topic("/object_recognition_ui");
 
-  actionlib::SimpleActionClient<object_recognition_gui::ObjectRecognitionGuiAction> client(topic, true);
+  actionlib::SimpleActionClient<interactive_perception_msgs::ObjectRecognitionGuiAction> client(topic, true);
   while(!client.waitForServer(ros::Duration(2.0)) && nh.ok())
   {
     ROS_INFO("Waiting for action client on topic %s", topic.c_str());
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     if (!nh.ok()) exit(0);
     ROS_INFO("All required messages received; sending goal to object recognition popup action");
 
-    object_recognition_gui::ObjectRecognitionGuiGoal or_gui_goal;
+    interactive_perception_msgs::ObjectRecognitionGuiGoal or_gui_goal;
     or_gui_goal.image = *recent_image;
     or_gui_goal.camera_info = *recent_camera_info;
 

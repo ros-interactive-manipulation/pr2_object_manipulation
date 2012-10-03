@@ -220,7 +220,7 @@ void ObjectSegmentationRvizUI::startActionServer( ros::NodeHandle &node_handle )
 
   //create non-threaded action server
   object_segmentation_server_ = new actionlib::SimpleActionServer<
-      ObjectSegmentationGuiAction>(node_handle, "segmentation_popup", false);
+    interactive_perception_msgs::ObjectSegmentationGuiAction>(node_handle, "segmentation_popup", false);
 
   object_segmentation_server_->registerGoalCallback(boost::bind(
       &ObjectSegmentationRvizUI::acceptNewGoal, this));
@@ -265,7 +265,7 @@ void ObjectSegmentationRvizUI::acceptNewGoal()
   // only if segmentation is not running, it can be started
   ui_->segment_button_->setEnabled(!running_);
 
-  const ObjectSegmentationGuiGoal::ConstPtr &goal =
+  const interactive_perception_msgs::ObjectSegmentationGuiGoal::ConstPtr &goal =
       object_segmentation_server_->acceptNewGoal();
 
   rviz_interaction_tools::updateCamera(render_panel_->getCamera(),
@@ -767,7 +767,7 @@ void ObjectSegmentationRvizUI::acceptButtonClicked()
 {
   if( !running_) return;
 
-  ObjectSegmentationGuiResult result;
+  interactive_perception_msgs::ObjectSegmentationGuiResult result;
 
   while(!object_segmenter_->getCurrentResult( labels_))
   {
@@ -1021,7 +1021,7 @@ void ObjectSegmentationRvizUI::getClusterSize()
   }
 }
 
-void ObjectSegmentationRvizUI::reconstructAndClusterPointCloud( ObjectSegmentationGuiResult &result)
+void ObjectSegmentationRvizUI::reconstructAndClusterPointCloud( interactive_perception_msgs::ObjectSegmentationGuiResult &result)
 {
   clusters_.clear();
   clusters_.resize(num_fg_hypos_);
