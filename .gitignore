@@ -6,3 +6,4 @@ lib
 srv_gen
 msg_gen
 cfg/cpp
+*.cfgc
