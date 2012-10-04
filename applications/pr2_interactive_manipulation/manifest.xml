@@ -24,7 +24,6 @@
   <depend package="move_base_msgs"/>
   <depend package="segmented_clutter_grasp_planner"/>
   <depend package="tf_throttle"/>
-  <depend package="image_transport_plugins"/>
 
   <!-- The straight-up pr2_teleop app built on rviz. We may want to reverse this. -->
   <depend package="pr2_marker_control"/>
