@@ -35,6 +35,7 @@
   <arg name="reactive_grasping" default="false" />		
   <arg name="compress_point_clouds" default="false" />
   <arg name="new_object_rec" default="false" />
+  <arg name="plugs" default="false" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -333,7 +334,7 @@
     <arg name="stereo" value="$(arg stereo)"/>
   </include>
   
-<!-- Interactive Object Detection incl. sensor data assembler -->
+  <!-- Interactive Object Detection incl. sensor data assembler -->
   <include file="$(find pr2_interactive_object_detection)/launch/pr2_interactive_object_detection_robot.launch">
     <arg name="stereo" value="$(arg stereo)"/>
     <arg name="cvfh" value="$(arg cvfh)"/>
@@ -353,14 +354,6 @@
     <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
   </include>
 
-  <!-- grasp_adjust action server -->
-  <!-- 
-  <include file="$(find pr2_grasp_adjust)/launch/grasp_adjust_action_server.launch">
-    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
-    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
-  </include>
-  -->
-
   <!-- segmented_clutter_grasp_planner action server -->
   <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch" />
 
@@ -374,5 +367,11 @@
 
   <!-- reachable zones marker broadcaster -->
   <node pkg="pr2_marker_control" name="draw_reachable_zones" type="draw_reachable_zones.py" />
+
+  <!-- PR2 plugs -->
+  <group if="$(arg plugs)" >
+    <include file="$(find pr2_plugs_actions)/launch/pr2_arm_ik.launch"/>
+    <include file="$(find pr2_plugs_actions)/launch/plug_actions.launch"/>
+  </group>
 
 </launch>
