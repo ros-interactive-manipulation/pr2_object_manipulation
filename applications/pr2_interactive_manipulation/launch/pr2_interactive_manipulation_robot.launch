@@ -36,6 +36,7 @@
   <arg name="compress_point_clouds" default="false" />
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
+  <arg name="track_people" default="false" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -373,5 +374,8 @@
     <include file="$(find pr2_plugs_actions)/launch/pr2_arm_ik.launch"/>
     <include file="$(find pr2_plugs_actions)/launch/plug_actions.launch"/>
   </group>
+
+  <!-- Caroline's People Tracking node -->
+  <include if="$(arg track_people)" file="$(find pr2_ped_tracker)/launch/robot_interactive.launch" />
 
 </launch>
