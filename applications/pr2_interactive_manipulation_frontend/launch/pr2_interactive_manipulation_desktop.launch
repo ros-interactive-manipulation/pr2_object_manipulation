@@ -14,6 +14,7 @@
     <arg name="rviz_config_file_base" 
 	 default="$(find pr2_interactive_manipulation_frontend)/config/rviz_config.yaml" />
     <arg name="compress_point_clouds" default="false" />
+    <arg name="rviz_user_prefix" default=""/>
 
     <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
     <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -48,7 +49,7 @@
 
     <!-- rviz -->
     <arg if="$(arg rviz_debug)" name="rviz_prefix" value="xterm -e gdb -ex run --args"/>
-    <arg unless="$(arg rviz_debug)" name="rviz_prefix" value=""/>
+    <arg unless="$(arg rviz_debug)" name="rviz_prefix" value="$(arg rviz_user_prefix)"/>
 
     <arg if="$(arg large_menus)" name="large_menu_arg" 
 	 value="-stylesheet $(find pr2_interactive_manipulation_frontend)/launch/big-menus.style"/>
