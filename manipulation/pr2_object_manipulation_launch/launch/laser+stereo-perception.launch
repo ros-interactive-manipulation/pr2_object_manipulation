@@ -85,18 +85,30 @@
     <group unless="$(arg sim)">
       <!-- start the Kinect -->
       <!-- USING arg use_left_arm IS A TOTALLY AWFUL HACK BECAUSE ROSLAUNCH IS DIFFICULT -->
+      <!--
       <include if="$(arg use_left_arm)" file="$(find rgbd_assembler)/launch/openni_node.launch">
         <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
         <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
         <arg name="high_res" value="$(arg high_res)"/>
       </include>
+      -->
 
       <!-- Tim provided this really awesome kinect monitor to kill the openni_node stupidness -->
+      <!--
       <node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" >
         <param name="kinect_node_name" value="openni_node1" />
         <param name="grace_period" value="15" />
         <remap from="camera_info" to="/$(arg kinect_camera_name)/rgb/camera_info" />
       </node>
+      -->
+
+      <include file="$(find openni_launch)/launch/openni.launch">
+        <arg name="depth_registration" value="true"/>
+        <arg name="camera" value="head_mount_kinect"/>
+        <arg name="rgb_frame_id" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
+        <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
+        <arg name="publish_tf" value="false"/>
+      </include>
 
     </group>
 
