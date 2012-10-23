@@ -151,7 +151,7 @@ Visualization Manager:
         - Class: pr2_interactive_manipulation_frontend/InteractiveManipulationFrontend
           Enabled: true
           Name: Manipulation
-        - Class: pr2_interactive_object_detection/InteractiveObjectDetection
+        - Class: pr2_interactive_object_detection_frontend/InteractiveObjectDetection
           Enabled: true
           Name: Object Detection
         - Class: pr2_interactive_manipulation_frontend/CameraFocusFrontend

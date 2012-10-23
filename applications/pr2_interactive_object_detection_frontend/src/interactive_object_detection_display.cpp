@@ -27,17 +27,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "pr2_interactive_object_detection/interactive_object_detection_display.h"
+#include "pr2_interactive_object_detection_frontend/interactive_object_detection_display.h"
 
 #include <rviz/window_manager_interface.h>
 #include <rviz/visualization_manager.h>
 #include <rviz/panel_dock_widget.h>
 
-#include "pr2_interactive_object_detection/interactive_object_detection_frame.h"
+#include "pr2_interactive_object_detection_frontend/interactive_object_detection_frame.h"
 
 #include <QDockWidget>
 
-namespace pr2_interactive_object_detection {
+namespace pr2_interactive_object_detection_frontend {
 
 InteractiveObjectDetectionDisplay::InteractiveObjectDetectionDisplay()
   : Display()

@@ -29,7 +29,7 @@
 
 #include <pluginlib/class_list_macros.h>
 
-#include "pr2_interactive_object_detection/interactive_object_detection_display.h"
+#include "pr2_interactive_object_detection_frontend/interactive_object_detection_display.h"
 
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_object_detection, InteractiveObjectDetection,
-                         pr2_interactive_object_detection::InteractiveObjectDetectionDisplay, rviz::Display )                         
+PLUGINLIB_DECLARE_CLASS( pr2_interactive_object_detection_frontend, InteractiveObjectDetection,
+                         pr2_interactive_object_detection_frontend::InteractiveObjectDetectionDisplay, rviz::Display )

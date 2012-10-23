@@ -51,7 +51,7 @@ qt4_wrap_ui(UIC_FILES
 )
 
 qt4_wrap_cpp(MOC_FILES
-  include/pr2_interactive_object_detection/interactive_object_detection_frame.h
+  include/pr2_interactive_object_detection_frontend/interactive_object_detection_frame.h
 )
 
 rosbuild_add_library(

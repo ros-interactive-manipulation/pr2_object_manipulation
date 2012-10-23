@@ -1,6 +1,6 @@
 <library path="lib/libinteractive_object_detection_display">
-  <class name="pr2_interactive_object_detection/InteractiveObjectDetection"
-         type="pr2_interactive_object_detection::InteractiveObjectDetectionDisplay"
+  <class name="pr2_interactive_object_detection_frontend/InteractiveObjectDetection"
+         type="pr2_interactive_object_detection_frontend::InteractiveObjectDetectionDisplay"
          base_class_type="rviz::Display">
     <description>
       Allows you to trigger the interactive segmentation

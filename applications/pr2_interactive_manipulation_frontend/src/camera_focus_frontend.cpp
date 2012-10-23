@@ -67,11 +67,11 @@ CameraFocusFrontend::~CameraFocusFrontend()
 void CameraFocusFrontend::addFocusButton( QString id )
 {
   // load icon
-  QPixmap icon_fg = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/"+id+".png" );
+  QPixmap icon_fg = rviz::loadPixmap( "package://pr2_interactive_manipulation_frontend/icons/"+id+".png" );
   icon_fg = icon_fg.scaled( 32, 32 );
 
   // load background image
-  QPixmap icon_bg = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/icon_bg.svg" );
+  QPixmap icon_bg = rviz::loadPixmap( "package://pr2_interactive_manipulation_frontend/icons/icon_bg.svg" );
 
   // draw icon on top of bg
   QPainter painter( &icon_bg );
