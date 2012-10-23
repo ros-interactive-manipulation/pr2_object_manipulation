@@ -28,6 +28,7 @@ stereo = str2bool( 'stereo', sys.argv[3] )
 nav_enabled = str2bool( 'nav_enabled', sys.argv[4] )
 nav_local = str2bool( 'nav_local', sys.argv[5] )
 sim = str2bool( 'sim', sys.argv[6] )
+pd_enabled = str2bool( 'pd_enabled', sys.argv[7] )
 
 # set derived params
 
@@ -49,6 +50,9 @@ for display in rviz_yaml['Visualization Manager']['Displays']:
     
     if display['Name'] == 'Map':
         display['Enabled'] = map_enabled
+
+    if display['Name'] == 'People Detection':
+        display['Enabled'] = pd_enabled
 
     if display['Name'] in ['Nav Global Path','Nav Obstacles']:
         display['Enabled'] = nav_enabled
