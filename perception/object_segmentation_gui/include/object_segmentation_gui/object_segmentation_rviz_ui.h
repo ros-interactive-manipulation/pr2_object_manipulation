@@ -34,7 +34,7 @@
 
 #include <ros/ros.h>
 
-#include "object_segmentation_gui/ObjectSegmentationGuiAction.h"
+#include "interactive_perception_msgs/ObjectSegmentationGuiAction.h"
 #include <actionlib/server/simple_action_server.h>
 
 #include "object_segmentation_gui/object_segmenter.h"
@@ -137,14 +137,14 @@ namespace object_segmentation_gui {
     
     void addColorCode();
     
-    void reconstructAndClusterPointCloud(ObjectSegmentationGuiResult &result);
+    void reconstructAndClusterPointCloud(interactive_perception_msgs::ObjectSegmentationGuiResult &result);
     
     void filterOutliersAndDownsample(std::vector<sensor_msgs::PointCloud> &clusters);
     
     ClickInfo click_info_;
     Ogre::ManualObject* box_object_;
     
-    actionlib::SimpleActionServer<ObjectSegmentationGuiAction> *object_segmentation_server_;
+    actionlib::SimpleActionServer<interactive_perception_msgs::ObjectSegmentationGuiAction> *object_segmentation_server_;
     
   private:
   

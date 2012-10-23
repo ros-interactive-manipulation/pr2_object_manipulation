@@ -77,7 +77,7 @@ void InteractiveMarkerNode::processConfig(PickupConfig &config, uint32_t level)
 }
 
 void InteractiveMarkerNode::processGraspableObjects(
-                                          const pr2_interactive_object_detection::GraspableObjectListConstPtr &objects)
+                                          const object_manipulation_msgs::GraspableObjectListConstPtr &objects)
 {
   object_handlers_.clear();
 

@@ -202,7 +202,7 @@ void ObjectRecognitionRvizUI::createMaterials()
 }
 
 
-void ObjectRecognitionRvizUI::parseMeshes(const std::vector<object_recognition_gui::ModelHypothesisList> &model_hyp_list)
+void ObjectRecognitionRvizUI::parseMeshes(const std::vector<interactive_perception_msgs::ModelHypothesisList> &model_hyp_list)
 {
   ROS_ASSERT( mesh_switchers_.size() == 0 );
 
@@ -211,7 +211,7 @@ void ObjectRecognitionRvizUI::parseMeshes(const std::vector<object_recognition_g
   mesh_switchers_.resize(num_models);
   for ( int m=0; m<num_models; ++m )
   {
-    const std::vector<object_recognition_gui::ModelHypothesis> &hyp_list =
+    const std::vector<interactive_perception_msgs::ModelHypothesis> &hyp_list =
         model_hyp_list[m].hypotheses;
 
     int num_hyp = hyp_list.size();
@@ -334,7 +334,7 @@ void ObjectRecognitionRvizUI::onRenderWindowMouseEvent( QMouseEvent* event )
 
 void ObjectRecognitionRvizUI::acceptButtonClicked()
 {
-  ObjectRecognitionGuiResult result;
+  interactive_perception_msgs::ObjectRecognitionGuiResult result;
 
   result.selected_hypothesis_indices.resize( mesh_switchers_.size() );
   for ( unsigned i=0; i<mesh_switchers_.size(); ++i )
@@ -365,7 +365,7 @@ void ObjectRecognitionRvizUI::startActionServer( ros::NodeHandle &node_handle )
 
   //create non-threaded action server
   object_recognition_server_ =
-      new actionlib::SimpleActionServer<ObjectRecognitionGuiAction>( node_handle, "object_recognition_popup", false );
+    new actionlib::SimpleActionServer<interactive_perception_msgs::ObjectRecognitionGuiAction>( node_handle, "object_recognition_popup", false );
 
   object_recognition_server_->registerGoalCallback( boost::bind(&ObjectRecognitionRvizUI::acceptNewGoal, this) );
   object_recognition_server_->registerPreemptCallback( boost::bind(&ObjectRecognitionRvizUI::preempt, this) );
@@ -396,7 +396,7 @@ void ObjectRecognitionRvizUI::stopActionServer()
 
 void ObjectRecognitionRvizUI::acceptNewGoal()
 {
-  const ObjectRecognitionGuiGoal::ConstPtr &goal = object_recognition_server_->acceptNewGoal();
+  const interactive_perception_msgs::ObjectRecognitionGuiGoal::ConstPtr &goal = object_recognition_server_->acceptNewGoal();
 
   rviz_interaction_tools::updateCamera( render_panel_->getCamera(), goal->camera_info );
 

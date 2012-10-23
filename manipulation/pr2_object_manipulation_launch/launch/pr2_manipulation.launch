@@ -8,7 +8,7 @@
   <arg name="use_probabilistic_grasp_planner" default="false" />
   <arg name="use_jinv" default="false" />
   <arg name="use_rmrc" default="false" />		
-  <arg name="reactive_grasping" default="true" />
+  <arg name="reactive_grasping" default="false" />
   <arg name="lcg_left_gripper" default="false"/>
   <arg name="lcg_right_gripper" default="false"/>
 
@@ -34,7 +34,7 @@
 
   <!--reactive approach-->
 
-  <group if="$(arg reactive_grasping)">
+  <!--group if="$(arg reactive_grasping)">
     <node if="$(arg use_right_arm)" name="reactive_grasp_node_right" pkg="pr2_gripper_reactive_approach" 
       type="reactive_grasp_server.py" args="r" respawn="false" output="screen">
       <param name="use_slip_controller" value="$(arg use_slip_controllers)"/>
@@ -47,7 +47,7 @@
       <param name="use_slip_detection" value="$(arg use_slip_controllers)"/>
       <param name="use_task_cartesian" value="$(arg use_task_cartesian)"/>
     </node>
-  </group>
+  </group-->
 
 
   <!--gripper grasp posture controllers-->
