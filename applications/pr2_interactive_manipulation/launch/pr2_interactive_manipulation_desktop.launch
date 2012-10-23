@@ -10,6 +10,7 @@
     <arg name="rviz_debug" default="false"/>
     <arg name="large_menus" default="false"/>
     <arg name="sim" default="false"/>
+    <arg name="pd" default="false"/>
     <arg name="throttle_cameras" default="true" />
     <arg name="rviz_config_file_base" 
 	 default="$(find pr2_interactive_manipulation)/config/rviz_config.yaml" />
@@ -37,7 +38,7 @@
     <arg name="rviz_config_file" value="$(env HOME)/.ros/pr2_interactive_manipulation_temp.rviz"/>
     <node pkg="pr2_interactive_manipulation" type="adjust_rviz_config.py" 
 	  args="$(arg rviz_config_file_base) $(arg rviz_config_file) 
-		$(arg stereo) $(arg nav) $(arg nav_local) $(arg sim)" 
+		$(arg stereo) $(arg nav) $(arg nav_local) $(arg sim) $(arg pd)" 
 	  name="rviz_config_adjuster" output="screen" />
     
     <!-- tf republish; the throttler gets launched on the robot side and the republisher on the desktop side -->
