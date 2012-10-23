@@ -67,17 +67,19 @@ CameraFocusFrontend::~CameraFocusFrontend()
 void CameraFocusFrontend::addFocusButton( QString id )
 {
   // load icon
-  QPixmap icon_raw = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/"+id+".png" );
-  icon_raw = icon_raw.scaled( 32, 32 );
+  QPixmap icon_fg = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/"+id+".png" );
+  icon_fg = icon_fg.scaled( 32, 32 );
 
-  // draw incon on top of background graphics
-  QPixmap icon = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/icon_bg.svg" );
-  QPainter painter( &icon );
-  painter.drawPixmap( 0, 0, icon_raw );
+  // load background image
+  QPixmap icon_bg = rviz::loadPixmap( "package://pr2_interactive_manipulation/icons/icon_bg.svg" );
+
+  // draw icon on top of bg
+  QPainter painter( &icon_bg );
+  painter.drawPixmap( 0, 0, icon_fg );
 
   // add action button to toolbar
-  QString name  = icon.isNull() ? id : "";
-  QAction* action = new QAction( icon, id, toolbar_ );
+  QString name  = icon_bg.isNull() ? id : "";
+  QAction* action = new QAction( icon_bg, id, toolbar_ );
   action->setData( QVariant( id ) ); // store the focus id in the action
   toolbar_actions_->addAction( action );
   toolbar_->addAction( action );
