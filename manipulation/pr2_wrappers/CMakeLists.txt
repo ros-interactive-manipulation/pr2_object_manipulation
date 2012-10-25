@@ -43,6 +43,8 @@ include/pr2_wrappers/base_client.h
 src/base_client.cpp
 include/pr2_wrappers/tuck_arms_client.h
 src/tuck_arms_client.cpp
+include/pr2_wrappers/plugs_client.h
+src/plugs_client.cpp
 manifest.xml
 )
 

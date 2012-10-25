@@ -126,6 +126,7 @@ PR2MarkerControl::PR2MarkerControl() :
   torso_client_(),
   base_client_(nh_, ros::Duration(2.0), &tfl_),
   tuck_arms_client_(nh_, ros::Duration(20.0)),
+  plugs_client_(nh_, ros::Duration(90.0)),
   check_state_validity_client_("/current_state_validator/get_state_validity"),
   collider_node_reset_srv_("/collider_node/reset"),
   snapshot_client_(&nh_, &tfl_, "interactive_manipulation_snapshot", 
@@ -1175,7 +1176,6 @@ void PR2MarkerControl::dualGripperResetControlCB( const visualization_msgs::Inte
   initControlMarkers();
 }
 
-
 void PR2MarkerControl::startDualGrippers( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, bool active )
 {
   control_state_.dual_grippers_.on_ = active;
@@ -1984,6 +1984,11 @@ void PR2MarkerControl::initMenus()
 		       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 1 ) );
     menu_arms_.insert( handle, "Close Gripper",
 		       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 0 ) );
+
+    handle = menu_arms_.insert( "Plug..." );
+    menu_arms_.insert( handle, "Plug in", boost::bind( &PR2MarkerControl::plugsCB, this, PLUGS_PLUGIN) );
+    menu_arms_.insert( handle, "Unplug", boost::bind( &PR2MarkerControl::plugsCB, this, PLUGS_UNPLUG) );
+    menu_arms_.insert( handle, "Cancel", boost::bind( &PR2MarkerControl::plugsCB, this, PLUGS_CANCEL) );
   }
   else
   {
