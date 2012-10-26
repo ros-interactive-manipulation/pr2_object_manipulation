@@ -15,18 +15,6 @@
 
   <depend package="roscpp"/>
   <depend package="rviz"/>
-  <depend package="tf"/>
-  <depend package="tabletop_object_detector"/>
-  <depend package="household_objects_database"/>
-  <depend package="household_objects_database_msgs"/>
-  <depend package="object_manipulator"/>
-  <depend package="sensor_msgs"/>
-  <depend package="stereo_msgs"/>
-  <depend package="object_recognition_gui"/>
-  <depend package="object_segmentation_gui"/>
-  <depend package="actionlib_msgs"/>
-  <depend package="rgbd_assembler"/>
-  <depend package="tabletop_collision_map_processing"/>
   <depend package="pr2_interactive_object_detection"/>
 
   <export>
