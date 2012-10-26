@@ -398,10 +398,17 @@ void ObjectRecognitionRvizUI::acceptNewGoal()
 {
   const interactive_perception_msgs::ObjectRecognitionGuiGoal::ConstPtr &goal = object_recognition_server_->acceptNewGoal();
 
-  rviz_interaction_tools::updateCamera( render_panel_->getCamera(), goal->camera_info );
+  try {
+    image_overlay_->setImage( goal->image );
+    image_overlay_->update();
+  } catch ( ... )
+  {
+    ROS_ERROR("Could not set the overlay image!");
+    object_recognition_server_->setAborted();
+    return;
+  }
 
-  image_overlay_->setImage( goal->image );
-  image_overlay_->update();
+  rviz_interaction_tools::updateCamera( render_panel_->getCamera(), goal->camera_info );
 
   parseMeshes( goal->model_hypotheses );
 
