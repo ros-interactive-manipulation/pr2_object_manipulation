@@ -41,6 +41,8 @@
   
   <depend package="dynamic_reconfigure"/>
 
+  <depend package="pr2_plugs_actions"/>
+
 </package>
 
 
