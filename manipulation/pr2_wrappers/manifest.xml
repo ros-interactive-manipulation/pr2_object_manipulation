@@ -19,7 +19,9 @@
 
   <!-- Robot interface -->
   <depend package="object_manipulator"/>
-  
+
+  <!-- For plugs-->
+  <depend package="pr2_plugs_msgs"/>  
 
   <export>
     <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lpr2_wrappers"/>

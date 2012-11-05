@@ -59,6 +59,7 @@
 #include <pr2_wrappers/torso_client.h>
 #include <pr2_wrappers/base_client.h>
 #include <pr2_wrappers/tuck_arms_client.h>
+#include <pr2_wrappers/plugs_client.h>
 #include <point_cloud_server/StoreCloudAction.h>
 
 #include <pr2_object_manipulation_msgs/GetNavPoseAction.h>
@@ -183,6 +184,18 @@ protected:
     tuck_arms_client_.tuckArms( tuck_right, tuck_left, false );  
   }
 
+  typedef enum {PLUGS_PLUGIN, PLUGS_UNPLUG, PLUGS_CANCEL} plugs_cmd_t_;
+  void plugsCB( plugs_cmd_t_ cmd )
+  {
+	  switchToJoint();
+	  if (cmd!=PLUGS_CANCEL) {
+		  plugs_client_.plug_unplug( (cmd==PLUGS_PLUGIN) ? true : false, false );
+	  } else {
+		  plugs_client_.cancel();
+	  }
+
+  }
+
   void updatePosture( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, int arm_id );
 
   void projectorMenuCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback );
@@ -207,6 +220,8 @@ protected:
   void torsoMenuCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback);
 
   void gripperClosureCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, const float &command);
+
+  void plugCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, const bool &plug);
 
   void updateHeadGoal( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, int arm_id );
 
@@ -340,6 +355,7 @@ protected:
   pr2_wrappers::TorsoClient torso_client_;
   pr2_wrappers::BaseClient base_client_;
   pr2_wrappers::TuckArmsClient tuck_arms_client_;
+  pr2_wrappers::PlugsClient plugs_client_;
 
   boost::mutex planner_lock_;
 
