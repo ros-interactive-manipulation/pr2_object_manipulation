@@ -16,6 +16,7 @@
 	 default="$(find pr2_interactive_manipulation_frontend)/config/rviz_config.yaml" />
     <arg name="compress_point_clouds" default="false" />
     <arg name="rviz_user_prefix" default=""/>
+    <arg name="audio" default="false"/>
 
     <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
     <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -47,6 +48,11 @@
 
     <!-- point cloud decompression -->
     <include if="$(arg compress_point_clouds)" file="$(find compressed_pointcloud_transport)/launch/decompress.launch"/>
+
+    <!-- audio play -->
+    <group if="$(arg audio)">
+      <include file="$(find audio_play)/launch/play.launch"/>      
+    </group>
 
     <!-- rviz -->
     <arg if="$(arg rviz_debug)" name="rviz_prefix" value="xterm -e gdb -ex run --args"/>
