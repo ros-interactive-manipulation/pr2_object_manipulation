@@ -38,6 +38,8 @@
 
 #include <std_msgs/String.h>
 
+#include "pr2_msgs/PowerState.h"
+
 #include "pr2_interactive_manipulation/advanced_options_dialog.h"
 #include "pr2_object_manipulation_msgs/IMGUIOptions.h"
 #include "pr2_object_manipulation_msgs/IMGUIAdvancedOptions.h"
@@ -117,6 +119,8 @@ protected:
 
   void statusCallback( const std_msgs::StringConstPtr &status);
 
+  void powerCallback( const pr2_msgs::PowerStateConstPtr &power);
+
   pr2_object_manipulation_msgs::IMGUIOptions getDialogOptions();
 
   void setCamera(std::vector<double> params);
@@ -131,16 +135,20 @@ protected:
   //actionlib::SimpleActionClient<RunScriptAction> *scripted_action_client_;
   //std::string scripted_action_name_;
   ros::Subscriber status_sub_;
+  ros::Subscriber power_sub_;
   ros::Publisher draw_reachable_zones_pub_;
 
   std::string rcommander_action_info_name_;
   std::string rcommander_group_name_;
   std::string action_name_;
   std::string status_name_;
+  std::string power_name_;
 
   std::string status_label_text_;
+  std::string power_label_text_;
 
   boost::mutex status_label_mutex_;
+  boost::mutex power_label_mutex_;
 
   pr2_object_manipulation_msgs::IMGUIAdvancedOptions adv_options_;
 
