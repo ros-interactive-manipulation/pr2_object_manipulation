@@ -80,6 +80,9 @@ InteractiveManipulationFrontend::InteractiveManipulationFrontend(rviz::DisplayCo
   status_name_ = "interactive_manipulation_status";
   status_sub_ = root_nh_.subscribe(status_name_, 1, &InteractiveManipulationFrontend::statusCallback, this);
 
+  power_name_ = "power_state";
+  power_sub_ = root_nh_.subscribe(power_name_, 1, &InteractiveManipulationFrontend::powerCallback, this);
+  
   draw_reachable_zones_pub_ = root_nh_.advertise<std_msgs::Empty>("/draw_reachable_zones/ping", 10);
 
   rcommander_action_info_name_ = "list_rcommander_actions";
@@ -141,6 +144,11 @@ void InteractiveManipulationFrontend::update()
   status_label_mutex_.unlock();
   ui_->status_label_->setText(mystring);
 
+  power_label_mutex_.lock();
+  mystring = QString::fromUtf8( power_label_text_.c_str() );
+  power_label_mutex_.unlock();
+  ui_->power_label_->setText(mystring);
+
   ui_->reset_button_->setEnabled(ui_->collision_box_->isChecked());
   ui_->reset_choice_->setEnabled(ui_->collision_box_->isChecked());
 }
@@ -150,6 +158,14 @@ void InteractiveManipulationFrontend::statusCallback( const std_msgs::StringCons
   ROS_DEBUG_STREAM("IM Frontend received stauts: " << status->data);
   boost::mutex::scoped_lock lock(status_label_mutex_);
   status_label_text_ = status->data;
+}
+
+void InteractiveManipulationFrontend::powerCallback( const pr2_msgs::PowerStateConstPtr &power)
+{
+  std::ostringstream numstr;
+  numstr << (int)power->relative_capacity << "%";
+  boost::mutex::scoped_lock lock(power_label_mutex_);
+  power_label_text_ = numstr.str();
 }
 
 void InteractiveManipulationFrontend::feedbackCallback(const pr2_object_manipulation_msgs::IMGUIFeedbackConstPtr &feedback)

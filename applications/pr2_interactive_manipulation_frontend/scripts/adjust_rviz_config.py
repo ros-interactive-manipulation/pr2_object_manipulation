@@ -48,16 +48,19 @@ rviz_yaml['Visualization Manager']['Global Options']['Fixed Frame'] = fixed_fram
 
 for display in rviz_yaml['Visualization Manager']['Displays']:
     
-    if display['Name'] == 'Map':
-        display['Enabled'] = map_enabled
-
     if display['Name'] == 'People Tracking':
         display['Enabled'] = track_people
 
-    if display['Name'] in ['Nav Global Path','Nav Obstacles']:
-        display['Enabled'] = nav_enabled
-        if nav_local:
-            display['Topic'] = display['Topic'].replace('move_base_node','move_base_local_node')
+    if display['Name'] == 'Navigation':
+        for nav_display in display['Displays']:
+
+            if nav_display['Name'] == 'Map':
+                nav_display['Enabled'] = map_enabled
+
+            if nav_display['Name'] in ['Nav Global Path','Nav Obstacles']:
+                nav_display['Enabled'] = nav_enabled
+                if nav_local:
+                    nav_display['Topic'] = nav_display['Topic'].replace('move_base_node','move_base_local_node')
 
 # dump yaml to output file
 

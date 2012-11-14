@@ -60,10 +60,12 @@ BaseClient::BaseClient(ros::NodeHandle &nh, const ros::Duration &timeout, tf::Tr
   pose_estimate_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
 
   // Subscribe to the status message for the move_base action server
-  sub_nav_status_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("move_base/status", 10, boost::bind(&BaseClient::moveBaseStatusCB, this, _1));
+  sub_nav_status_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("move_base/status", 10, 
+                                                                   boost::bind(&BaseClient::moveBaseStatusCB, this, _1));
 
   // Subscribe to the result message for the move_base action server
-  sub_nav_result_ = nh_.subscribe<move_base_msgs::MoveBaseActionResult>("move_base/result", 10, boost::bind(&BaseClient::moveBaseResultCB, this, _1));
+  sub_nav_result_ = nh_.subscribe<move_base_msgs::MoveBaseActionResult>("move_base/result", 10, 
+                                                                        boost::bind(&BaseClient::moveBaseResultCB, this, _1));
 
   // Setup the timer callback for publishing updates
   publish_timer_ = nh_.createTimer(ros::Duration(0.05), boost::bind(&BaseClient::publishTwist, this, _1));
@@ -150,28 +152,36 @@ void BaseClient::applyTwist(const geometry_msgs::TwistStamped &ts)
 //! Publishes the most recent twist message to the base controller
 void BaseClient::publishTwist(const ros::TimerEvent &e)
 {
+  //use the command if it not too old, or use zero instead
+  geometry_msgs::TwistStamped cmd = base_cmd_;
+  if( ( (e.current_real - base_cmd_.header.stamp) > timeout_)  )
+  {
+    cmd.twist.linear.x = cmd.twist.linear.y = cmd.twist.linear.z = 0.0;
+    cmd.twist.angular.x = cmd.twist.angular.y = cmd.twist.angular.z = 0.0;
+  }
+
   tf::Vector3 linear;
   tf::Vector3 angular;
 
-  tf::vector3MsgToTF(base_cmd_.twist.linear, linear);
-  tf::vector3MsgToTF(base_cmd_.twist.angular, angular);
+  tf::vector3MsgToTF(cmd.twist.linear, linear);
+  tf::vector3MsgToTF(cmd.twist.angular, angular);
 
   float nu = 0.4;
 
   last_linear_ = nu*linear + (1.0 -nu)*last_linear_;
   last_angular_ = nu*angular + (1.0 -nu)*last_angular_;
 
-  geometry_msgs::Twist cmd;
-  tf::vector3TFToMsg(last_linear_, cmd.linear);
-  tf::vector3TFToMsg(last_angular_, cmd.angular);
-
-  // send the command if it isn't too old
-  if(     ( (e.current_real - base_cmd_.header.stamp) < timeout_)  )
+  //if we have a zero command are we've already sent it, nothing to do
+  if ( linear.length() == 0.0 && last_linear_.length() == 0 && 
+       angular.length() == 0.0 && last_angular_.length() == 0 )
   {
-    //if( linear.length() > 0.01 || angular.length() > 0.01   )
-    //  ROS_INFO("Publishing updated twist command to base.");
-    cmd_vel_pub_.publish(cmd);
+    return;
   }
+
+  geometry_msgs::Twist newcmd;
+  tf::vector3TFToMsg(last_linear_, newcmd.linear);
+  tf::vector3TFToMsg(last_angular_, newcmd.angular);
+  cmd_vel_pub_.publish(newcmd);
 }
 
 void BaseClient::sendNavGoal( const geometry_msgs::PoseStamped &ps)
