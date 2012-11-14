@@ -3,10 +3,9 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Head Camera1
+      Expanded: ~
       Splitter Ratio: 0.65625
-    Tree Height: 478
+    Tree Height: 790
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -40,7 +39,286 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        {}
+        base_bellow_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bl_caster_l_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bl_caster_r_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bl_caster_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        br_caster_l_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        br_caster_r_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        br_caster_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        double_stereo_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fl_caster_l_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fl_caster_r_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fl_caster_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_caster_l_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_caster_r_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr_caster_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_mount_kinect_ir_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_mount_kinect_rgb_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_mount_prosilica_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_pan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_plate_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_tilt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_elbow_flex_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_forearm_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_l_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_l_finger_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_motor_accelerometer_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_palm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_r_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_gripper_r_finger_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_shoulder_lift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_shoulder_pan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_upper_arm_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_wrist_flex_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        l_wrist_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser_tilt_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_elbow_flex_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_forearm_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_l_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_l_finger_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_motor_accelerometer_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_palm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_r_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_gripper_r_finger_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_shoulder_lift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_shoulder_pan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_upper_arm_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_wrist_flex_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r_wrist_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sensor_mount_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        torso_lift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: Robot Model
       Robot Description: robot_description
       TF Prefix: ""
@@ -70,7 +348,7 @@ Visualization Manager:
       Value: true
     - Class: pr2_interactive_manipulation_frontend/PublishClickCamera
       Enabled: true
-      Image Rendering: background
+      Image Rendering: background and overlay
       Image Topic: /interactive_manipulation_camera/image
       Name: Head Camera
       Near Clip Distance: 0.35
@@ -85,16 +363,18 @@ Visualization Manager:
           Base Laser: true
           Grasp Execution Markers: true
           Grasp Markers: true
-          Map: true
-          Nav Global Path: true
-          Nav Obstacles: true
           Octomap Point Cloud: true
           Planning Scene Markers: true
           Tabletop Segmentation Markers: true
           Value: true
         Grid: false
         Kinect Stream: false
-        PR2 Teleop: false
+        Navigation:
+          Map: false
+          Nav Global Path: true
+          Nav Obstacles: false
+          Value: true
+        PR2 Teleop: true
         Panels:
           CameraFocusFrontend: true
           Manipulation: true
@@ -105,7 +385,7 @@ Visualization Manager:
           InteractiveMarkers: true
           Value: true
         Pick Up Objects: true
-        Robot Model: false
+        Robot Model: true
         Snapshot: false
         Value: true
       Zoom Factor: 1
@@ -164,37 +444,37 @@ Visualization Manager:
     - Class: rviz/Group
       Displays:
         - Class: rviz/Marker
-          Enabled: true
+          Enabled: false
           Marker Topic: /grasp_markers
           Name: Grasp Markers
           Namespaces:
             {}
           Queue Size: 100
-          Value: true
+          Value: false
         - Class: rviz/Marker
-          Enabled: true
+          Enabled: false
           Marker Topic: /object_manipulator/grasp_execution_markers
           Name: Grasp Execution Markers
           Namespaces:
             {}
           Queue Size: 100
-          Value: true
+          Value: false
         - Class: rviz/Marker
-          Enabled: true
+          Enabled: false
           Marker Topic: /attached_objects
           Name: Attached Objects
           Namespaces:
             {}
           Queue Size: 100
-          Value: true
+          Value: false
         - Class: rviz/Marker
-          Enabled: true
+          Enabled: false
           Marker Topic: /planning_scene_markers
           Name: Planning Scene Markers
           Namespaces:
             {}
           Queue Size: 100
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds:
             Max Intensity: 4096
@@ -210,7 +490,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: FlatColor
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Name: Octomap Point Cloud
           Position Transformer: XYZ
           Queue Size: 10
@@ -224,22 +504,15 @@ Visualization Manager:
             Max Color: 255; 255; 255
             Min Color: 0; 0; 0
             Value: true
-          Value: true
+          Value: false
         - Class: rviz/Marker
-          Enabled: true
+          Enabled: false
           Marker Topic: /tabletop_segmentation_markers
           Name: Tabletop Segmentation Markers
           Namespaces:
             {}
           Queue Size: 100
-          Value: true
-        - Alpha: 0.7
-          Class: rviz/Map
-          Draw Behind: false
-          Enabled: true
-          Name: Map
-          Topic: /map
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds:
             Max Intensity: 4096
@@ -255,7 +528,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: Intensity
           Decay Time: 0
-          Enabled: true
+          Enabled: false
           Name: Base Laser
           Position Transformer: XYZ
           Queue Size: 10
@@ -269,6 +542,28 @@ Visualization Manager:
             Max Color: 255; 255; 255
             Min Color: 0; 0; 0
             Value: true
+          Value: false
+      Enabled: false
+      Name: Debug Displays
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/InteractiveMarkers
+          Enabled: true
+          Name: InteractiveMarkers
+          Show Axes: false
+          Show Descriptions: true
+          Update Topic: ""
+          Value: true
+      Enabled: false
+      Name: People Tracking
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 0.7
+          Class: rviz/Map
+          Draw Behind: false
+          Enabled: true
+          Name: Map
+          Topic: /map
           Value: true
         - Alpha: 1
           Class: rviz/GridCells
@@ -284,19 +579,8 @@ Visualization Manager:
           Name: Nav Global Path
           Topic: /move_base_node/NavfnROS/plan
           Value: true
-      Enabled: false
-      Name: Debug Displays
-    - Class: rviz/Group
-      Displays:
-        - Class: rviz/InteractiveMarkers
-          Enabled: true
-          Name: InteractiveMarkers
-          Show Axes: false
-          Show Descriptions: true
-          Update Topic: ""
-          Value: true
       Enabled: true
-      Name: People Tracking
+      Name: Navigation
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -310,15 +594,15 @@ Visualization Manager:
     Current:
       Class: rviz/Free
       Control Mode: Orbit
-      Distance: 2.76985
+      Distance: 2.76986
       Eye:
-        X: 0.249999
-        Y: 2.63999
-        Z: 0.799999
+        X: 0.917227
+        Y: 2.56988
+        Z: 0.881961
       Focus:
-        X: 0.354845
-        Y: -0.127871
-        Z: 0.8
+        X: 0.19947
+        Y: -0.105046
+        Z: 0.840507
       Maintain Vertical Axis: true
       Mouse Enabled: true
       Name: Current View
@@ -334,10 +618,10 @@ Visualization Manager:
       Value: Free (rviz)
     Saved: ~
 Window Geometry:
-  Height: 782
+  Height: 1088
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000003000000000000013e0000028bfc0200000006fc0000014e000000ad0000000000fffffffa000000000100000001fb000000300049006e0074006500720061006300740069007600650020004d0061006e006900700075006c006100740069006f006e0100000000ffffffff0000000000000000fb000000160048006500610064002000430061006d0065007200610100000041000001410000001600fffffffb00000018004d0061006e006900700075006c006100740069006f006e010000018800000144000000bd00fffffffb00000020004f0062006a00650063007400200044006500740065006300740069006f006e01000001eb000000bd0000000000000000fb0000000800540069006d0065020000028f00000446000002c700000046fb000000380049006e0074006500720061006300740069007600650020004f0062006a00650063007400200044006500740065006300740069006f006e0100000268000000cc000000000000000000000001000001220000028bfc0200000002fc000000410000028b000000fb0100001dfa000000010100000002fb0000000a005600690065007700730100000000ffffffff0000010f00fffffffb000000100044006900730070006c00610079007301000006080000011d0000010f00fffffffc00000041000003740000000000fffffffa000000000100000002fb0000001200530065006c0065006300740069006f006e0100000000ffffffff0000000000000000fb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000006310000011d0000000000000000000000020000019a00000031fc0100000002fb0000001800430061006d00650072006100200046006f00630075007301000001440000019a0000000000000000fb0000002a00430061006d00650072006100200046006f006300750073002000460072006f006e00740065006e006401000001440000029c0000000000000000000001ba0000028b00000001000000020000000100000002fc00000003000000020000000000000002000000020000000a0054006f006f006c00730100000000ffffffff00000000000000000000001600430061006d0065007200610046006f0063007500730100000127ffffffff00000000000000000000000300000000
-  Width: 1078
-  X: 80
-  Y: 39
+  QMainWindow State: 000000ff00000000fd00000003000000000000020d000003c3fc0200000006fc0000014e000000ad0000000000fffffffa000000000100000001fb000000300049006e0074006500720061006300740069007600650020004d0061006e006900700075006c006100740069006f006e0100000000ffffffff0000000000000000fb000000160048006500610064002000430061006d0065007200610100000041000002500000001600fffffffb00000018004d0061006e006900700075006c006100740069006f006e0100000297000000bd000000bd00fffffffb00000020004f0062006a00650063007400200044006500740065006300740069006f006e010000035a000000aa000000aa00fffffffb0000000800540069006d0065020000028f00000446000002c700000046fb000000380049006e0074006500720061006300740069007600650020004f0062006a00650063007400200044006500740065006300740069006f006e0100000268000000cc00000000000000000000000100000122000003c3fc0200000002fc00000041000003c3000000fb0100001dfa000000010100000002fb0000000a005600690065007700730100000000ffffffff0000010f00fffffffb000000100044006900730070006c00610079007301000006080000011d0000010f00fffffffc00000041000003740000000000fffffffa000000000100000002fb0000001200530065006c0065006300740069006f006e0100000000ffffffff0000000000000000fb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000006310000011d0000000000000000000000020000019a00000031fc0100000002fb0000001800430061006d00650072006100200046006f00630075007301000001440000019a0000000000000000fb0000002a00430061006d00650072006100200046006f006300750073002000460072006f006e00740065006e006401000001440000029c0000000000000000000002e5000003c300000001000000020000000100000002fc00000003000000020000000000000002000000020000000a0054006f006f006c00730100000000ffffffff00000000000000000000001600430061006d0065007200610046006f0063007500730100000127ffffffff00000000000000000000000300000000
+  Width: 1570
+  X: 79
+  Y: 10
