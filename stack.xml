@@ -36,4 +36,6 @@
   <depend stack="visualization" /> <!-- interactive_markers, rviz -->
   <depend stack="simulator_gazebo" /> <!-- gazebo, gazebo_worlds -->
   <depend stack="pr2_simulator" /> <!-- pr2_gazebo, pr2_controller_configuration_gazebo -->
+  <depend stack="geometry_experimental" /> <!-- tf2, tf2_ros -->
+  <depend stack="pr2_plugs" /> <!-- pr2_plugs_actions, pr2_plugs_msgs -->
 </stack>
