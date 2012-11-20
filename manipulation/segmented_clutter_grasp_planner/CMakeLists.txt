@@ -3,7 +3,10 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Eigen REQUIRED)
-include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
+find_package(PCL REQUIRED)
+include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS}
+                           ${PCL_INCLUDE_DIRS}
+)
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -11,7 +14,11 @@ include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
 #  Release        : w/o debug symbols, w/ optimization
 #  RelWithDebInfo : w/ debug symbols, w/ optimization
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+set(ROS_BUILD_TYPE Release)
+
+find_package(PCL)
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
+find_package(PkgConfig REQUIRED)
 
 rosbuild_init()
 
@@ -34,5 +41,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #target_link_libraries(example ${PROJECT_NAME})
 
 rosbuild_add_executable(find_container_action src/find_container_action.cpp)
+target_link_libraries(find_container_action ${PCL_LIBRARIES})
 rosbuild_add_executable(test_find_container_action src/test_find_container_action.cpp)
 rosbuild_add_executable(write_transformed_pcd src/write_transformed_pcd.cpp)
