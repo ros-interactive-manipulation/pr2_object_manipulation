@@ -15,13 +15,14 @@
   <depend package="geometric_shapes"/>
   <depend package="urdf"/>
   <depend package="resource_retriever"/>
-  <depend package="pcl"/>
-  <depend package="common_rosdeps"/>
+  <rosdep name="pcl"/>
+  <depend package="shape_msgs"/>
 
   <rosdep name="assimp" />
+  <rosdep name="pkg-config" />
 
   <export>
-    <cpp cflags="`pkg-config --cflags eigen3` -I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lrobot_self_filter" />
+    <cpp cflags="-I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lrobot_self_filter_color" />
   </export>
 
   <platform os="ubuntu" version="9.04"/>

@@ -73,29 +73,39 @@ public:
                               const pcl::PointCloud<PointT>::Ptr &horizontal_cloud,
                               const pcl::PointCloud<PointT>::Ptr &vertical_cloud)
   {
-    pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>());
+    //pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>());
+    pcl::PointCloud<pcl::PointXYZRGBNormal> mls_points;
 
     // Estimate point normals
     pcl::search::KdTree<PointT>::Ptr tree (new pcl::search::KdTree<PointT> ());
-    pcl::MovingLeastSquares<PointT, pcl::Normal> ne;
+    pcl::MovingLeastSquares<PointT, pcl::PointXYZRGBNormal> ne;
     ne.setSearchMethod (tree);
+    ne.setComputeNormals (true);
     ne.setInputCloud (cloud_in);
-    ne.setOutputNormals(normals);
+    //ne.setOutputNormals(normals);
     ne.setSearchRadius (0.012);
-    ne.reconstruct (*cloud_in);
+    //ne.reconstruct (*cloud_in);
+    ne.process (mls_points);
 
-    for(size_t i = 0; i < cloud_in->points.size(); i++)
+    for(size_t i = 0; i < mls_points.points.size(); i++)
     {
 
-      pcl::Normal normal = normals->points[i];
-      if(fabs(normal.normal_x*opening_dir_.x + normal.normal_y*opening_dir_.y + normal.normal_z*opening_dir_.z) > 0.7)
+      PointT point;
+      point.x = mls_points.points[i].x;
+      point.y = mls_points.points[i].y;
+      point.z = mls_points.points[i].z;
+      point.rgba = mls_points.points[i].rgba;
+
+      //pcl::Normal normal = normals->points[i];
+      //if(fabs(normal.normal_x*opening_dir_.x + normal.normal_y*opening_dir_.y + normal.normal_z*opening_dir_.z) > 0.7)
+      if(fabs(mls_points[i].normal_x*opening_dir_.x + mls_points[i].normal_y*opening_dir_.y + mls_points[i].normal_z*opening_dir_.z) > 0.7)
       //if(fabs(normal.normal_z) > 0.7)
       {
-        horizontal_cloud->points.push_back(cloud_in->points[i]);
+        horizontal_cloud->points.push_back(point);
       }
       else
       {
-        vertical_cloud->points.push_back(cloud_in->points[i]);
+        vertical_cloud->points.push_back(point);
       }
     }
 
