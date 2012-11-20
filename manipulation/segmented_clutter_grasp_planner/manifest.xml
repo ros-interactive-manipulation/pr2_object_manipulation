@@ -13,8 +13,10 @@
   <depend package="tf" />
   <depend package="pr2_gripper_grasp_planner_cluster" />
   <depend package="roscpp"/>
-  <depend package="pcl"/>
+  <rosdep name="pcl"/>
   <depend package="sensor_msgs"/>
+  <rosdep name="pkg-config" />
+
 </package>
 
 
