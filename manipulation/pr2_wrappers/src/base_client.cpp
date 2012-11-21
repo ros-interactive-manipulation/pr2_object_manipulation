@@ -172,8 +172,9 @@ void BaseClient::publishTwist(const ros::TimerEvent &e)
   last_angular_ = nu*angular + (1.0 -nu)*last_angular_;
 
   //if we have a zero command are we've already sent it, nothing to do
-  if ( linear.length() == 0.0 && last_linear_.length() == 0 && 
-       angular.length() == 0.0 && last_angular_.length() == 0 )
+  double EPS = 1.0e-10;
+  if (  linear.length() < EPS &&  last_linear_.length() < EPS && 
+       angular.length() < EPS && last_angular_.length() < EPS )
   {
     return;
   }
