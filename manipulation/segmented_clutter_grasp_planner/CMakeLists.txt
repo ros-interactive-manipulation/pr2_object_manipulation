@@ -16,10 +16,6 @@ include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS}
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 set(ROS_BUILD_TYPE Release)
 
-find_package(PCL)
-include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
-find_package(PkgConfig REQUIRED)
-
 rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
