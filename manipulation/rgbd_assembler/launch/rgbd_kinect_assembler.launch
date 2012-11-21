@@ -9,8 +9,8 @@
             pkg="rgbd_assembler" output="screen" respawn="false">
         <param if="$(arg high_res)" name="image_topic" value="/$(arg kinect_camera_name)/depth_registered/points_image"/>
         <param unless="$(arg high_res)" name="image_topic" value="/$(arg kinect_camera_name)/rgb/image_color"/>
-        <param name="disparity_image_topic" value="/$(arg kinect_camera_name)/depth/disparity"/>
-        <param name="camera_info_topic" value="/$(arg kinect_camera_name)/depth/camera_info"/>
+        <param name="disparity_image_topic" value="/$(arg kinect_camera_name)/depth_registered/disparity"/>
+        <param name="camera_info_topic" value="/$(arg kinect_camera_name)/depth_registered/camera_info"/>
         <param name="point_cloud_topic" value="/$(arg kinect_camera_name)/depth_registered/points"/>
 		<param name="use_disparity_image" value="false"/>
       </node>
