@@ -29,7 +29,7 @@
 
 #include "pr2_interactive_manipulation/camera_focus_frontend.h"
 
-#include <rviz_view_controllers/CameraPlacement.h>
+#include <view_controller_msgs/CameraPlacement.h>
 
 #include "object_manipulator/tools/camera_configurations.h"
 
@@ -54,7 +54,7 @@ CameraFocusFrontend::CameraFocusFrontend() :
   toolbar_( 0 )
 {
   topic_prop_ = new rviz::RosTopicProperty( "Command topic", "/rviz/camera_placement",
-      QString::fromStdString(ros::message_traits::datatype<rviz_view_controllers::CameraPlacement>() ),
+      QString::fromStdString(ros::message_traits::datatype<view_controller_msgs::CameraPlacement>() ),
       "Topic on which to send out camera placement messages.", this , SLOT( updateTopic() ) );
 }
 
@@ -131,17 +131,17 @@ void CameraFocusFrontend::changeView( QAction* action )
 
 void CameraFocusFrontend::updateTopic()
 {
-  pub_ = root_nh_.advertise<rviz_view_controllers::CameraPlacement>(topic_prop_->getStdString(), 5);
+  pub_ = root_nh_.advertise<view_controller_msgs::CameraPlacement>(topic_prop_->getStdString(), 5);
 }
 
 void CameraFocusFrontend::processButtonClick(const std::string &name)
 {
-  rviz_view_controllers::CameraPlacement cp;
+  view_controller_msgs::CameraPlacement cp;
   try
   {
     if(object_manipulator::cameraConfigurations().get_camera_placement(name.c_str(), cp.eye, cp.focus, cp.up))
     {
-      cp.attached_frame = "";
+      cp.target_frame = (name == "kinect") ? "head_mount_kinect_rgb_link" : "<Fixed Frame>" ; // special case for kinect...
       cp.time_from_start = ros::Duration(0.6);
       ROS_DEBUG_STREAM("Publishing camera placement request [" << name << "]: " << cp);
       pub_.publish(cp);
