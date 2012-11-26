@@ -10,7 +10,7 @@
   <url>http://ros.org/wiki/pr2_interactive_manipulation_frontend</url>
 
   <depend package="rviz"/>
-  <depend package="rviz_view_controllers"/>
+  <depend package="view_controller_msgs"/>
   <depend package="pr2_controllers_msgs"/>
   <depend package="object_manipulator"/>
   <depend package="pr2_object_manipulation_msgs"/>

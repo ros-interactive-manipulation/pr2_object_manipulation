@@ -593,30 +593,29 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Free
+      Class: rviz_animated_view_controller/Animated
       Control Mode: Orbit
       Distance: 3.09619
       Eye:
-        X: 20.2989
-        Y: 23.2672
+        X: 3.2989
+        Y: 3.2672
         Z: 1.47974
       Focus:
-        X: 20.4301
-        Y: 26.2969
-        Z: 0.855307
+        X: 0.4301
+        Y: 0.2969
+        Z: 1.0
+      Up:
+        X: 0
+        Y: 0
+        Z: 0
       Maintain Vertical Axis: true
       Mouse Enabled: true
       Name: Current View
       Near Clip Distance: 0.35
       Placement Topic: /rviz/camera_placement
       Target Frame: <Fixed Frame>
-      Trajectory Topic: /rviz/camera_placement_trajectory
       Transition Time: 0.5
-      Up:
-        X: 0.00246793
-        Y: -0.00411519
-        Z: 0.999988
-      Value: Free (rviz)
+      Value: Animated (rviz_animated_view_controller)
     Saved: ~
 Window Geometry:
   Height: 1148
