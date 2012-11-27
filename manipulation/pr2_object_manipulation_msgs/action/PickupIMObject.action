@@ -1,0 +1,9 @@
+# objects are numbered in the same order as the GraspableObjectsList (0 start)
+int32 object_id
+
+# 0=right, 1=left arm
+int32 arm_selection
+
+---
+
+---
