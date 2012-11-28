@@ -30,7 +30,6 @@
 #ifndef CAMERA_FOCUS_FRONTEND
 #define CAMERA_FOCUS_FRONTEND
 
-#include <rviz_view_controllers/CameraPlacement.h>
 #include <rviz/display.h>
 #include <ros/ros.h>
 
