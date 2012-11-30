@@ -37,6 +37,7 @@
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
   <arg name="track_people" default="false" />
+  <arg name="audio" default="false" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -199,7 +200,7 @@
     <!-- broadcast Willow's map -->
     <group if="$(arg wg)">
       <node name="map_server" pkg="map_server" type="map_server" 
-            args="$(find willow_maps)/willow-sans-whitelab-2010-02-18-0.025.pgm 0.025" machine="c2" />
+            args="$(find willow_maps)/willow-sans-whitelab-2010-02-18-0.025.pgm 0.025"/>
     </group>
   </group>
 
@@ -377,5 +378,11 @@
 
   <!-- Caroline's People Tracking node -->
   <include if="$(arg track_people)" file="$(find pr2_ped_tracker)/launch/robot_interactive.launch" />
+
+  <!-- audio capture and speech synthesis -->
+  <group if="$(arg audio)">
+    <include file="$(find audio_capture)/launch/capture.launch"/>
+    <node pkg="sound_play" name="sound_play" type="soundplay_node.py" respawn="false" output="screen"/>    
+  </group>
 
 </launch>
