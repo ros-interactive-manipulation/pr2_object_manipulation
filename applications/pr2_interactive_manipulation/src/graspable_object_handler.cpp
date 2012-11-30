@@ -140,15 +140,19 @@ namespace pr2_interactive_manipulation
 
   void GraspableObjectHandler::pickup( const InteractiveMarkerFeedbackConstPtr &feedback )
   {
-    // determine arm selection
-    MenuHandler::EntryHandle arm_h = feedback->menu_entry_id;
-    if ( arm_h == left_pickup_h_ ) options_.arm_selection = 1;
-    else if ( arm_h == right_pickup_h_ ) options_.arm_selection = 0;
-    else return;
-
     // pick up
     ROS_INFO_STREAM( "Picking up object # " << feedback->marker_name );
 
+    // determine arm selection
+    MenuHandler::EntryHandle arm_h = feedback->menu_entry_id;
+    if ( arm_h == left_pickup_h_ ) callPickup(1);
+    else if ( arm_h == right_pickup_h_ ) callPickup(0);
+  }
+
+  //arm_selection: 0=right, 1=left
+  void GraspableObjectHandler::callPickup(int arm_selection)
+  {
+    options_.arm_selection = arm_selection;
     object_manipulation_msgs::GraspableObject object = object_;
 
     if ( !use_rec_result_ )
