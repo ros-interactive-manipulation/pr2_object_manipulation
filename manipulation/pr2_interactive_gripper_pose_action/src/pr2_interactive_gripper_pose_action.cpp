@@ -350,7 +350,7 @@ public:
         {
           ROS_INFO("Goal contains object model; looking for model mesh...");
           // Connect to databse, get object mesh.
-          shape_msgs::Shape mesh;
+          shape_msgs::Mesh mesh;
           if(!getModelMesh(goal.object.potential_models[0].model_id, mesh))
           {
             ROS_INFO("Unable to get database model, continuing with cluster.");
@@ -1156,7 +1156,7 @@ protected:
   }
 
   //! Get the mesh corresponding to a database model_id
-  bool getModelMesh( int model_id, shape_msgs::Shape& mesh )
+  bool getModelMesh( int model_id, shape_msgs::Mesh& mesh )
   {
     household_objects_database_msgs::GetModelMesh mesh_srv;
 

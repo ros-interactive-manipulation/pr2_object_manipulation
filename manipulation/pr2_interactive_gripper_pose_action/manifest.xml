@@ -10,23 +10,24 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/pr2_marker_control</url>
-  <depend package="roscpp"/>
-  <depend package="interactive_markers"/>
-  <depend package="interactive_marker_helpers"/>
-  <depend package="sensor_msgs"/>
-  <depend package="visualization_msgs"/>
-  <depend package="geometry_msgs"/>
-  <depend package="tf"/>
-  
+
+  <!-- Robot interface -->
+  <depend package="object_manipulator"/>
+
   <!-- Contains the GetGripperPose and TestGripperPose actions  -->
   <depend package="pr2_object_manipulation_msgs"/>
   
   <!-- So we can send cloud to the (optional) grasp planner -->
   <depend package="point_cloud_server"/>
 
-  <!-- Robot interface -->
-  <depend package="object_manipulator"/>
-  
+  <depend package="roscpp"/>
+  <depend package="interactive_marker_helpers"/>
+  <depend package="sensor_msgs"/>
+  <depend package="visualization_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tf"/>
+  <depend package="interactive_markers"/>
+   
   <!-- For joint states stuff 
   <depend package="planning_environment"/>
   <depend package="pr2_wrappers"/>

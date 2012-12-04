@@ -289,7 +289,6 @@ void TabletopSegmentor::addConvexHullTable(Table &table,
   centroid.z /= convex_hull.points.size();
 
   //create a triangle mesh out of the convex hull points and add it to the table message
-  table.convex_hull.type = table.convex_hull.MESH;
   for (size_t i=0; i<convex_hull.points.size(); i++)
   {
     geometry_msgs::Point vertex;
@@ -309,9 +308,11 @@ void TabletopSegmentor::addConvexHullTable(Table &table,
     table.convex_hull.vertices.push_back(vertex);
       
     if(i==0 || i==convex_hull.points.size()-1) continue;
-    table.convex_hull.triangles.push_back(0);
-    table.convex_hull.triangles.push_back(i);
-    table.convex_hull.triangles.push_back(i+1);
+    shape_msgs::MeshTriangle meshtri;
+    meshtri.vertex_indices[0] = 0;
+    meshtri.vertex_indices[1] = i;
+    meshtri.vertex_indices[2] = i+1;
+    table.convex_hull.triangles.push_back(meshtri);
   }
   visualization_msgs::Marker tableMarker = MarkerGenerator::getConvexHullTableMarker(table.convex_hull);
   tableMarker.header = table.pose.header;
@@ -515,7 +516,7 @@ bool TabletopSegmentor::tableMsgToPointCloud (Table &table, std::string frame_id
   table.pose.header.frame_id = frame_id;
 
   //make a new Shape for drawing
-  arm_navigation_msgs::Shape mesh;
+  shape_msgs::Mesh mesh;
   mesh.vertices.resize(table_hull.points.size());
   for(size_t i = 0; i < table_hull.points.size(); i++)
   {
