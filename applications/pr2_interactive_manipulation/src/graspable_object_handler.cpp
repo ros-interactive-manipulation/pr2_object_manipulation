@@ -43,7 +43,7 @@ namespace pr2_interactive_manipulation
   GraspableObjectHandler::GraspableObjectHandler( std::string name,
       InteractiveMarkerNode *node,
       const object_manipulation_msgs::GraspableObject &object,
-      const arm_navigation_msgs::Shape &mesh,
+      const shape_msgs::Mesh &mesh,
       interactive_markers::InteractiveMarkerServer &marker_server,
       pr2_object_manipulation_msgs::IMGUIOptions &options,
       tabletop_collision_map_processing::CollisionMapInterface *col ) :
@@ -182,7 +182,7 @@ namespace pr2_interactive_manipulation
     marker.color.a = 0.5;
     marker.frame_locked = false;
 
-    if ( use_rec_result_ && mesh_.type == arm_navigation_msgs::Shape::MESH && mesh_.vertices.size() > 0 )
+    if ( use_rec_result_ && mesh_.vertices.size() > 0 )
     {
       int_marker.pose = object_.potential_models[0].pose.pose;
       int_marker.header = object_.potential_models[0].pose.header;
@@ -193,16 +193,15 @@ namespace pr2_interactive_manipulation
 
       marker.points.reserve( mesh_.triangles.size()*3 );
 
-      size_t num_t = mesh_.triangles.size();
-      for ( size_t t=0; t+2<num_t; t+=3 )
+      for ( size_t t=0; t<mesh_.triangles.size(); t++ )
       {
-        if ( (size_t)mesh_.triangles[t] < mesh_.vertices.size() &&
-            (size_t)mesh_.triangles[t+1] < mesh_.vertices.size() &&
-            (size_t)mesh_.triangles[t+2] < mesh_.vertices.size() )
+        if ( (size_t)mesh_.triangles[t].vertex_indices[0] < mesh_.vertices.size() &&
+             (size_t)mesh_.triangles[t].vertex_indices[1] < mesh_.vertices.size() &&
+             (size_t)mesh_.triangles[t].vertex_indices[2] < mesh_.vertices.size() )
         {
-          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t] ] );
-          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t+1] ] );
-          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t+2] ] );
+          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t].vertex_indices[0] ] );
+          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t].vertex_indices[1] ] );
+          marker.points.push_back( mesh_.vertices[ mesh_.triangles[t].vertex_indices[2] ] );
         }
         else
         {

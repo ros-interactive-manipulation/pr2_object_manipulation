@@ -22,7 +22,7 @@
   <depend package="sensor_msgs"/>
   <depend package="stereo_msgs"/>
   <depend package="geometry_msgs"/>
-  <depend package="arm_navigation_msgs"/>
+  <depend package="shape_msgs"/>
 
   <depend package="interactive_perception_msgs"/>
   

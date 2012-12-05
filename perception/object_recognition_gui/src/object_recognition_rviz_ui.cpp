@@ -224,11 +224,11 @@ void ObjectRecognitionRvizUI::parseMeshes(const std::vector<interactive_percepti
 
     for ( int h=0; h<num_hyp; ++h )
     {
-      const arm_navigation_msgs::Shape& mesh = hyp_list[h].mesh;
+      const shape_msgs::Mesh& mesh = hyp_list[h].mesh;
       const geometry_msgs::Pose pose = hyp_list[h].pose.pose;
 #if 0
       ROS_INFO_STREAM( "Model " << m << ", hypothesis " << h
-          << ") has " << mesh.triangles.size()/3 << " triangles and "
+          << ") has " << mesh.triangles.size() << " triangles and "
           << mesh.vertices.size() << " vertices." );
       ROS_INFO_STREAM( " Position:" << pose.position.x << " "
           << pose.position.y << " " << pose.position.z <<

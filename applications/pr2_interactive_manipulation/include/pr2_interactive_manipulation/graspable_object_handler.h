@@ -54,7 +54,7 @@ public:
   GraspableObjectHandler( std::string name,
       InteractiveMarkerNode *node,
       const object_manipulation_msgs::GraspableObject &object,
-      const arm_navigation_msgs::Shape &mesh,
+      const shape_msgs::Mesh &mesh,
       interactive_markers::InteractiveMarkerServer &marker_server,
       pr2_object_manipulation_msgs::IMGUIOptions &options,
       tabletop_collision_map_processing::CollisionMapInterface *col);
@@ -86,7 +86,7 @@ private:
   pr2_object_manipulation_msgs::IMGUIOptions &options_;
 
   object_manipulation_msgs::GraspableObject object_;
-  const arm_navigation_msgs::Shape mesh_;
+  const shape_msgs::Mesh mesh_;
 
   bool use_rec_result_;
 
