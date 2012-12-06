@@ -39,4 +39,6 @@
   <depend stack="geometry_experimental" /> <!-- tf2, tf2_ros -->
   <depend stack="pr2_plugs" /> <!-- pr2_plugs_actions, pr2_plugs_msgs -->
   <depend stack="pr2_apps" /> <!-- pr2_tuckarm -->
+  <depend stack="view_controller_msgs" /> <!-- view_controller_msgs -->
+  <depend stack="rviz_animated_view_controller" /> <!-- rviz_animated_view_controller -->
 </stack>
