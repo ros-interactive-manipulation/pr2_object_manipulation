@@ -44,7 +44,8 @@ InteractiveMarkerNode::InteractiveMarkerNode() :
   root_nh_(""),
   priv_nh_("~"),
   im_gui_action_client_("imgui_action", true),
-  marker_server_("interactive_manipulation")
+  marker_server_("interactive_manipulation"),
+  pickup_as_(root_nh_, "pickup_im_object_action", boost::bind(&InteractiveMarkerNode::pickupIMObject, this, _1), false)
 {
   graspable_objects_sub_ = root_nh_.subscribe("interactive_object_recognition_result", 10,
     &InteractiveMarkerNode::processGraspableObjects, this);
@@ -62,10 +63,30 @@ InteractiveMarkerNode::InteractiveMarkerNode() :
   dyn_conf_srv_.setCallback( boost::bind(&InteractiveMarkerNode::processConfig, this, _1, _2) );
   collision_map_interface_.resetCollisionId(1000);
 
+  pickup_as_.start();
+
+  ROS_INFO("interactive_marker_node: done init");
 }
 
 InteractiveMarkerNode::~InteractiveMarkerNode()
 {
+}
+
+void InteractiveMarkerNode::pickupIMObject(const pr2_object_manipulation_msgs::PickupIMObjectGoalConstPtr &goal)
+{
+  ROS_INFO("interactive_marker_node: picking up object number %d", goal->object_id);
+
+  if(goal->object_id >= (int)object_handlers_.size())
+  {
+    ROS_ERROR("interactive_marker_node: object_id %d doesn't exist!", goal->object_id);    
+    pickup_as_.setAborted();
+    return;
+  }
+
+  object_handlers_[goal->object_id]->callPickup(goal->arm_selection);
+
+  pickup_as_.setSucceeded();
+
 }
 
 void InteractiveMarkerNode::processConfig(PickupConfig &config, uint32_t level)
