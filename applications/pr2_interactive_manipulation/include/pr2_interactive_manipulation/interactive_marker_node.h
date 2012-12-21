@@ -31,11 +31,13 @@
 #define INTERACTIVE_MANIPULATION_MARKER_NODE
 
 #include "pr2_object_manipulation_msgs/IMGUIAction.h"
+#include "pr2_object_manipulation_msgs/PickupIMObjectAction.h"
 
 #include "graspable_object_handler.h"
 
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
+#include <actionlib/server/simple_action_server.h>
 #include <dynamic_reconfigure/server.h>
 
 #include <interactive_markers/interactive_marker_server.h>
@@ -83,6 +85,10 @@ private:
   dynamic_reconfigure::Server<PickupConfig> dyn_conf_srv_;
 
   tabletop_collision_map_processing::CollisionMapInterface collision_map_interface_;
+
+  actionlib::SimpleActionServer<pr2_object_manipulation_msgs::PickupIMObjectAction> pickup_as_;
+
+  void pickupIMObject(const pr2_object_manipulation_msgs::PickupIMObjectGoalConstPtr &goal);
 };
 
 }
