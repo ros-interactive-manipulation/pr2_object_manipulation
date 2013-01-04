@@ -131,13 +131,13 @@ PR2MarkerControl::PR2MarkerControl() :
   collider_node_reset_srv_("/collider_node/reset"),
   snapshot_client_(&nh_, &tfl_, "interactive_manipulation_snapshot", 
                    "interactive_point_cloud", "interactive_manipulation_snapshot_server", 
-                   mechanism_, "/odom_combined"),
+                   mechanism_, "odom_combined"),
   object_cloud_left_(&nh_, &tfl_, "in_hand_object_cloud_left", 
                      "in_hand_objects", "in_hand_object_server_left", 
-                     mechanism_, "/l_wrist_roll_link"),
+                     mechanism_, "l_wrist_roll_link"),
   object_cloud_right_(&nh_, &tfl_, "in_hand_object_cloud_right", 
                       "in_hand_objects", "in_hand_object_server_right", 
-                      mechanism_, "/r_wrist_roll_link"),
+                      mechanism_, "r_wrist_roll_link"),
   base_pose_client_("pr2_interactive_nav_action", true),
   gripper_pose_client_("pr2_interactive_gripper_pose_action", true),
   alignedOdomValid_(false),
@@ -156,7 +156,7 @@ PR2MarkerControl::PR2MarkerControl() :
   pnh_.param<double>("update_period",  update_period_, 0.05);
   pnh_.param<double>("cartesian_clip_distance",  cartesian_clip_distance_, 2);
   pnh_.param<double>("cartesian_clip_angle",  cartesian_clip_angle_, 10);
-  pnh_.param<std::string>("head_pointing_frame", head_pointing_frame_, "/default_head_pointing_frame");
+  pnh_.param<std::string>("head_pointing_frame", head_pointing_frame_, "default_head_pointing_frame");
   pnh_.param<std::string>("move_base_node_name", move_base_node_name_, "move_base_node");
   pnh_.param<bool>("nav_3d", using_3d_nav_, false);
 
@@ -173,9 +173,9 @@ PR2MarkerControl::PR2MarkerControl() :
   pnh_.param<std::string>("l_gripper_type", l_gripper_type_, "pr2");
   pnh_.param<std::string>("r_gripper_type", r_gripper_type_, "pr2");
 
-  object_cloud_left_sub_ = nh_.subscribe("/in_hand_object_left", 1, 
+  object_cloud_left_sub_ = nh_.subscribe("in_hand_object_left", 1,
                                          &PR2MarkerControl::inHandObjectLeftCallback, this);
-  object_cloud_right_sub_ = nh_.subscribe("/in_hand_object_right", 1, 
+  object_cloud_right_sub_ = nh_.subscribe("in_hand_object_right", 1,
                                           &PR2MarkerControl::inHandObjectRightCallback, this);
 
   ROS_INFO("***************************** %s *****************************", manipulator_base_frame_.c_str());
@@ -722,7 +722,7 @@ void PR2MarkerControl::initMeshMarkers()
 
   if (true) // Head is always on
   {
-    ps.header.frame_id = "/head_tilt_link";
+    ps.header.frame_id = "head_tilt_link";
     server_.insert(makeMeshMarker( "head_tilt_link", "package://pr2_description/meshes/head_v0/head_tilt.dae",
                                    ps, scale_factor));
     menu_head_.apply(server_, "head_tilt_link");
@@ -761,7 +761,7 @@ void PR2MarkerControl::initMeshMarkers()
   if(use_right_arm_)
   {
     ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "/r_upper_arm_link";
+    ps.header.frame_id = "r_upper_arm_link";
     ps.pose.position.x = mesh_offset*2;
     server_.insert(makeMeshMarker( "r_upper_arm_link", "package://pr2_description/meshes/upper_arm_v0/upper_arm.dae",
                                    ps, scale_factor, object_manipulator::msg::createColorMsg(1, 0 , 0, 1),
@@ -771,7 +771,7 @@ void PR2MarkerControl::initMeshMarkers()
     menu_arms_.apply(server_, "r_upper_arm_link");
 
     // --------------------------------------------------------
-    ps.header.frame_id = "/r_gripper_palm_link";
+    ps.header.frame_id = "r_gripper_palm_link";
     if (r_gripper_type_ == "pr2") ps.pose.position.x = mesh_offset;
     else ps.pose.position.x = 0.0;
     ps.pose.orientation = q_identity;
@@ -780,7 +780,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_palm_link");
 
-    ps.header.frame_id = "/r_gripper_l_finger_link";
+    ps.header.frame_id = "r_gripper_l_finger_link";
     ps.pose.position.x = mesh_offset/2;
     ps.pose.orientation = q_identity;
     server_.insert(makeMeshMarker( "r_gripper_l_finger_link", r_gripper_finger_path, ps, scale_factor),
@@ -788,7 +788,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_l_finger_link");
 
-    ps.header.frame_id = "/r_gripper_l_finger_tip_link";
+    ps.header.frame_id = "r_gripper_l_finger_tip_link";
     ps.pose.position.x = mesh_offset/4;
     ps.pose.orientation = q_identity;
     server_.insert(makeMeshMarker( "r_gripper_l_finger_tip_link", r_gripper_fingertip_path, ps, scale_factor*1.02),
@@ -796,7 +796,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_l_finger_tip_link");
 
-    ps.header.frame_id = "/r_gripper_r_finger_link";
+    ps.header.frame_id = "r_gripper_r_finger_link";
     ps.pose.position.x = mesh_offset/2;
     if (r_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
     else ps.pose.orientation = q_identity;
@@ -805,7 +805,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_r_finger_link");
 
-    ps.header.frame_id = "/r_gripper_r_finger_tip_link";
+    ps.header.frame_id = "r_gripper_r_finger_tip_link";
     ps.pose.position.x = mesh_offset/4;
     if (r_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
     else ps.pose.orientation = q_identity;
@@ -821,7 +821,7 @@ void PR2MarkerControl::initMeshMarkers()
   if(use_left_arm_)
   {
     ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "/l_upper_arm_link";
+    ps.header.frame_id = "l_upper_arm_link";
     ps.pose.position.x = mesh_offset*2;
     server_.insert(makeMeshMarker( "l_upper_arm_link", "package://pr2_description/meshes/upper_arm_v0/upper_arm.dae",
                                    ps, scale_factor, object_manipulator::msg::createColorMsg(1, 0 , 0, 1),
@@ -831,7 +831,7 @@ void PR2MarkerControl::initMeshMarkers()
     menu_arms_.apply(server_, "l_upper_arm_link");
 
     // --------------------------------------------------------
-    ps.header.frame_id = "/l_gripper_palm_link";
+    ps.header.frame_id = "l_gripper_palm_link";
     if (l_gripper_type_ == "pr2") ps.pose.position.x = mesh_offset;
     else ps.pose.position.x = 0.0;
     ps.pose.orientation = q_identity;
@@ -840,7 +840,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_palm_link");
 
-    ps.header.frame_id = "/l_gripper_l_finger_link";
+    ps.header.frame_id = "l_gripper_l_finger_link";
     ps.pose.position.x = mesh_offset/2;
     ps.pose.orientation = q_identity;
     server_.insert(makeMeshMarker( "l_gripper_l_finger_link", l_gripper_finger_path, ps, scale_factor),
@@ -848,7 +848,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_l_finger_link");
 
-    ps.header.frame_id = "/l_gripper_l_finger_tip_link";
+    ps.header.frame_id = "l_gripper_l_finger_tip_link";
     ps.pose.position.x = mesh_offset/4;
     ps.pose.orientation = q_identity;
     server_.insert(makeMeshMarker( "l_gripper_l_finger_tip_link", l_gripper_fingertip_path, ps, scale_factor*1.02),
@@ -856,7 +856,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_l_finger_tip_link");
 
-    ps.header.frame_id = "/l_gripper_r_finger_link";
+    ps.header.frame_id = "l_gripper_r_finger_link";
     ps.pose.position.x = mesh_offset/2;
     if (l_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
     else ps.pose.orientation = q_identity;
@@ -865,7 +865,7 @@ void PR2MarkerControl::initMeshMarkers()
                    visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_r_finger_link");
 
-    ps.header.frame_id = "/l_gripper_r_finger_tip_link";
+    ps.header.frame_id = "l_gripper_r_finger_tip_link";
     ps.pose.position.x = mesh_offset/4;
     if (l_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
     else ps.pose.orientation = q_identity;
@@ -894,7 +894,7 @@ void PR2MarkerControl::initMeshMarkers()
   if(control_state_.projector_on_)
   {
     ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "/projector_wg6802418_frame";
+    ps.header.frame_id = "projector_wg6802418_frame";
     ps.pose.position.x = 0.07;
     ps.pose.position.z = 0.02;
     ps.pose.orientation = msg::createQuaternionMsg( tf::Quaternion(tf::Vector3(0,1,0), M_PI/2));
@@ -909,7 +909,7 @@ void PR2MarkerControl::initMeshMarkers()
 
   // The "reset" box over the PR2's head.
   ps = msg::createPoseStampedMsg(msg::createPointMsg(0,0,0.85), msg::createQuaternionMsg(0,0,0,1),
-                                 "/torso_lift_link", ros::Time(0));
+                                 "torso_lift_link", ros::Time(0));
   server_.insert(makeButtonBox( "PR2 Marker Control Reset", ps, 0.05, false, true),
                  boost::bind( &PR2MarkerControl::initAllMarkers, this, true ),
                  visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
@@ -1295,7 +1295,7 @@ void PR2MarkerControl::updateGripper( const visualization_msgs::InteractiveMarke
     {
       //geometry_msgs::PoseStamped ps = object_manipulator::msg::createPoseStampedMsg(
       //                                              feedback->pose, feedback->header.frame_id, ros::Time(0));
-      //tfl_.transformPose("/base_link", ps, ps );
+      //tfl_.transformPose("base_link", ps, ps );
 //      tf::Transform control_pose;
 //      tf::poseMsgToTF(feedback->pose, control_pose);
 //      tf::Transform command_pose = control_pose * pose_offset_[arm_id].inverse();
@@ -1544,7 +1544,7 @@ void PR2MarkerControl::updateBase( const visualization_msgs::InteractiveMarkerFe
 {
   geometry_msgs::TwistStamped ts;
   ts.header.stamp = ros::Time::now();
-  ts.header.frame_id = "/base_link";
+  ts.header.frame_id = "base_link";
 
   tf::Vector3 linear  = tf::Vector3(0,0,0);
   tf::Vector3 angular = tf::Vector3(0,0,0);
