@@ -2,6 +2,7 @@
 
   <!-- set stereo to true for narrow stereo, false for kinect -->
   <arg name="stereo" default="false" />
+  <arg name="marker_control" default="true" />
   <arg name="cvfh" default="false" />
   <arg name="tod" default="false" />
   <arg name="model_set" default="REDUCED_MODEL_SET"/>
@@ -309,20 +310,22 @@
   </node>  
 
   <!-- Interactive Marker Teleop -->
-  <include file="$(find pr2_marker_control)/launch/marker_control.launch">
-    <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
-    <arg name="stereo" value="$(arg stereo)"/>
-    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
-    <arg name="use_left_arm" value="$(arg use_left_arm)"/>
-    <arg name="use_state_validator" value="false"/>
-    <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
-    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
-    <arg name="nav_local" value="$(arg nav_local)"/>
-    <arg name="slow_movement" value="$(arg slow_movement)"/>
-    <arg name="nav_3d" value="$(arg nav_3d)"/>
-    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
-    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
-  </include>
+  <group if="$(arg marker_control)">
+    <include file="$(find pr2_marker_control)/launch/marker_control.launch">
+      <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
+      <arg name="stereo" value="$(arg stereo)"/>
+      <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+      <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+      <arg name="use_state_validator" value="false"/>
+      <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+      <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+      <arg name="nav_local" value="$(arg nav_local)"/>
+      <arg name="slow_movement" value="$(arg slow_movement)"/>
+      <arg name="nav_3d" value="$(arg nav_3d)"/>
+      <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+      <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+    </include>
+  </group>
 
   <!-- pr2_interactive_gripper_pose_action -->
   <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_gripper_pose_action.launch" >
