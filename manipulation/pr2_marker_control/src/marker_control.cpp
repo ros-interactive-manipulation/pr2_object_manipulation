@@ -334,7 +334,6 @@ void PR2MarkerControl::slowUpdate()
     //init_mesh_markers = true;
     //init_control_markers = true;
     init_all_markers = true;
-    //initAllMarkers();
   }
 
   ROS_DEBUG("r_cart: %d  l_cart: %d", r_cart, l_cart);
@@ -705,6 +704,7 @@ void PR2MarkerControl::initControlMarkers()
 //! Re-initialize only the mesh markers
 void PR2MarkerControl::initMeshMarkers()
 {
+  // create interactive markers for all links
   std::vector<visualization_msgs::InteractiveMarker> mesh_markers;
   addMeshMarkersFromRobotModel(mesh_markers);
 
@@ -714,20 +714,6 @@ void PR2MarkerControl::initMeshMarkers()
   }
 
   ros::Time now = ros::Time(0);
-
-  // For making the interactive marker meshes slightly bigger than the default robot_model meshes
-  double scale_factor = 1.02;
-  double mesh_offset  = -0.002;
-  //double palm_scale_factor = 1.15;
-  //double palm_mesh_offset  = -0.017;
-  geometry_msgs::Quaternion q_identity;
-  geometry_msgs::Quaternion q_rotateX180;
-  q_rotateX180.w = 0;
-  q_rotateX180.x = 1;
-
-  // All interactive markers will be set to time(0), so they update automatically in rviz.
-  geometry_msgs::PoseStamped ps;
-  ps.header.stamp = ros::Time(0);
 
   menu_head_.apply(server_, "head_tilt_link");
 
@@ -778,6 +764,7 @@ void PR2MarkerControl::initMeshMarkers()
 
   if(control_state_.projector_on_)
   {
+    geometry_msgs::PoseStamped ps;
     server_.insert(makeProjectorMarker( "projector_control", ps, 1.0),
                    boost::bind( &PR2MarkerControl::projectorMenuCB, this, _1 ));
   }
@@ -787,6 +774,8 @@ void PR2MarkerControl::initMeshMarkers()
   }
 
   // The "reset" box over the PR2's head.
+
+  geometry_msgs::PoseStamped ps;
   ps = msg::createPoseStampedMsg(msg::createPointMsg(0,0,0.85), msg::createQuaternionMsg(0,0,0,1),
                                  "torso_lift_link", ros::Time(0));
   server_.insert(makeButtonBox( "PR2 Marker Control Reset", ps, 0.05, false, true),
@@ -828,6 +817,7 @@ void PR2MarkerControl::switchToCartesian()
 
   if(joint_handle_)       menu_arms_.setCheckState(joint_handle_, MenuHandler::UNCHECKED);
   if(jtranspose_handle_)  menu_arms_.setCheckState(jtranspose_handle_, MenuHandler::CHECKED);
+  menu_arms_.reApply(server_);
 }
 
 void PR2MarkerControl::switchToJoint()
@@ -855,6 +845,7 @@ void PR2MarkerControl::switchToJoint()
 
   if(joint_handle_)       menu_arms_.setCheckState(joint_handle_, MenuHandler::CHECKED);
   if(jtranspose_handle_)  menu_arms_.setCheckState(jtranspose_handle_, MenuHandler::UNCHECKED);
+  menu_arms_.reApply(server_);
 }
 
 bool PR2MarkerControl::checkStateValidity(std::string arm_name)
@@ -920,6 +911,7 @@ void PR2MarkerControl::targetPointMenuCB( const visualization_msgs::InteractiveM
     menu_head_.setCheckState(head_target_handle_, MenuHandler::UNCHECKED);
 
   initControlMarkers();
+  menu_head_.reApply(server_);
 }
 
 void PR2MarkerControl::projectorMenuCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback )
@@ -950,8 +942,7 @@ void PR2MarkerControl::projectorMenuCB( const visualization_msgs::InteractiveMar
       menu_head_.setCheckState(projector_handle_, MenuHandler::CHECKED);
     }
   }
-  //menu_head_.reApply(server_);
-  initMeshMarkers();
+  menu_head_.reApply(server_);
 }
 
 void PR2MarkerControl::gripperToggleModeCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback )
@@ -975,6 +966,7 @@ void PR2MarkerControl::gripperToggleModeCB( const visualization_msgs::Interactiv
     assert(menu_grippers_.setCheckState(gripper_6dof_handle_, MenuHandler::CHECKED));
   }
 
+  menu_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -989,6 +981,7 @@ void PR2MarkerControl::gripperToggleFixedCB( const visualization_msgs::Interacti
   else
     menu_grippers_.setCheckState(gripper_fixed_control_handle_, MenuHandler::UNCHECKED);
 
+  menu_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -1001,6 +994,7 @@ void PR2MarkerControl::dualGripperToggleFixedCB( const visualization_msgs::Inter
   else
     menu_dual_grippers_.setCheckState(dual_gripper_fixed_control_handle_, MenuHandler::UNCHECKED);
 
+  menu_dual_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -1015,6 +1009,7 @@ void PR2MarkerControl::gripperToggleControlCB( const visualization_msgs::Interac
   else
     menu_grippers_.setCheckState(gripper_edit_control_handle_, MenuHandler::UNCHECKED);
 
+  menu_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -1029,6 +1024,7 @@ void PR2MarkerControl::dualGripperToggleControlCB( const visualization_msgs::Int
 
   ROS_INFO("toggling dual gripper edit control frame, current state is %d", control_state_.dual_grippers_.edit_control_);
 
+  menu_dual_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -1100,6 +1096,8 @@ void PR2MarkerControl::startDualGrippers( const visualization_msgs::InteractiveM
     dual_grippers_frame_ = msg::createPoseStampedMsg(b_T_m, feedback->header.frame_id, ros::Time(0)); // Time(0) prevents disappearing markers bug.
   }
 
+  menu_grippers_.reApply(server_);
+  menu_dual_grippers_.reApply(server_);
   initControlMarkers();
 }
 
@@ -1314,7 +1312,6 @@ void PR2MarkerControl::gripperButtonCB( const visualization_msgs::InteractiveMar
   {
     switchToJoint();
   }
-  initAllMarkers();
 }
 
 void PR2MarkerControl::upperArmButtonCB( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, int id)
@@ -1339,7 +1336,6 @@ void PR2MarkerControl::upperArmButtonCB( const visualization_msgs::InteractiveMa
   {
     switchToJoint();
     }*/
-  initAllMarkers();
 }
 
 void PR2MarkerControl::updatePosture( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, int arm_id )
@@ -1660,8 +1656,6 @@ void PR2MarkerControl::moveArmThread(std::string arm_name, std::string position,
   {
     switchToCartesian();
     control_state_.r_gripper_.on_ = true;
-    //control_state_.posture_r_ = true;
-    initAllMarkers();
   }
   // Auto-refresh / reset collision map is useful when running with novice users.
   if(interface_number_ != 0){
@@ -1829,6 +1823,7 @@ void PR2MarkerControl::initMenus()
 
     menu_head_.insert( "Move Head To Center", boost::bind( &PR2MarkerControl::centerHeadCB,
 							   this ) );
+    menu_head_.reApply(server_);
   }
 
 
