@@ -1325,6 +1325,7 @@ void PR2MarkerControl::upperArmButtonCB( const visualization_msgs::InteractiveMa
 
   //always switch to Cartesian, so that joint trajectories are stopped in a hurry (e-stop)
   switchToCartesian();
+  initControlMarkers();
 
   /*
   if ( control_state_.r_gripper_.on_ || control_state_.l_gripper_.on_ ||
