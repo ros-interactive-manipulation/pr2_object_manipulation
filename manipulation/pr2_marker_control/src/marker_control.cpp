@@ -332,8 +332,8 @@ void PR2MarkerControl::slowUpdate()
   {
     //if(tuck_handle_) menu_arms_.setVisible(tuck_handle_, !(r_cart || l_cart) );
     //init_mesh_markers = true;
-    //init_control_markers = true;
-    init_all_markers = true;
+    init_control_markers = true;
+    //init_all_markers = true;
   }
 
   ROS_DEBUG("r_cart: %d  l_cart: %d", r_cart, l_cart);
