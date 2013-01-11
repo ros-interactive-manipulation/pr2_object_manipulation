@@ -31,6 +31,8 @@
 
 // **** 10 ***** 20 ****** 30 ****** 40 ****** 50 ****** 60 ****** 70 ****** 80 ****** 90 ***** 100 ***** 110 ***** 120
 
+#include "pr2_marker_control/generate_robot_model.h"
+
 #include <ros/ros.h>
 #include <math.h>
 
@@ -394,7 +396,6 @@ void PR2MarkerControl::initControlMarkers()
   //wait for the service to initialize, for how long it takes
   mechanism_.get_robot_state_client_.client(ros::Duration(-1));
   mechanism_.getRobotState(robot_state);
-
   
   control_state_.print();
   // Right gripper control
@@ -704,6 +705,14 @@ void PR2MarkerControl::initControlMarkers()
 //! Re-initialize only the mesh markers
 void PR2MarkerControl::initMeshMarkers()
 {
+  std::vector<visualization_msgs::InteractiveMarker> mesh_markers;
+  addMeshMarkersFromRobotModel(mesh_markers);
+
+  for ( unsigned i=0; i<mesh_markers.size(); i++)
+  {
+    server_.insert(mesh_markers[i]);
+  }
+
   ros::Time now = ros::Time(0);
 
   // For making the interactive marker meshes slightly bigger than the default robot_model meshes
@@ -720,172 +729,48 @@ void PR2MarkerControl::initMeshMarkers()
   geometry_msgs::PoseStamped ps;
   ps.header.stamp = ros::Time(0);
 
-  if (true) // Head is always on
-  {
-    ps.header.frame_id = "head_tilt_link";
-    server_.insert(makeMeshMarker( "head_tilt_link", "package://pr2_description/meshes/head_v0/head_tilt.dae",
-                                   ps, scale_factor));
-    menu_head_.apply(server_, "head_tilt_link");
-  }
-
-  // Choose correct gripper geometry. This will change when we fix all this to read in urdf
-  std::string l_gripper_palm_path, l_gripper_finger_path, l_gripper_fingertip_path;
-  if (l_gripper_type_ == "lcg")
-  {
-    l_gripper_palm_path = "package://gripper_control/meshes/lcg_actuator_palm_mesh_v1-55.STL";
-    l_gripper_finger_path = "package://gripper_control/meshes/lcg_proximal_mesh_v1-55.STL";
-    l_gripper_fingertip_path = "package://gripper_control/meshes/lcg_distal_mesh_v1-55.STL";
-  }
-  else
-  {
-    if (l_gripper_type_ != "pr2") ROS_WARN("Unrecognized gripper type in marker control; defaulting to PR2 gripper");
-    l_gripper_palm_path = "package://pr2_description/meshes/gripper_v0/gripper_palm.dae";
-    l_gripper_finger_path = "package://pr2_description/meshes/gripper_v0/l_finger.dae";
-    l_gripper_fingertip_path = "package://pr2_description/meshes/gripper_v0/l_finger_tip.dae";
-  }
-  std::string r_gripper_palm_path, r_gripper_finger_path, r_gripper_fingertip_path;
-  if (r_gripper_type_ == "lcg")
-  {
-    r_gripper_palm_path = "package://gripper_control/meshes/lcg_actuator_palm_mesh_v1-55.STL";
-    r_gripper_finger_path = "package://gripper_control/meshes/lcg_proximal_mesh_v1-55.STL";
-    r_gripper_fingertip_path = "package://gripper_control/meshes/lcg_distal_mesh_v1-55.STL";
-  }
-  else
-  {
-    if (r_gripper_type_ != "pr2") ROS_WARN("Unrecognized gripper type in marker control; defaulting to PR2 gripper");
-    r_gripper_palm_path = "package://pr2_description/meshes/gripper_v0/gripper_palm.dae";
-    r_gripper_finger_path = "package://pr2_description/meshes/gripper_v0/l_finger.dae";
-    r_gripper_fingertip_path = "package://pr2_description/meshes/gripper_v0/l_finger_tip.dae";
-  }
+  menu_head_.apply(server_, "head_tilt_link");
 
   if(use_right_arm_)
   {
-    ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "r_upper_arm_link";
-    ps.pose.position.x = mesh_offset*2;
-    server_.insert(makeMeshMarker( "r_upper_arm_link", "package://pr2_description/meshes/upper_arm_v0/upper_arm.dae",
-                                   ps, scale_factor, object_manipulator::msg::createColorMsg(1, 0 , 0, 1),
-                                   in_collision_r_));
     server_.setCallback("r_upper_arm_link", boost::bind( &PR2MarkerControl::upperArmButtonCB, this, _1, 0),
                         visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK );
     menu_arms_.apply(server_, "r_upper_arm_link");
 
-    // --------------------------------------------------------
-    ps.header.frame_id = "r_gripper_palm_link";
-    if (r_gripper_type_ == "pr2") ps.pose.position.x = mesh_offset;
-    else ps.pose.position.x = 0.0;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "r_gripper_palm_link", r_gripper_palm_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
+    server_.setCallback("r_gripper_palm_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("r_gripper_l_finger_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("r_gripper_l_finger_tip_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("r_gripper_r_finger_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("r_gripper_r_finger_tip_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+
     menu_gripper_close_.apply(server_, "r_gripper_palm_link");
-
-    ps.header.frame_id = "r_gripper_l_finger_link";
-    ps.pose.position.x = mesh_offset/2;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "r_gripper_l_finger_link", r_gripper_finger_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_l_finger_link");
-
-    ps.header.frame_id = "r_gripper_l_finger_tip_link";
-    ps.pose.position.x = mesh_offset/4;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "r_gripper_l_finger_tip_link", r_gripper_fingertip_path, ps, scale_factor*1.02),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_l_finger_tip_link");
-
-    ps.header.frame_id = "r_gripper_r_finger_link";
-    ps.pose.position.x = mesh_offset/2;
-    if (r_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
-    else ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "r_gripper_r_finger_link", r_gripper_finger_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_r_finger_link");
-
-    ps.header.frame_id = "r_gripper_r_finger_tip_link";
-    ps.pose.position.x = mesh_offset/4;
-    if (r_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
-    else ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "r_gripper_r_finger_tip_link", r_gripper_fingertip_path, ps, scale_factor*1.02),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "r_gripper_r_finger_tip_link");
-
-    // Try to clean up
-    ps.pose.orientation = q_identity;
   }
 
   if(use_left_arm_)
   {
-    ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "l_upper_arm_link";
-    ps.pose.position.x = mesh_offset*2;
-    server_.insert(makeMeshMarker( "l_upper_arm_link", "package://pr2_description/meshes/upper_arm_v0/upper_arm.dae",
-                                   ps, scale_factor, object_manipulator::msg::createColorMsg(1, 0 , 0, 1),
-                                   in_collision_l_));
     server_.setCallback("l_upper_arm_link", boost::bind( &PR2MarkerControl::upperArmButtonCB, this, _1, 1),
                         visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK );
     menu_arms_.apply(server_, "l_upper_arm_link");
 
-    // --------------------------------------------------------
-    ps.header.frame_id = "l_gripper_palm_link";
-    if (l_gripper_type_ == "pr2") ps.pose.position.x = mesh_offset;
-    else ps.pose.position.x = 0.0;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "l_gripper_palm_link", l_gripper_palm_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
+    server_.setCallback("l_gripper_palm_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("l_gripper_l_finger_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("l_gripper_l_finger_tip_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("l_gripper_r_finger_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+    server_.setCallback("l_gripper_r_finger_tip_link", boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle") );
+
     menu_gripper_close_.apply(server_, "l_gripper_palm_link");
-
-    ps.header.frame_id = "l_gripper_l_finger_link";
-    ps.pose.position.x = mesh_offset/2;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "l_gripper_l_finger_link", l_gripper_finger_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_l_finger_link");
-
-    ps.header.frame_id = "l_gripper_l_finger_tip_link";
-    ps.pose.position.x = mesh_offset/4;
-    ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "l_gripper_l_finger_tip_link", l_gripper_fingertip_path, ps, scale_factor*1.02),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_l_finger_tip_link");
-
-    ps.header.frame_id = "l_gripper_r_finger_link";
-    ps.pose.position.x = mesh_offset/2;
-    if (l_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
-    else ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "l_gripper_r_finger_link", l_gripper_finger_path, ps, scale_factor),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_r_finger_link");
-
-    ps.header.frame_id = "l_gripper_r_finger_tip_link";
-    ps.pose.position.x = mesh_offset/4;
-    if (l_gripper_type_ == "pr2") ps.pose.orientation = q_rotateX180;
-    else ps.pose.orientation = q_identity;
-    server_.insert(makeMeshMarker( "l_gripper_r_finger_tip_link", l_gripper_fingertip_path, ps, scale_factor*1.02),
-                   boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "toggle"), 
-                   visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK);
     menu_gripper_close_.apply(server_, "l_gripper_r_finger_tip_link");
-
-    // Try to clean up
-    ps.pose.orientation = q_identity;
   }
 
   if (interface_number_ == 0) // base link not allowed in studies
   {
-    ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "base_link";
-    ps.pose.position.x = 0.0;
-    ps.pose.position.z = -0.01;
-    server_.insert(makeMeshMarker( "base_link", "package://pr2_description/meshes/base_v0/base.dae",
-                                   ps, scale_factor));
     server_.setCallback("base_link", boost::bind( &PR2MarkerControl::baseButtonCB, this, _1),
                         visualization_msgs::InteractiveMarkerFeedback::BUTTON_CLICK );
     menu_base_.apply(server_, "base_link");
@@ -893,12 +778,6 @@ void PR2MarkerControl::initMeshMarkers()
 
   if(control_state_.projector_on_)
   {
-    ps.pose = geometry_msgs::Pose();
-    ps.header.frame_id = "projector_wg6802418_frame";
-    ps.pose.position.x = 0.07;
-    ps.pose.position.z = 0.02;
-    ps.pose.orientation = msg::createQuaternionMsg( tf::Quaternion(tf::Vector3(0,1,0), M_PI/2));
-    ps.header.stamp = ros::Time(0);
     server_.insert(makeProjectorMarker( "projector_control", ps, 1.0),
                    boost::bind( &PR2MarkerControl::projectorMenuCB, this, _1 ));
   }
