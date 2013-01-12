@@ -129,7 +129,7 @@ void addMeshMarkersFromRobotModel(boost::shared_ptr<const urdf::Link> link, std:
         color.b = 1.0; //link->visual->material->color.b;
         color.a = 1; //link->visual->material->color.a;
 
-        ROS_INFO("Creating interactive marker for link %s (%s)", link_name.c_str(), mesh_filename.c_str());
+        ROS_DEBUG("Creating interactive marker for link %s (%s)", link_name.c_str(), mesh_filename.c_str());
 
         // create mesh marker
         visualization_msgs::Marker mesh_marker;
@@ -155,7 +155,7 @@ void addMeshMarkersFromRobotModel(boost::shared_ptr<const urdf::Link> link, std:
         // interactive marker control
         visualization_msgs::InteractiveMarkerControl control;
         control.markers.push_back(mesh_marker);
-        control.interaction_mode = visualization_msgs::InteractiveMarkerControl::BUTTON;
+        control.interaction_mode = visualization_msgs::InteractiveMarkerControl::NONE;
         control.always_visible = true;
 
         // create interactive marker
@@ -179,7 +179,7 @@ void addMeshMarkersFromRobotModel(boost::shared_ptr<const urdf::Link> link, std:
   }
   else
   {
-    ROS_WARN("Robot model: link: %s has a null child!", link->name.c_str());
+    ROS_DEBUG("Robot model: link: %s has a null child!", link->name.c_str());
   }
 
   // recursively traverse the urdf tree

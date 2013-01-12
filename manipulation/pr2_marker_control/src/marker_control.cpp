@@ -707,8 +707,19 @@ void PR2MarkerControl::initMeshMarkers()
   // create interactive markers for all links
   std::vector<visualization_msgs::InteractiveMarker> mesh_markers;
   addMeshMarkersFromRobotModel(mesh_markers);
+
   for ( unsigned i=0; i<mesh_markers.size(); i++)
   {
+    // make head, grippers and upper arms into buttons
+    if ( mesh_markers[i].controls.size() == 1 &&
+         mesh_markers[i].controls[0].markers.size() == 1 && (
+        mesh_markers[i].name == "head_tilt_link" ||
+        mesh_markers[i].name.find("gripper") != std::string::npos ||
+        mesh_markers[i].name.find("upper_arm_link") != std::string::npos
+         ))
+    {
+      mesh_markers[i].controls[0].interaction_mode = visualization_msgs::InteractiveMarkerControl::BUTTON;
+    }
     server_.insert(mesh_markers[i]);
   }
 
