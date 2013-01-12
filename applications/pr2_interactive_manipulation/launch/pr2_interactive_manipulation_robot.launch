@@ -38,6 +38,7 @@
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
   <arg name="track_people" default="false" />
+  <arg name="launch_kinect" default="false" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -238,6 +239,7 @@
     <arg name="do_preplan_scan" value="$(arg do_preplan_scan)"/>
     <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
     <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="launch_kinect" value="$(arg launch_kinect)"/>
     <arg name="sim" value="$(arg sim)"/>
     <arg name="tod" value="$(arg tod)"/>
   </include>
