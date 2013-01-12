@@ -707,7 +707,6 @@ void PR2MarkerControl::initMeshMarkers()
   // create interactive markers for all links
   std::vector<visualization_msgs::InteractiveMarker> mesh_markers;
   addMeshMarkersFromRobotModel(mesh_markers);
-
   for ( unsigned i=0; i<mesh_markers.size(); i++)
   {
     server_.insert(mesh_markers[i]);
@@ -818,6 +817,7 @@ void PR2MarkerControl::switchToCartesian()
   if(joint_handle_)       menu_arms_.setCheckState(joint_handle_, MenuHandler::UNCHECKED);
   if(jtranspose_handle_)  menu_arms_.setCheckState(jtranspose_handle_, MenuHandler::CHECKED);
   menu_arms_.reApply(server_);
+  initControlMarkers();
 }
 
 void PR2MarkerControl::switchToJoint()
@@ -846,6 +846,7 @@ void PR2MarkerControl::switchToJoint()
   if(joint_handle_)       menu_arms_.setCheckState(joint_handle_, MenuHandler::CHECKED);
   if(jtranspose_handle_)  menu_arms_.setCheckState(jtranspose_handle_, MenuHandler::UNCHECKED);
   menu_arms_.reApply(server_);
+  initControlMarkers();
 }
 
 bool PR2MarkerControl::checkStateValidity(std::string arm_name)
@@ -1325,18 +1326,6 @@ void PR2MarkerControl::upperArmButtonCB( const visualization_msgs::InteractiveMa
 
   //always switch to Cartesian, so that joint trajectories are stopped in a hurry (e-stop)
   switchToCartesian();
-  initControlMarkers();
-
-  /*
-  if ( control_state_.r_gripper_.on_ || control_state_.l_gripper_.on_ ||
-       control_state_.posture_r_ || control_state_.posture_l_ )
-  {
-    switchToCartesian();
-  }
-  else
-  {
-    switchToJoint();
-    }*/
 }
 
 void PR2MarkerControl::updatePosture( const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback, int arm_id )
