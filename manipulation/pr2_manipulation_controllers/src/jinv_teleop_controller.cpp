@@ -620,5 +620,4 @@ void JinvTeleopController<JOINTS>::update()
 } // namespace
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_DECLARE_CLASS(pr2_manipulation_controllers, JinvTeleopController7,
-                        pr2_manipulation_controllers::JinvTeleopController<7>, pr2_controller_interface::Controller)
+PLUGINLIB_EXPORT_CLASS(pr2_manipulation_controllers::JinvTeleopController<7>,pr2_controller_interface::Controller)

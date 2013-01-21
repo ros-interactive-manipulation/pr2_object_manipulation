@@ -31,4 +31,4 @@
 
 #include "object_recognition_gui/object_recognition_display.h"
 
-PLUGINLIB_DECLARE_CLASS( object_recognition_gui, ObjectRecognition, object_recognition_gui::ObjectRecognitionDisplay, rviz::Display )
+PLUGINLIB_EXPORT_CLASS( object_recognition_gui::ObjectRecognitionDisplay, rviz::Display )

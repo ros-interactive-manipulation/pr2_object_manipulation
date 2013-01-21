@@ -514,7 +514,5 @@ void JinvExperimentalController<JOINTS>::update()
 } // namespace
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_DECLARE_CLASS(pr2_manipulation_controllers, JinvExperimentalController7,
-                        pr2_manipulation_controllers::JinvExperimentalController<7>, 
-                        pr2_controller_interface::Controller)
+PLUGINLIB_EXPORT_CLASS(pr2_manipulation_controllers::JinvExperimentalController<7>,pr2_controller_interface::Controller)
 
