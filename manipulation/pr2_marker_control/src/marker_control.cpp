@@ -334,6 +334,10 @@ void PR2MarkerControl::slowUpdate()
     //init_mesh_markers = true;
     init_control_markers = true;
     //init_all_markers = true;
+<<<<<<< HEAD
+=======
+    //initAllMarkers();
+>>>>>>> dafd4f50591341a85eb7a5c4be09974b3a8dfda0
   }
 
   ROS_DEBUG("r_cart: %d  l_cart: %d", r_cart, l_cart);
