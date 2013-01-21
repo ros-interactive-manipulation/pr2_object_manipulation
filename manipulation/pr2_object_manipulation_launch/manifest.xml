@@ -32,6 +32,9 @@
   <depend package="pr2_gripper_grasp_controller"/>
   <!--depend package="pr2_gripper_reactive_approach"/-->
   <depend package="pr2_gripper_grasp_planner_cluster"/>
+  
+  <!-- freenect Kinect driver-->
+  <depend package="freenect_stack"/>
 
 </package>
 
