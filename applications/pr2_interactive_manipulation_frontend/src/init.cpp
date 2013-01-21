@@ -47,7 +47,7 @@ namespace pr2_interactive_manipulation_frontend
 }
 
 
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, InteractiveManipulationFrontend, pr2_interactive_manipulation_frontend::InteractiveManipulationFrontendDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, PointHeadCamera, pr2_interactive_manipulation_frontend::PointHeadCameraDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, PublishClickCamera, pr2_interactive_manipulation_frontend::PublishClickCameraDisplay, rviz::Display )
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_manipulation_frontend, CameraFocusFrontend, pr2_interactive_manipulation_frontend::CameraFocusFrontend, rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::InteractiveManipulationFrontendDisplay,rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PointHeadCameraDisplay,rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PublishClickCameraDisplay,rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::CameraFocusFrontend,rviz::Display )
