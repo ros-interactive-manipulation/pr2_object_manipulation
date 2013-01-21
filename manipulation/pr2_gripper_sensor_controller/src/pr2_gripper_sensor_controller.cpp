@@ -759,6 +759,4 @@ void PR2GripperSensorController::forceServoCB(const pr2_gripper_sensor_msgs::PR2
 
 
 // Register controller to pluginlib
-PLUGINLIB_DECLARE_CLASS(pr2_gripper_sensor_controller,PR2GripperSensorController, 
-                         pr2_gripper_sensor_controller::PR2GripperSensorController, 
-                         pr2_controller_interface::Controller)
+PLUGINLIB_EXPORT_CLASS(pr2_gripper_sensor_controller::PR2GripperSensorController,pr2_controller_interface::Controller)

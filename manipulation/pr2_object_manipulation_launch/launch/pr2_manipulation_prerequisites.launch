@@ -10,6 +10,8 @@
   <arg name="sim" default="false" />
   <arg name="tod" default="false" />
   <arg name="launch_kinect" default="false" />
+  <arg name="use_freenect" default="false" />
+
 
   <!-- load perception -->
   <!-- this launch file was moved inside this package in order to change laser settings -->
@@ -22,6 +24,7 @@
     <arg name="sim" value="$(arg sim)"/>
     <arg name="high_res" value="$(arg tod)"/>
     <arg name="launch_kinect" value="$(arg launch_kinect)"/>
+    <arg name="use_freenect" value="$(arg use_freenect)"/>
   </include>
 
   <!-- load planning -->

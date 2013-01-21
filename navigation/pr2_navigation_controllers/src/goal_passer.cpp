@@ -38,7 +38,7 @@
 #include <pluginlib/class_list_macros.h>
 
 //register this planner as a BaseGlobalPlanner plugin
-PLUGINLIB_DECLARE_CLASS(pr2_navigation_controllers, GoalPasser, pr2_navigation_controllers::GoalPasser, nav_core::BaseGlobalPlanner)
+PLUGINLIB_EXPORT_CLASS(pr2_navigation_controllers::GoalPasser, nav_core::BaseGlobalPlanner)
 
 namespace pr2_navigation_controllers {
   void GoalPasser::initialize(std::string name, costmap_2d::Costmap2DROS* costmap_ros){

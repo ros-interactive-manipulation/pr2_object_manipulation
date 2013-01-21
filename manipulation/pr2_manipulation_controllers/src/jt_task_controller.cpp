@@ -723,5 +723,5 @@ void JTTaskController::update()
 
 } //namespace
 
-PLUGINLIB_DECLARE_CLASS(pr2_manipulation_controllers, JTTaskController, pr2_manipulation_controllers::JTTaskController, pr2_controller_interface::Controller)
+PLUGINLIB_EXPORT_CLASS(pr2_manipulation_controllers::JTTaskController,pr2_controller_interface::Controller)
 

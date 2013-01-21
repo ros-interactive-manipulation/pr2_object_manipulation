@@ -31,5 +31,4 @@
 
 #include "pr2_interactive_object_detection_frontend/interactive_object_detection_display.h"
 
-PLUGINLIB_DECLARE_CLASS( pr2_interactive_object_detection_frontend, InteractiveObjectDetection,
-                         pr2_interactive_object_detection_frontend::InteractiveObjectDetectionDisplay, rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_object_detection_frontend::InteractiveObjectDetectionDisplay, rviz::Display )

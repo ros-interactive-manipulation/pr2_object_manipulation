@@ -9,12 +9,17 @@
   <arg name="high_res" default="false" />
   <arg name="sim" default="false" />
   <arg name="launch_kinect" default="false" />
+  <arg name="use_freenect" default="false" />
+  
 
   <arg if="$(arg use_right_arm)"      name="right_arm_text" value="right" />
   <arg unless="$(arg use_right_arm)"  name="right_arm_text" value="" />
   <arg if="$(arg use_left_arm)"       name="left_arm_text" value="left" />
   <arg unless="$(arg use_left_arm)"   name="left_arm_text" value="" />
   <arg name="arm_config" value="$(arg right_arm_text)_$(arg left_arm_text)" />
+  
+  
+ 
 
   <include file="$(find pr2_machine)/$(env ROBOT).machine" />
   
@@ -105,13 +110,29 @@
          </node>
          -->
 
-         <include file="$(find openni_launch)/launch/openni.launch">
-            <arg name="depth_registration" value="true"/>
-            <arg name="camera" value="head_mount_kinect"/>
-            <arg name="rgb_frame_id" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
-            <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
-            <arg name="publish_tf" value="false"/>
-         </include>
+
+	 <!-- Chose between freenect and Openni launch files
+	      This is deeply disgusting. I would much rather just swap the launch file name, but roslaunch
+	 does not appear to support this level of indirection -->
+	 <group if="$(arg use_freenect)" >
+	   <include file="$(find freenect_launch)/launch/freenect.launch">
+	    <arg name="depth_registration" value="true"/>
+	    <arg name="camera" value="head_mount_kinect"/>
+	    <arg name="rgb_frame_id" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
+	    <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
+	    <arg name="publish_tf" value="false"/>
+	   </include>
+	 </group>
+	 <group unless="$(arg use_freenect)" >
+	   <include file="$(find openni_launch)/launch/openni.launch">
+	    <arg name="depth_registration" value="true"/>
+	    <arg name="camera" value="head_mount_kinect"/>
+	    <arg name="rgb_frame_id" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
+	    <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
+	    <arg name="publish_tf" value="false"/>
+	   </include>
+	 </group>
+	 <!-- end if use_freenect -->
 
        </group>
     </group>
