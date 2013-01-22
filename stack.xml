@@ -41,4 +41,5 @@
   <depend stack="pr2_apps" /> <!-- pr2_tuckarm -->
   <depend stack="view_controller_msgs" /> <!-- view_controller_msgs -->
   <depend stack="rviz_animated_view_controller" /> <!-- rviz_animated_view_controller -->
+  <depend stack="freenect_stack" />
 </stack>
