@@ -38,7 +38,7 @@
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
   <arg name="track_people" default="false" />
-  <arg name="launch_kinect" default="false" />
+  <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="true" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
