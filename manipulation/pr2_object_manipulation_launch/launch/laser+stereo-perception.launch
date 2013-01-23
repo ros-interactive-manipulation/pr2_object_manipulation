@@ -74,7 +74,6 @@
         <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
       </node>
     </group>
-
     <!-- separate self filter stereo points for creating object models with higher resolution-->
     <node pkg="robot_self_filter_color" type="self_filter_color" respawn="false" name="object_modeling_stereo_self_filter" 
       output="screen">
@@ -87,29 +86,8 @@
   </group>
 
   <group unless="$(arg stereo)">
-
     <group unless="$(arg sim)">
-
       <group if="$(arg launch_kinect)">
-         <!-- start the Kinect -->
-         <!-- USING arg use_left_arm IS A TOTALLY AWFUL HACK BECAUSE ROSLAUNCH IS DIFFICULT -->
-         <!--
-         <include if="$(arg use_left_arm)" file="$(find rgbd_assembler)/launch/openni_node.launch">
-           <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
-           <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
-           <arg name="high_res" value="$(arg high_res)"/>
-         </include>
-         -->
-
-         <!-- Tim provided this really awesome kinect monitor to kill the openni_node stupidness -->
-         <!--
-         <node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" >
-           <param name="kinect_node_name" value="openni_node1" />
-           <param name="grace_period" value="15" />
-           <remap from="camera_info" to="/$(arg kinect_camera_name)/rgb/camera_info" />
-         </node>
-         -->
-
          <include file="$(arg kinect_launchfile)">
           <arg name="depth_registration" value="true"/>
           <arg name="camera" value="head_mount_kinect"/>
@@ -117,7 +95,6 @@
           <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
           <arg name="publish_tf" value="false"/>
          </include>
-
        </group>
     </group>
 

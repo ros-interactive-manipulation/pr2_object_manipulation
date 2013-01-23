@@ -114,7 +114,7 @@ private:
   bool transformPose( geometry_msgs::PoseStamped &pose, std::string target_frame );
 
   /// retrieve mesh from model database
-  bool getModelMesh( int model_id, arm_navigation_msgs::Shape& mesh );
+  bool getModelMesh( int model_id, shape_msgs::Mesh& mesh );
 
   /// add the segmented table to the collision map
   bool addTableToCollisionMap(tabletop_object_detector::Table table );
