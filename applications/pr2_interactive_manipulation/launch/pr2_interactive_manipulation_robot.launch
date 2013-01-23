@@ -2,6 +2,7 @@
 
   <!-- set stereo to true for narrow stereo, false for kinect -->
   <arg name="stereo" default="false" />
+  <arg name="marker_control" default="true" />
   <arg name="cvfh" default="false" />
   <arg name="tod" default="false" />
   <arg name="model_set" default="REDUCED_MODEL_SET"/>
@@ -37,6 +38,8 @@
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
   <arg name="track_people" default="false" />
+  <arg name="launch_kinect" default="false" />
+  <arg name="use_freenect" default="true" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -237,6 +240,9 @@
     <arg name="do_preplan_scan" value="$(arg do_preplan_scan)"/>
     <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
     <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="launch_kinect" value="$(arg launch_kinect)"/>
+    <arg name="use_freenect" value="$(arg use_freenect)"/>
+
     <arg name="sim" value="$(arg sim)"/>
     <arg name="tod" value="$(arg tod)"/>
   </include>
@@ -309,20 +315,22 @@
   </node>  
 
   <!-- Interactive Marker Teleop -->
-  <include file="$(find pr2_marker_control)/launch/marker_control.launch">
-    <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
-    <arg name="stereo" value="$(arg stereo)"/>
-    <arg name="use_right_arm" value="$(arg use_right_arm)"/>
-    <arg name="use_left_arm" value="$(arg use_left_arm)"/>
-    <arg name="use_state_validator" value="false"/>
-    <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
-    <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
-    <arg name="nav_local" value="$(arg nav_local)"/>
-    <arg name="slow_movement" value="$(arg slow_movement)"/>
-    <arg name="nav_3d" value="$(arg nav_3d)"/>
-    <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
-    <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
-  </include>
+  <group if="$(arg marker_control)">
+    <include file="$(find pr2_marker_control)/launch/marker_control.launch">
+      <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
+      <arg name="stereo" value="$(arg stereo)"/>
+      <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+      <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+      <arg name="use_state_validator" value="false"/>
+      <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+      <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+      <arg name="nav_local" value="$(arg nav_local)"/>
+      <arg name="slow_movement" value="$(arg slow_movement)"/>
+      <arg name="nav_3d" value="$(arg nav_3d)"/>
+      <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+      <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+    </include>
+  </group>
 
   <!-- pr2_interactive_gripper_pose_action -->
   <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_gripper_pose_action.launch" >

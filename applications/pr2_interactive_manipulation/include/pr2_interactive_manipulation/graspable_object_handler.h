@@ -65,6 +65,8 @@ public:
 
   std::string getCollisionName() {return collision_object_name_;}
 
+  void callPickup( int arm_selection );
+
 private:
 
   typedef interactive_markers::MenuHandler MenuHandler;

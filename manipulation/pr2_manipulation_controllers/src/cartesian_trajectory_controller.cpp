@@ -43,7 +43,7 @@ using namespace tf;
 using namespace ros;
 using namespace controller;
 
-PLUGINLIB_DECLARE_CLASS(pr2_manipulation_controllers, CartesianTrajectoryController, pr2_manipulation_controllers::CartesianTrajectoryController, pr2_controller_interface::Controller)
+PLUGINLIB_EXPORT_CLASS(pr2_manipulation_controllers::CartesianTrajectoryController,pr2_controller_interface::Controller)
 
 namespace pr2_manipulation_controllers{
 

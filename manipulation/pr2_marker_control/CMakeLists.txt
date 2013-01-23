@@ -36,6 +36,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 rosbuild_add_library(pr2_marker_control_lib
   src/cloud_handler.cpp
   src/marker_control.cpp
+  src/generate_robot_model.cpp
 )
 
 rosbuild_add_executable(pr2_marker_control

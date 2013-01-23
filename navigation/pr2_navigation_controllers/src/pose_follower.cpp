@@ -37,7 +37,7 @@
 #include <pr2_navigation_controllers/pose_follower.h>
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_DECLARE_CLASS(pr2_navigation_controllers, PoseFollower, pr2_navigation_controllers::PoseFollower, nav_core::BaseLocalPlanner)
+PLUGINLIB_EXPORT_CLASS(pr2_navigation_controllers::PoseFollower, nav_core::BaseLocalPlanner)
 
 namespace pr2_navigation_controllers {
   PoseFollower::PoseFollower(): tf_(NULL), costmap_ros_(NULL) {}

@@ -27,8 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <pluginlib/class_list_macros.h>
+#include <urdf/model.h>
+#include <visualization_msgs/InteractiveMarker.h>
 
-#include "object_segmentation_gui/object_segmentation_display.h"
-
-PLUGINLIB_DECLARE_CLASS( object_segmentation_gui, ObjectSegmentation, object_segmentation_gui::ObjectSegmentationDisplay, rviz::Display )
+/*
+ * Creates (non-interactive) Interactive Markers for the given URDF link
+ * and it's children.
+ * @param link the URDF link
+ *
+ */
+void addMeshMarkersFromRobotModel(std::vector<visualization_msgs::InteractiveMarker>& int_markers);
