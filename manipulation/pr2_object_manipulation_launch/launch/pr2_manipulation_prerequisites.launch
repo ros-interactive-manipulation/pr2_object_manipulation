@@ -9,7 +9,7 @@
   <arg name="log_to_warehouse" default="false" />
   <arg name="sim" default="false" />
   <arg name="tod" default="false" />
-  <arg name="launch_kinect" default="false" />
+  <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
 
 

@@ -8,7 +8,7 @@
   <arg name="kinect_camera_name" default="head_mount_kinect" />
   <arg name="high_res" default="false" />
   <arg name="sim" default="false" />
-  <arg name="launch_kinect" default="false" />
+  <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
   
   <arg if="$(arg use_freenect)"     name="kinect_launchfile" value="$(find freenect_launch)/launch/freenect.launch" />
