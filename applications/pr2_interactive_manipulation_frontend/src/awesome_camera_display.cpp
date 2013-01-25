@@ -64,6 +64,8 @@
 #include "rviz/properties/display_group_visibility_property.h"
 #include "rviz/load_resource.h"
 #include "rviz/view_manager.h"
+#include "rviz/window_manager_interface.h"
+#include "rviz/panel_dock_widget.h"
 
 #include <image_transport/camera_common.h>
 
@@ -102,12 +104,16 @@ void makeRect( std::string material_name, Ogre::ManualObject* rect )
 
 AwesomeCameraDisplay::AwesomeCameraDisplay()
   : ImageDisplayBase()
-  , caminfo_tf_filter_( 0 )
   , texture_()
+  , caminfo_tf_filter_( 0 )
   , new_caminfo_( false )
   , render_panel_( 0 )
   , force_render_( false )
+  , render_panel_dock_widget_(0)
 {
+  show_panel_property_ = new BoolProperty( "Show Panel", true, "Show Extra Panel with the camera image, in addition to main view.",
+                                           this, SLOT( showPanelPropertyChanged() ) );
+
   image_position_property_ = new EnumProperty( "Image Rendering", BOTH,
                                                "Render the image behind all other geometry or overlay it on top, or both.",
                                                this, SLOT( forceRender() ));
@@ -198,7 +204,6 @@ void AwesomeCameraDisplay::onInitialize()
 
     fg_scene_node_->attachObject(fg_screen_rect_);
     fg_scene_node_->setVisible(false);
-
   }
 
   updateAlpha();
@@ -210,7 +215,15 @@ void AwesomeCameraDisplay::onInitialize()
   render_panel_->resize( 640, 480 );
   render_panel_->initialize( context_->getSceneManager(), context_ );
 
-  setAssociatedWidget( render_panel_ );
+  //setAssociatedWidget( render_panel_ );
+
+  WindowManagerInterface* wm = context_->getWindowManager();
+  if( wm )
+  {
+    render_panel_dock_widget_ = wm->addPane( getName(), render_panel_ );
+    connect( render_panel_dock_widget_, SIGNAL( visibilityChanged( bool ) ), this, SLOT( panelVisibilityChanged( bool )));
+    render_panel_dock_widget_->setIcon( getIcon() );
+  }
 
   render_panel_->setAutoRender(false);
   render_panel_->setOverlaysEnabled(false);
@@ -230,6 +243,19 @@ void AwesomeCameraDisplay::onInitialize()
   visibility_property_->setIcon( loadPixmap("package://rviz/icons/visibility.svg",true) );
 
   this->addChild( visibility_property_, 0 );
+}
+
+void AwesomeCameraDisplay::panelVisibilityChanged( bool visible )
+{
+  show_panel_property_->setBool(visible);
+}
+
+void AwesomeCameraDisplay::showPanelPropertyChanged()
+{
+  if ( render_panel_dock_widget_ )
+  {
+    render_panel_dock_widget_->setVisible( show_panel_property_->getBool() );
+  }
 }
 
 void AwesomeCameraDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
