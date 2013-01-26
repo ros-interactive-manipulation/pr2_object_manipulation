@@ -29,4 +29,11 @@
       A click into the display window publish the coordinates of the point on a specified topic.
     </description>
   </class>
+  <class name="pr2_interactive_manipulation_frontend/InvisibleRobot"
+         type="pr2_interactive_manipulation_frontend::InvisibleRobotDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Draws an invisible robot.
+    </description>
+  </class>
 </library>

@@ -36,6 +36,7 @@
 #include "pr2_interactive_manipulation/publish_click_camera_display.h"
 #include "pr2_interactive_manipulation/point_head_camera_display.h"
 #include "pr2_interactive_manipulation/camera_focus_frontend.h"
+#include "pr2_interactive_manipulation/invisible_robot_display.h"
 
 /* move plugins to a unique namespace so they don't conflict with the ones in the old deb installs of pr2_interactive_manipulation */
 namespace pr2_interactive_manipulation_frontend
@@ -44,6 +45,7 @@ namespace pr2_interactive_manipulation_frontend
   typedef pr2_interactive_manipulation::PointHeadCameraDisplay PointHeadCameraDisplay;
   typedef pr2_interactive_manipulation::PublishClickCameraDisplay PublishClickCameraDisplay;
   typedef pr2_interactive_manipulation::CameraFocusFrontend CameraFocusFrontend;
+  typedef pr2_interactive_manipulation::InvisibleRobotDisplay InvisibleRobotDisplay;
 }
 
 
@@ -51,3 +53,4 @@ PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::InteractiveManipul
 PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PointHeadCameraDisplay,rviz::Display )
 PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PublishClickCameraDisplay,rviz::Display )
 PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::CameraFocusFrontend,rviz::Display )
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::InvisibleRobotDisplay,rviz::Display )
