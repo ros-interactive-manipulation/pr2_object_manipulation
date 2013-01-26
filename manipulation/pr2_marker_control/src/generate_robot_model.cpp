@@ -173,7 +173,7 @@ void addMeshMarkersFromRobotModel(boost::shared_ptr<const urdf::Link> link, std:
         break;
       }
       default:
-        ROS_WARN("Unsupported geometry type for element: %d", geom.type);
+        //ROS_WARN("Unsupported geometry type for element: %d", geom.type);
         break;
     }
   }

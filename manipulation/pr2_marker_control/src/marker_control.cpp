@@ -123,7 +123,7 @@ std::string getArmNameFromMarkerName(const std::string &name){
 PR2MarkerControl::PR2MarkerControl() :
   nh_("/"),
   pnh_("~"),
-  server_("pr2_marker_control", "marker_control", false),
+  server_(ros::names::resolve("pr2_marker_control"), "marker_control", false),
   tfl_(nh_),
   torso_client_(),
   base_client_(nh_, ros::Duration(2.0), &tfl_),
@@ -416,8 +416,8 @@ void PR2MarkerControl::initControlMarkers()
                      boost::bind( &PR2MarkerControl::updateGripper, this, _1, 0));
     } else {
       server_.insert(make6DofMarker( "r_gripper_control", ps, 0.25, control_state_.r_gripper_.torso_frame_,
-				     control_state_.r_gripper_.view_facing_),
-		     boost::bind( &PR2MarkerControl::updateGripper, this, _1, 0));
+                                     control_state_.r_gripper_.view_facing_),
+                     boost::bind( &PR2MarkerControl::updateGripper, this, _1, 0));
     }
     menu_grippers_.apply(server_, "r_gripper_control");
   }
@@ -458,7 +458,7 @@ void PR2MarkerControl::initControlMarkers()
     psGripper_expressedIn_odomCombined2.header.stamp = ros::Time(0);
     
     server_.insert(make6DofMarker( "l_gripper_control", psGripper_expressedIn_odomCombined2, 
-				   0.25, control_state_.l_gripper_.torso_frame_,
+                                   0.25, control_state_.l_gripper_.torso_frame_,
                                    control_state_.l_gripper_.view_facing_),
                    boost::bind( &PR2MarkerControl::updateGripper, this, _1, 1 ));
     menu_grippers_.apply(server_, "l_gripper_control");
@@ -480,9 +480,9 @@ void PR2MarkerControl::initControlMarkers()
     menu_grippers_.apply(server_, "l_gripper_control");
     
     ROS_DEBUG_STREAM("init marker in frame " << ps.header.frame_id << "(" 
-		    << ps.pose.position.x << ", " 
-		    << ps.pose.position.y << ", " 
-		    << ps.pose.position.z << ")" );
+                    << ps.pose.position.x << ", "
+                    << ps.pose.position.y << ", "
+                    << ps.pose.position.z << ")" );
  
   }
   else
@@ -713,14 +713,21 @@ void PR2MarkerControl::initMeshMarkers()
     // make head, grippers and upper arms into buttons
     if ( mesh_markers[i].controls.size() == 1 &&
          mesh_markers[i].controls[0].markers.size() == 1 && (
-        mesh_markers[i].name == "head_tilt_link" ||
+         mesh_markers[i].name == "head_tilt_link" ||
+         mesh_markers[i].name == "base_link" ||
         mesh_markers[i].name.find("gripper") != std::string::npos ||
         mesh_markers[i].name.find("upper_arm_link") != std::string::npos
          ))
     {
       mesh_markers[i].controls[0].interaction_mode = visualization_msgs::InteractiveMarkerControl::BUTTON;
+      mesh_markers[i].controls[0].markers[0].mesh_use_embedded_materials = false;
+      mesh_markers[i].controls[0].markers[0].color.a = 0;
+      mesh_markers[i].controls[0].markers[0].scale.x = 1.1;
+      mesh_markers[i].controls[0].markers[0].scale.y = 1.1;
+      mesh_markers[i].controls[0].markers[0].scale.z = 1.1;
+      mesh_markers[i].controls[0].markers[0].pose.position.x = -0.01;
+      server_.insert(mesh_markers[i]);
     }
-    server_.insert(mesh_markers[i]);
   }
 
   ros::Time now = ros::Time(0);
@@ -1133,9 +1140,9 @@ void PR2MarkerControl::commandGripperPose(const geometry_msgs::PoseStamped &ps, 
                                                                        dummy_var);
 
   ROS_DEBUG_STREAM("sending gripper command in frame " << desired_pose.header.frame_id << "(" 
-		  << desired_pose.pose.position.x << ", " 
-		  << desired_pose.pose.position.y << ", " 
-		  << desired_pose.pose.position.z << ")" );
+                  << desired_pose.pose.position.x << ", "
+                  << desired_pose.pose.position.y << ", "
+                  << desired_pose.pose.position.z << ")" );
 
   try {
     mechanism_.sendCartesianPoseCommand( arm_name, desired_pose);
@@ -1823,7 +1830,7 @@ void PR2MarkerControl::initMenus()
     menu_head_.setCheckState(projector_handle_, MenuHandler::UNCHECKED);
 
     menu_head_.insert( "Move Head To Center", boost::bind( &PR2MarkerControl::centerHeadCB,
-							   this ) );
+                                                           this ) );
     menu_head_.reApply(server_);
   }
 
@@ -1852,13 +1859,13 @@ void PR2MarkerControl::initMenus()
 
     handle = menu_arms_.insert( "Gripper commands" );
     menu_arms_.insert( handle, "Activate Cartesian control",
-		       boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "turn on") );
+                       boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "turn on") );
     menu_arms_.insert( handle, "Turn off Cartesian control",
-		       boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "turn off") );
+                       boost::bind( &PR2MarkerControl::gripperButtonCB, this, _1, "turn off") );
     menu_arms_.insert( handle, "Open Gripper",
-		       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 1 ) );
+                       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 1 ) );
     menu_arms_.insert( handle, "Close Gripper",
-		       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 0 ) );
+                       boost::bind( &PR2MarkerControl::gripperClosureCB, this, _1, 0 ) );
 
     handle = menu_arms_.insert( "Plug..." );
     menu_arms_.insert( handle, "Plug in", boost::bind( &PR2MarkerControl::plugsCB, this, PLUGS_PLUGIN) );
