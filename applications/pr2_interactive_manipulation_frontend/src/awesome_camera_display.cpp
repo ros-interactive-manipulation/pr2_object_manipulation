@@ -208,6 +208,9 @@ void AwesomeCameraDisplay::onInitialize()
 
   updateAlpha();
 
+  // we need to listen to the main window rendering so we can fiddle with its visibility bits
+  context_->getViewManager()->getRenderPanel()->getRenderWindow()->addListener(this);
+
   render_panel_ = new RenderPanel();
   render_panel_->getRenderWindow()->addListener( this );
   render_panel_->getRenderWindow()->setAutoUpdated(false);
@@ -260,26 +263,33 @@ void AwesomeCameraDisplay::showPanelPropertyChanged()
 
 void AwesomeCameraDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
-  //double near_plane = near_clip_property_->getFloat();
-
-  QString image_position = image_position_property_->getString();
-  bg_scene_node_->setVisible( image_position == BACKGROUND || image_position == BOTH );
-  fg_scene_node_->setVisible( image_position == OVERLAY || image_position == BOTH );
-}
-
-void AwesomeCameraDisplay::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
-{
   //determine if the main view sits inside the camera
   Ogre::Camera* main_cam = context_->getViewManager()->getCurrent()->getCamera();
   Ogre::Camera* my_cam = render_panel_->getCamera();
   float dist = (main_cam->getDerivedPosition() - my_cam->getDerivedPosition()).length();
 
-  if ( dist > 0.02 )
-
+  Ogre::Viewport* vp = evt.source->getViewport(0);
+  if ( vp == render_panel_->getViewport() || dist < 0.02 )
   {
+    vp->setVisibilityMask( vis_bit_ );
+    QString image_position = image_position_property_->getString();
+    bg_scene_node_->setVisible( image_position == BACKGROUND || image_position == BOTH );
+    fg_scene_node_->setVisible( image_position == OVERLAY || image_position == BOTH );
+  }
+  else
+  {
+    vp->setVisibilityMask( 0xffffffff );
     bg_scene_node_->setVisible( false );
     fg_scene_node_->setVisible( false );
   }
+}
+
+void AwesomeCameraDisplay::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
+{
+  Ogre::Viewport* vp = evt.source->getViewport(0);
+  vp->setVisibilityMask( 0xffffffff );
+  bg_scene_node_->setVisible( false );
+  fg_scene_node_->setVisible( false );
 }
 
 void AwesomeCameraDisplay::onEnable()
