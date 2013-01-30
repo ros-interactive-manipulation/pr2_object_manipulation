@@ -282,6 +282,9 @@ void AwesomeCameraDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& 
     bg_scene_node_->setVisible( false );
     fg_scene_node_->setVisible( false );
   }
+
+  // apply visibility bit to all other displays
+  visibility_property_->update();
 }
 
 void AwesomeCameraDisplay::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
@@ -400,7 +403,6 @@ void AwesomeCameraDisplay::update( float wall_dt, float ros_dt )
     setStatus( StatusProperty::Error, "Image", e.what() );
   }
 
-  visibility_property_->update();
   render_panel_->getRenderWindow()->update();
 }
 
