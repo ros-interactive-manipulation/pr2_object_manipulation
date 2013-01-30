@@ -42,6 +42,8 @@ public:
   InvisibleRobotDisplay();
   virtual ~InvisibleRobotDisplay();
 
+  virtual void onInitialize();
+
   virtual void load();
 };
 

@@ -31,30 +31,36 @@
 
 #include <rviz/robot/robot_link.h>
 #include <rviz/robot/robot.h>
+#include <rviz/properties/float_property.h>
 
 namespace pr2_interactive_manipulation
 {
 
 InvisibleRobotDisplay::InvisibleRobotDisplay()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 InvisibleRobotDisplay::~InvisibleRobotDisplay()
 {
-  // TODO Auto-generated destructor stub
+}
+
+void InvisibleRobotDisplay::onInitialize()
+{
+  RobotModelDisplay::onInitialize();
+  alpha_property_->setHidden(true);
 }
 
 void InvisibleRobotDisplay::load()
 {
   RobotModelDisplay::load();
+  alpha_property_->setFloat(0.0);
 
   std::map< std::string, rviz::RobotLink* > links = robot_->getLinks();
   std::map< std::string, rviz::RobotLink* >::iterator it;
   for( it=links.begin(); it!=links.end(); it++ )
   {
     it->second->setRenderQueueGroup(0);
+    it->second->forceDepthWrite(true);
   }
 }
 
