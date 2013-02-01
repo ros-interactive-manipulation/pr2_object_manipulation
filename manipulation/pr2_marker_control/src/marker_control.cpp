@@ -149,6 +149,8 @@ PR2MarkerControl::PR2MarkerControl() :
 
   ros::Duration(2.0).sleep();
 
+  pnh_.param<bool>("transparent", transparent_, false);
+
   pnh_.param<bool>("use_right_arm", use_right_arm_, true);
   pnh_.param<bool>("use_left_arm", use_left_arm_, true);
   pnh_.param<bool>("use_state_validator", use_state_validator_, true);
@@ -720,13 +722,28 @@ void PR2MarkerControl::initMeshMarkers()
          ))
     {
       mesh_markers[i].controls[0].interaction_mode = visualization_msgs::InteractiveMarkerControl::BUTTON;
-      mesh_markers[i].controls[0].markers[0].mesh_use_embedded_materials = false;
-      mesh_markers[i].controls[0].markers[0].color.a = 0;
-      mesh_markers[i].controls[0].markers[0].scale.x = 1.1;
-      mesh_markers[i].controls[0].markers[0].scale.y = 1.1;
-      mesh_markers[i].controls[0].markers[0].scale.z = 1.1;
-      mesh_markers[i].controls[0].markers[0].pose.position.x = -0.01;
+      if ( transparent_ )
+      {
+        mesh_markers[i].controls[0].markers[0].mesh_use_embedded_materials = false;
+        mesh_markers[i].controls[0].markers[0].color.a = 0;
+        mesh_markers[i].controls[0].markers[0].color.r = 1;
+        mesh_markers[i].controls[0].markers[0].color.g = 1;
+        mesh_markers[i].controls[0].markers[0].color.b = 1;
+        mesh_markers[i].controls[0].markers[0].scale.x = 1.1;
+        mesh_markers[i].controls[0].markers[0].scale.y = 1.1;
+        mesh_markers[i].controls[0].markers[0].scale.z = 1.1;
+        mesh_markers[i].controls[0].markers[0].pose.position.x = -0.01;
+        mesh_markers[i].controls[0].markers[0].ns = mesh_markers[i].name;
+      }
       server_.insert(mesh_markers[i]);
+    }
+    else
+    {
+      // in non-transparent mode, add all links
+      if ( !transparent_ )
+      {
+        server_.insert(mesh_markers[i]);
+      }
     }
   }
 

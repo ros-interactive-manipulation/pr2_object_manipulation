@@ -164,7 +164,6 @@ void addMeshMarkersFromRobotModel(boost::shared_ptr<const urdf::Link> link, std:
         int_marker.header = ps.header;
         int_marker.pose.orientation.w = 1;
         int_marker.name = link_name;
-        int_marker.description = link_name;
         int_marker.scale = 0.3;
 
         int_marker.controls.push_back(control);

@@ -13,6 +13,7 @@
     <arg name="planar_marker_only" default="false" />
     <arg name="interactive_marker_frame" default="base_link" />
     <arg name="name" default="pr2_marker_control" />
+    <arg name="transparent" default="transparent" />
     <arg name="launch_nav_action" default="true" />
 
     <arg name="lcg_left_gripper" default="false"/>
@@ -21,14 +22,14 @@
     <arg if="$(arg stereo)" name="head_pointing_frame" value="/narrow_stereo_optical_frame"/>
     <arg unless="$(arg stereo)" name="head_pointing_frame" value="$(arg kinect_frame_prefix)_rgb_optical_frame"/>
 
+    <remap from="pr2_marker_control" to="$(arg name)"/>
+
     <node pkg="pr2_marker_control" name="$(arg name)" type="pr2_marker_control" respawn="true" output="screen">
           
       <remap if="$(arg stereo)" from="snapshot_input_topic" 
 	     to="/narrow_stereo_textured/object_modeling_points_filtered" />      
       <remap unless="$(arg stereo)" from="snapshot_input_topic" 
 	     to="/$(arg kinect_camera_name)/rgb/object_modeling_points_filtered" />
-
-      <remap from="pr2_marker_control" to="$(arg name)" />
 
       <remap from="right_arm/constraint_aware_ik" to="/pr2_right_arm_kinematics/get_constraint_aware_ik" />
       <remap from="left_arm/constraint_aware_ik" to="/pr2_left_arm_kinematics/get_constraint_aware_ik" />
@@ -71,6 +72,8 @@
                                             to="/l_gripper_sensor_controller/gripper_action"/>
       <remap if="$(arg use_slip_controllers)" from="right_arm/gripper_action"
                                             to="/r_gripper_sensor_controller/gripper_action"/>
+
+      <param name="transparent" value="$(arg transparent)" />
 
       <param name="use_right_arm" value="$(arg use_right_arm)" />
       <param name="use_left_arm"  value="$(arg use_left_arm)" />
@@ -125,7 +128,6 @@
       <param if="$(arg lcg_right_gripper)" name="r_gripper_max_effort" value="10.0"/>
 
     </node>
-
 
     <!-- pr2_interactive_nav_action -->
     <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_nav_action.launch" 
