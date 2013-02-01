@@ -90,3 +90,7 @@ void PointHeadCameraDisplay::updatePointHeadTopic()
 }
 
 }
+
+#include <pluginlib/class_list_macros.h>
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::PointHeadCameraDisplay,rviz::Display )
+
