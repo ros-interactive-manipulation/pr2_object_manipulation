@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, Willow Garage, Inc.
+ * Copyright (c) 2013, Willow Garage, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,43 +27,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "pr2_interactive_manipulation/invisible_robot_display.h"
-
-#include <rviz/robot/robot_link.h>
-#include <rviz/robot/robot.h>
-#include <rviz/properties/float_property.h>
+#include <rviz/default_plugin/tools/point_tool.h>
 
 namespace pr2_interactive_manipulation
 {
 
-InvisibleRobotDisplay::InvisibleRobotDisplay()
+class LookAtTool: public rviz::PointTool
 {
-}
+public:
+  LookAtTool();
+};
 
-InvisibleRobotDisplay::~InvisibleRobotDisplay()
+class SetGripperTool: public rviz::PointTool
 {
-}
+public:
+  SetGripperTool();
+};
 
-void InvisibleRobotDisplay::onInitialize()
+class NavigateToTool: public rviz::PointTool
 {
-  RobotModelDisplay::onInitialize();
-  alpha_property_->setHidden(true);
-}
-
-void InvisibleRobotDisplay::load()
-{
-  RobotModelDisplay::load();
-
-  std::map< std::string, rviz::RobotLink* > links = robot_->getLinks();
-
-  std::map< std::string, rviz::RobotLink* >::iterator it;
-  for( it=links.begin(); it!=links.end(); it++ )
-  {
-    it->second->setOnlyRenderDepth(true);
-  }
-}
+public:
+  NavigateToTool();
+};
 
 }
-
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::InvisibleRobotDisplay,rviz::Display )

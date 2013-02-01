@@ -55,6 +55,7 @@ rosbuild_add_library(interactive_manipulation_plugin
   src/awesome_camera_display.cpp
   src/point_head_camera_display.cpp
   src/point_head_view_controller.cpp
+  src/point_tools.cpp
   src/publish_click_camera_display.cpp
   src/publish_click_view_controller.cpp
   src/camera_focus_frontend.cpp
@@ -62,7 +63,6 @@ rosbuild_add_library(interactive_manipulation_plugin
   src/interactive_manipulation_frontend_display.cpp
   src/interactive_manipulation_frontend.cpp
   src/advanced_options_dialog.cpp
-  src/init.cpp
   src/invisible_robot_display.cpp
   ${UIC_FILES}
   ${MOC_FILES}

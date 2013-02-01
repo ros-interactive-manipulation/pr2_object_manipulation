@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, Willow Garage, Inc.
+ * Copyright (c) 2013, Willow Garage, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,43 +27,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "pr2_interactive_manipulation/invisible_robot_display.h"
+#include "pr2_interactive_manipulation/point_tools.h"
 
-#include <rviz/robot/robot_link.h>
-#include <rviz/robot/robot.h>
-#include <rviz/properties/float_property.h>
+#include <rviz/properties/string_property.h>
 
 namespace pr2_interactive_manipulation
 {
 
-InvisibleRobotDisplay::InvisibleRobotDisplay()
+LookAtTool::LookAtTool()
 {
-}
+  topic_property_->setStdString("/rviz/look_here");
+};
 
-InvisibleRobotDisplay::~InvisibleRobotDisplay()
+SetGripperTool::SetGripperTool()
 {
-}
+  topic_property_->setStdString("/rviz/set_gripper");
+};
 
-void InvisibleRobotDisplay::onInitialize()
+NavigateToTool::NavigateToTool()
 {
-  RobotModelDisplay::onInitialize();
-  alpha_property_->setHidden(true);
-}
-
-void InvisibleRobotDisplay::load()
-{
-  RobotModelDisplay::load();
-
-  std::map< std::string, rviz::RobotLink* > links = robot_->getLinks();
-
-  std::map< std::string, rviz::RobotLink* >::iterator it;
-  for( it=links.begin(); it!=links.end(); it++ )
-  {
-    it->second->setOnlyRenderDepth(true);
-  }
-}
+  topic_property_->setStdString("/rviz/navigate_to");
+};
 
 }
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::InvisibleRobotDisplay,rviz::Display )
+PLUGINLIB_EXPORT_CLASS( pr2_interactive_manipulation::LookAtTool, rviz::Tool )
+PLUGINLIB_EXPORT_CLASS( pr2_interactive_manipulation::SetGripperTool, rviz::Tool )
+PLUGINLIB_EXPORT_CLASS( pr2_interactive_manipulation::NavigateToTool, rviz::Tool )
