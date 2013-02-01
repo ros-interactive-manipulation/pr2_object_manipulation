@@ -123,7 +123,7 @@ public:
       max_direct_move_radius_(10.0),
       nh_("/"),
       pnh_("~"),
-      server_("pr2_marker_control", "nav_action", false),
+      server_(ros::names::resolve("pr2_marker_control"), "nav_action", false),
       tfl_(nh_),
       get_pose_name_(ros::this_node::getName()),
       get_pose_server_(nh_, get_pose_name_, false)
