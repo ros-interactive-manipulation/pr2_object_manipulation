@@ -714,6 +714,7 @@ void PR2MarkerControl::initMeshMarkers()
     if ( mesh_markers[i].controls.size() == 1 &&
          mesh_markers[i].controls[0].markers.size() == 1 && (
         mesh_markers[i].name == "head_tilt_link" ||
+        mesh_markers[i].name == "base_link" ||
         mesh_markers[i].name.find("gripper") != std::string::npos ||
         mesh_markers[i].name.find("upper_arm_link") != std::string::npos
          ))
