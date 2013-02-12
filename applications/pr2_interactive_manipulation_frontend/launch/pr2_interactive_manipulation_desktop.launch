@@ -12,8 +12,7 @@
     <arg name="sim" default="false"/>
     <arg name="track_people" default="false"/>
     <arg name="throttle_cameras" default="true" />
-    <arg name="rviz_config_file_base" 
-	 default="$(find pr2_interactive_manipulation_frontend)/config/rviz_config.yaml" />
+    <arg name="rviz_config_file_base" default="$(find pr2_interactive_manipulation_frontend)/config/pr2_interactive_manipulation.rviz" />
     <arg name="compress_point_clouds" default="false" />
     <arg name="rviz_user_prefix" default=""/>
     <arg name="audio" default="false"/>

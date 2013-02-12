@@ -88,6 +88,7 @@
   <group unless="$(arg stereo)">
     <group unless="$(arg sim)">
       <group if="$(arg launch_kinect)">
+         <!-- start the Kinect -->
          <include file="$(arg kinect_launchfile)">
           <arg name="depth_registration" value="true"/>
           <arg name="camera" value="head_mount_kinect"/>
