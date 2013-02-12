@@ -74,7 +74,6 @@
         <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
       </node>
     </group>
-
     <!-- separate self filter stereo points for creating object models with higher resolution-->
     <node pkg="robot_self_filter_color" type="self_filter_color" respawn="false" name="object_modeling_stereo_self_filter" 
       output="screen">
@@ -87,9 +86,7 @@
   </group>
 
   <group unless="$(arg stereo)">
-
     <group unless="$(arg sim)">
-
       <group if="$(arg launch_kinect)">
          <!-- start the Kinect -->
          <include file="$(arg kinect_launchfile)">
@@ -99,7 +96,6 @@
           <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
           <arg name="publish_tf" value="false"/>
          </include>
-
        </group>
     </group>
 

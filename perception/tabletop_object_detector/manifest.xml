@@ -15,6 +15,7 @@
   <depend package="visualization_msgs" />
   <depend package="sensor_msgs"/>
   <depend package="geometry_msgs" />
+  <depend package="shape_msgs" />
 
   <depend package="pcl"/>
   <depend package="pcl_ros"/>

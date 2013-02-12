@@ -366,7 +366,7 @@ bool InteractiveObjDetBackend::doInteractiveRecognition()
 
     for ( int h=0; h<num_hypotheses; ++h )
     {
-      arm_navigation_msgs::Shape mesh;
+      shape_msgs::Mesh mesh;
 
       if ( !getModelMesh( model_pose_list[h].model_id, rec_goal.model_hypotheses[m].hypotheses[h].mesh ) )
       {
@@ -375,7 +375,7 @@ bool InteractiveObjDetBackend::doInteractiveRecognition()
       }
 
       ROS_INFO_STREAM( "Model " << m << ", hypothesis " << h << " (database id "
-          << model_pose_list[h].model_id << ") has " << mesh.triangles.size()/3 << " triangles and "
+          << model_pose_list[h].model_id << ") has " << mesh.triangles.size() << " triangles and "
           << mesh.vertices.size() << " vertices." );
 
       rec_goal.model_hypotheses[m].hypotheses[h].pose = model_pose_list[h].pose;
@@ -657,7 +657,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
   for ( unsigned cluster_index=0; cluster_index<num_clusters; ++cluster_index )
   {
     object_manipulation_msgs::GraspableObject graspable_object;
-    arm_navigation_msgs::Shape mesh;
+    shape_msgs::Mesh mesh;
 
     //populate cluster
     graspable_object.cluster = segmentation_result_.clusters[cluster_index];
@@ -712,7 +712,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
         }
 
         ROS_INFO_STREAM( "Model " << model_index << " (database id "
-            << graspable_object.potential_models[0].model_id << ") has " << mesh.triangles.size()/3 << " triangles and "
+            << graspable_object.potential_models[0].model_id << ") has " << mesh.triangles.size() << " triangles and "
             << mesh.vertices.size() << " vertices." );
 
         if ( graspable_object.potential_models[0].pose.header.frame_id != reference_frame_id )
@@ -752,7 +752,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
     used_model_indices.insert( model_index );
 
     object_manipulation_msgs::GraspableObject graspable_object;
-    arm_navigation_msgs::Shape mesh;
+    shape_msgs::Mesh mesh;
 
     graspable_object.reference_frame_id = reference_frame_id;
     graspable_object.potential_models = recognition_result_.models[ model_index ].model_list;
@@ -764,7 +764,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
     }
 
     ROS_INFO_STREAM( "Model " << model_index << " (database id "
-        << graspable_object.potential_models[0].model_id << ") has " << mesh.triangles.size()/3 << " triangles and "
+        << graspable_object.potential_models[0].model_id << ") has " << mesh.triangles.size() << " triangles and "
         << mesh.vertices.size() << " vertices." );
 
     if ( graspable_object.potential_models[0].pose.header.frame_id != reference_frame_id )
@@ -839,7 +839,7 @@ void InteractiveObjDetBackend::publishFitMarkers(
     const std::vector<household_objects_database_msgs::DatabaseModelPose> models = potential_models[i].model_list;
     for (size_t j=0; j<models.size(); j++)
     {
-      arm_navigation_msgs::Shape mesh;
+      shape_msgs::Mesh mesh;
 
       if ( !getModelMesh( models[j].model_id, mesh ) )
       {
@@ -944,7 +944,7 @@ bool InteractiveObjDetBackend::transformPose( geometry_msgs::PoseStamped &pose, 
 }
 
 
-bool InteractiveObjDetBackend::getModelMesh( int model_id, arm_navigation_msgs::Shape& mesh )
+bool InteractiveObjDetBackend::getModelMesh( int model_id, shape_msgs::Mesh& mesh )
 {
   GetModelMesh mesh_srv;
 

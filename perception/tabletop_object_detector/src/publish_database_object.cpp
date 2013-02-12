@@ -40,7 +40,7 @@
 
 #include <household_objects_database_msgs/GetModelMesh.h>
 
-visualization_msgs::Marker getFitMarker(const arm_navigation_msgs::Shape &mesh)
+visualization_msgs::Marker getFitMarker(const shape_msgs::Mesh &mesh)
 {
   visualization_msgs::Marker marker;
   marker.action = visualization_msgs::Marker::ADD;
