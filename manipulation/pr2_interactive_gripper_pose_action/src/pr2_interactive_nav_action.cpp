@@ -59,9 +59,6 @@
 #include "pcl/point_types.h"
 #include "pcl_ros/transforms.h"
 
-#include <household_objects_database_msgs/GetModelDescription.h>
-#include <household_objects_database_msgs/GetModelMesh.h>
-
 #include <interactive_marker_helpers/interactive_marker_helpers.h>
 
 using namespace object_manipulator;

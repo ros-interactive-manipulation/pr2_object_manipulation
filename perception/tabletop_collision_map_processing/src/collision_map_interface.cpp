@@ -162,10 +162,19 @@ void CollisionMapInterface::processCollisionGeometryForTable(const tabletop_obje
   table_object.poses.resize(1);
 
   //if the convex hull mesh is available, use that
-  if(table.convex_hull.type == table.convex_hull.MESH && table.convex_hull.triangles.size() != 0)
+  if(table.convex_hull.triangles.size() != 0)
   {
     ROS_INFO("using convex hull mesh for table collision geometry");
-    table_object.shapes[0] = table.convex_hull;
+    arm_navigation_msgs::Shape table_shape;
+    table_shape.type = table_shape.MESH;
+    table_shape.vertices = table.convex_hull.vertices;
+    for (size_t i=0; i<table.convex_hull.triangles.size(); i++)
+    {
+      table_shape.triangles.push_back( table.convex_hull.triangles.at(i).vertex_indices.at(0) );
+      table_shape.triangles.push_back( table.convex_hull.triangles.at(i).vertex_indices.at(1) );
+      table_shape.triangles.push_back( table.convex_hull.triangles.at(i).vertex_indices.at(2) );
+    }
+    table_object.shapes[0] = table_shape;
     table_object.poses[0] = table.pose.pose;
     if(table_thickness_)
     {
@@ -176,7 +185,7 @@ void CollisionMapInterface::processCollisionGeometryForTable(const tabletop_obje
       geometry_msgs::Pose shifted_table_offset = object_manipulator::msg::createPoseMsg(tf::Pose(tf::Quaternion::getIdentity(), tf::Vector3(0,0,-table_thickness_)));
       tf::poseMsgToTF(shifted_table_offset, T);
       tf::poseTFToMsg( P*T, shifted_table_pose);
-      table_object.shapes.push_back(table.convex_hull);
+      table_object.shapes.push_back(table_shape);
       table_object.poses.push_back(shifted_table_pose);
     }
   }
@@ -384,7 +393,15 @@ bool CollisionMapInterface::getMeshFromDatabasePose(const household_objects_data
     ROS_ERROR("Get model mesh service returned an error");
     return false;
   }
-  mesh = get_mesh.response.mesh;
+  //translate to arm_navigation_msgs::Shape 
+  mesh.vertices = get_mesh.response.mesh.vertices;
+  mesh.triangles.clear();
+  for (size_t i=0; i<get_mesh.response.mesh.triangles.size(); i++)
+  {
+    mesh.triangles.push_back( get_mesh.response.mesh.triangles.at(i).vertex_indices.at(0) );
+    mesh.triangles.push_back( get_mesh.response.mesh.triangles.at(i).vertex_indices.at(1) );
+    mesh.triangles.push_back( get_mesh.response.mesh.triangles.at(i).vertex_indices.at(2) );
+  }
   return true;
 }
 
