@@ -10,7 +10,8 @@
   <arg name="sim" default="false" />
   <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
-  
+  <arg name="kinect_data_skip" default="1" />
+
   <arg if="$(arg use_freenect)"     name="kinect_launchfile" value="$(find freenect_launch)/launch/freenect.launch" />
   <arg unless="$(arg use_freenect)" name="kinect_launchfile" value="$(find openni_launch)/launch/openni.launch" />
 
@@ -19,8 +20,7 @@
   <arg if="$(arg use_left_arm)"       name="left_arm_text" value="left" />
   <arg unless="$(arg use_left_arm)"   name="left_arm_text" value="" />
   <arg name="arm_config" value="$(arg right_arm_text)_$(arg left_arm_text)" />
-  
-  
+    
   <include file="$(find pr2_machine)/$(env ROBOT).machine" />
   
   <!-- send additional description parameters -->
@@ -86,7 +86,8 @@
   </group>
 
   <group unless="$(arg stereo)">
-    <group unless="$(arg sim)">
+    <group unless="$(arg sim)">         
+   
       <group if="$(arg launch_kinect)">
          <!-- start the Kinect -->
          <include file="$(arg kinect_launchfile)">
@@ -96,7 +97,10 @@
           <arg name="depth_frame_id" value="$(arg kinect_frame_prefix)_depth_optical_frame"/>
           <arg name="publish_tf" value="false"/>
          </include>
+  
+
        </group>
+
     </group>
 
     <group if="$(arg use_camera_in_collider)">
@@ -141,5 +145,7 @@
      <!-- self filtering links -->
      <rosparam command="load" file="$(find pr2_arm_navigation_perception)/config/self_filter_$(arg arm_config).yaml" />
   </node>
+
+  <param name="$(arg kinect_frame_prefix)/driver/data_skip" value="$(arg kinect_data_skip)" /> 
 
 </launch>
