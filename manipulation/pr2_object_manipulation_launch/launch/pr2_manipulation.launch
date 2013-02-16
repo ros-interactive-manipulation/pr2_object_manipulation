@@ -26,7 +26,9 @@
   <!-- database-backed grasp planning is now provided directly by the database wrapper node -->
   <!-- which must be started separately -->
   
-  <include file="$(find pr2_gripper_grasp_planner_cluster)/launch/pr2_gripper_grasp_planner_cluster_server.launch"/>
+  <include file="$(find pr2_gripper_grasp_planner_cluster)/launch/pr2_gripper_grasp_planner_cluster_server.launch">
+    <arg name="machine" value="c2"/>
+  </include>
 
   <include if="$(arg use_probabilistic_grasp_planner)" 
     file="$(find bayesian_grasp_planner)/launch/bayesian_grasp_planner_node.launch"/>
@@ -164,7 +166,7 @@
   <!-- cluster bounding box finder--> 
 
   <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
-    type="cluster_bounding_box_finder_server.py" output="screen" respawn="false" >
+    type="cluster_bounding_box_finder_server.py" output="screen" respawn="false" machine="c2">
 	<param name="z_up_frame" value="/base_link" />
   </node>
 
