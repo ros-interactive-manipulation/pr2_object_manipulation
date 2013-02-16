@@ -40,6 +40,7 @@
   <arg name="track_people" default="false" />
   <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
+  <arg name="kinect_data_skip" default="1" />
 
   <!-- assumes Kinect frame names end in _rgb_optical_frame and _ir_optical_frame -->
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />  
@@ -239,6 +240,7 @@
     <arg name="do_monitoring" value="$(arg do_monitoring)"/>
     <arg name="do_preplan_scan" value="$(arg do_preplan_scan)"/>
     <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+    <arg name="kinect_data_skip" value="$(arg kinect_data_skip)"/>
     <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
     <arg name="launch_kinect" value="$(arg launch_kinect)"/>
     <arg name="use_freenect" value="$(arg use_freenect)"/>
