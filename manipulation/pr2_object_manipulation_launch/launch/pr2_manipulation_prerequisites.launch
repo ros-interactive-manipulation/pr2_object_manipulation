@@ -11,6 +11,7 @@
   <arg name="tod" default="false" />
   <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
+  <arg name="kinect_data_skip" default="1" />
 
 
   <!-- load perception -->
@@ -21,6 +22,7 @@
     <arg name="use_left_arm" value="$(arg use_left_arm)"/>
     <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
     <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+    <arg name="kinect_data_skip" value="$(arg kinect_data_skip)"/>
     <arg name="sim" value="$(arg sim)"/>
     <arg name="high_res" value="$(arg tod)"/>
     <arg name="launch_kinect" value="$(arg launch_kinect)"/>
