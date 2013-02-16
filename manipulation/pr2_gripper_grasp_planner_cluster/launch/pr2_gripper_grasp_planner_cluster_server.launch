@@ -1,5 +1,6 @@
 <launch>
-  <arg name="machine" default="c1"/>
+  <arg name="machine" default="c2"/>
+  <include file="$(find pr2_machine)/pr2.machine" />
 
   <node name="pr2_gripper_grasp_planner_cluster" pkg="pr2_gripper_grasp_planner_cluster" 
     type="point_cluster_grasp_planner_server.py" respawn="false" output="screen" machine="$(arg machine)">
