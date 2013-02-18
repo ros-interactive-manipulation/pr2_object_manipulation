@@ -182,6 +182,10 @@ PR2MarkerControl::PR2MarkerControl() :
   object_cloud_right_sub_ = nh_.subscribe("in_hand_object_right", 1,
                                           &PR2MarkerControl::inHandObjectRightCallback, this);
 
+  nav_goal_point_sub_ = nh_.subscribe("/rviz/navigate_to", 1, &PR2MarkerControl::processNavGoalPoint, this);
+
+  base_pose_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("cloud_click_point",1);
+
   ROS_INFO("***************************** %s *****************************", manipulator_base_frame_.c_str());
 
   if (interface_number_ == 1)
@@ -1808,6 +1812,19 @@ void PR2MarkerControl::sendLastNavGoal()
         ROS_INFO("Last goal was from too long ago; sending identity base goal pose");
         base_client_.sendNavGoal( base_goal_pose_ );
     }
+}
+
+void PR2MarkerControl::processNavGoalPoint(const geometry_msgs::PointStampedConstPtr & goal_pt)
+{
+  tf::StampedTransform base_stamped;
+  geometry_msgs::Pose goal_pose;
+  tfl_.lookupTransform("base_link", goal_pt->header.frame_id, ros::Time(0), base_stamped);
+  tf::poseTFToMsg(base_stamped, goal_pose);
+  goal_pose.position.x = goal_pt->point.x;
+  goal_pose.position.y = goal_pt->point.y;
+  //requestNavGoal(true);
+  base_pose_goal_pub_.publish(goal_pose);
+
 }
 
 void PR2MarkerControl::clearLocalCostmap()
