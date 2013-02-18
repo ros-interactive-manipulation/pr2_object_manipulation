@@ -27,55 +27,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "pr2_interactive_manipulation/interactive_manipulation_frontend_display.h"
+#ifndef INVISIBLE_ROBOT_DISPLAY_H_
+#define INVISIBLE_ROBOT_DISPLAY_H_
 
-#include <rviz/display_context.h>
-#include <rviz/panel_dock_widget.h>
-#include <rviz/window_manager_interface.h>
+#include <rviz/default_plugin/robot_model_display.h>
 
-#include "pr2_interactive_manipulation/interactive_manipulation_frontend.h"
-
-#include <QDockWidget>
-
-namespace pr2_interactive_manipulation {
-
-InteractiveManipulationFrontendDisplay::InteractiveManipulationFrontendDisplay() : 
-  Display(),
-  frame_(0),
-  frame_dock_(0)
+namespace pr2_interactive_manipulation
 {
-}
-  
-InteractiveManipulationFrontendDisplay::~InteractiveManipulationFrontendDisplay()
+
+class InvisibleRobotDisplay: public rviz::RobotModelDisplay
 {
-  delete frame_dock_;
-}
+  Q_OBJECT
+public:
+  InvisibleRobotDisplay();
+  virtual ~InvisibleRobotDisplay();
 
-void InteractiveManipulationFrontendDisplay::onInitialize()
-{
-  rviz::WindowManagerInterface* window_context = context_->getWindowManager();
-  ROS_ASSERT(window_context);
-  frame_ = new InteractiveManipulationFrontend(context_, window_context->getParentWindow());
-  frame_dock_ = window_context->addPane( "Manipulation", frame_ );
-}
+  virtual void onInitialize();
 
-void InteractiveManipulationFrontendDisplay::onEnable()
-{
-  frame_dock_->show();
-}
+  virtual void load();
+};
 
-void InteractiveManipulationFrontendDisplay::onDisable()
-{
-  if ( frame_dock_ ) frame_dock_->hide();
-}
-
-void InteractiveManipulationFrontendDisplay::update(float, float)
-{
-  if ( frame_ ) frame_->update();
-}
-
-}
-
-
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay,rviz::Display )
+} /* namespace pr2_interactive_manipulation */
+#endif /* INVISIBLE_ROBOT_DISPLAY_H_ */

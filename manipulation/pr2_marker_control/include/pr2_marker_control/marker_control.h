@@ -369,6 +369,8 @@ protected:
   double cartesian_clip_distance_;
   double cartesian_clip_angle_;
 
+  bool transparent_;
+
   double max_direct_nav_radius_;
 
   bool in_collision_r_, in_collision_l_;

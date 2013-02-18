@@ -97,12 +97,16 @@ protected:
 
   ROSImageTexture texture_;
   RenderPanel* render_panel_;
+  PanelDockWidget* render_panel_dock_widget_;
 
 private Q_SLOTS:
   void forceRender();
   void updateAlpha();
 
   virtual void updateQueueSize();
+
+  void panelVisibilityChanged( bool );
+  void showPanelPropertyChanged( );
 
 private:
   void subscribe();
@@ -133,6 +137,7 @@ private:
   FloatProperty* zoom_property_;
   FloatProperty* near_clip_property_;
   DisplayGroupVisibilityProperty* visibility_property_;
+  BoolProperty* show_panel_property_;
 
   sensor_msgs::CameraInfo::ConstPtr current_caminfo_;
   boost::mutex caminfo_mutex_;

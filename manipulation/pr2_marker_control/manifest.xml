@@ -19,6 +19,7 @@
   <depend package="point_cloud_server"/>
   <depend package="pr2_object_manipulation_msgs"/>
   <depend package="pr2_navigation_controllers"/>
+  <depend package="pr2_interactive_gripper_pose_action"/>
 
   <!-- Robot interface -->
   <depend package="object_manipulator"/>
