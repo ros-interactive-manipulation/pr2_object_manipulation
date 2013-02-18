@@ -90,9 +90,7 @@ InteractiveManipulationBackend::InteractiveManipulationBackend() :
   get_gripper_pose_client_("/get_pose_server", true),
   run_script_client_("run_rcommander_action", true),
   move_base_client_("move_base", true),
-  collider_node_reset_srv_("/collider_node/reset"),
-  lookat_sub_("/rviz/look_here", 5, 
-              boost::bind(InteractiveManipulationBackend::lookAtCallback, this, _1))
+  collider_node_reset_srv_("/collider_node/reset")
 {
   priv_nh_.param<double>("cartesian_dist_tol", cartesian_dist_tol_, .01);
   priv_nh_.param<double>("cartesian_angle_tol", cartesian_angle_tol_, .087);
@@ -125,6 +123,8 @@ InteractiveManipulationBackend::InteractiveManipulationBackend() :
   create_model_client_.setInterruptFunction(boost::bind(&InteractiveManipulationBackend::interruptRequested, this));
   get_gripper_pose_client_.setInterruptFunction(boost::bind(&InteractiveManipulationBackend::interruptRequested, this));
   
+  lookat_sub_= root_nh_.subscribe("/rviz/look_here", 5, &InteractiveManipulationBackend::lookAtCallback, this);
+
   ROS_INFO("IM Backend ready");
 }
 
@@ -1299,7 +1299,7 @@ void InteractiveManipulationBackend::lookAtCallback(const geometry_msgs::PointSt
   setStatusLabel( "moving head" );
   try
   {
-    if ( !mech_interface_.pointHeadAction( lookatPS, "/narrow_stereo_optical_frame" ) ) 
+    if ( !mech_interface_.pointHeadAction( *lookatPS, "/narrow_stereo_optical_frame" ) ) 
     {
       setStatusLabel( "head movement failed");
     }
