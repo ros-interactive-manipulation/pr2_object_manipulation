@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, Willow Garage, Inc.
+ * Copyright (c) 2013, Willow Garage, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,55 +27,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "pr2_interactive_manipulation/interactive_manipulation_frontend_display.h"
+#include <rviz/default_plugin/tools/point_tool.h>
 
-#include <rviz/display_context.h>
-#include <rviz/panel_dock_widget.h>
-#include <rviz/window_manager_interface.h>
-
-#include "pr2_interactive_manipulation/interactive_manipulation_frontend.h"
-
-#include <QDockWidget>
-
-namespace pr2_interactive_manipulation {
-
-InteractiveManipulationFrontendDisplay::InteractiveManipulationFrontendDisplay() : 
-  Display(),
-  frame_(0),
-  frame_dock_(0)
+namespace pr2_interactive_manipulation
 {
-}
-  
-InteractiveManipulationFrontendDisplay::~InteractiveManipulationFrontendDisplay()
+
+class LookAtTool: public rviz::PointTool
 {
-  delete frame_dock_;
-}
+public:
+  LookAtTool();
+};
 
-void InteractiveManipulationFrontendDisplay::onInitialize()
+class SetGripperTool: public rviz::PointTool
 {
-  rviz::WindowManagerInterface* window_context = context_->getWindowManager();
-  ROS_ASSERT(window_context);
-  frame_ = new InteractiveManipulationFrontend(context_, window_context->getParentWindow());
-  frame_dock_ = window_context->addPane( "Manipulation", frame_ );
-}
+public:
+  SetGripperTool();
+};
 
-void InteractiveManipulationFrontendDisplay::onEnable()
+class NavigateToTool: public rviz::PointTool
 {
-  frame_dock_->show();
-}
-
-void InteractiveManipulationFrontendDisplay::onDisable()
-{
-  if ( frame_dock_ ) frame_dock_->hide();
-}
-
-void InteractiveManipulationFrontendDisplay::update(float, float)
-{
-  if ( frame_ ) frame_->update();
-}
+public:
+  NavigateToTool();
+};
 
 }
-
-
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay,rviz::Display )

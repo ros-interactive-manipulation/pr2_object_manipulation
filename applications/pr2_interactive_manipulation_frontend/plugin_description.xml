@@ -1,20 +1,20 @@
 <library path="lib/libinteractive_manipulation_plugin">
   <class name="pr2_interactive_manipulation_frontend/CameraFocusFrontend"
-         type="pr2_interactive_manipulation_frontend::CameraFocusFrontend"
+         type="pr2_interactive_manipulation::CameraFocusFrontend"
          base_class_type="rviz::Display">
     <description>
       (NEW) Allows the user to focus the 3D camera at pre-defined locations.
     </description>
   </class>
   <class name="pr2_interactive_manipulation_frontend/InteractiveManipulationFrontend"
-         type="pr2_interactive_manipulation_frontend::InteractiveManipulationFrontendDisplay"
+         type="pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay"
          base_class_type="rviz::Display">
     <description>
       Allows the user to request and assist with manipulation tasks.
     </description>
   </class>
   <class name="pr2_interactive_manipulation_frontend/PointHeadCamera"
-         type="pr2_interactive_manipulation_frontend::PointHeadCameraDisplay"
+         type="pr2_interactive_manipulation::PointHeadCameraDisplay"
          base_class_type="rviz::Display">
     <description>
       Displays an image from a camera, with the visualized world rendered behind it.
@@ -22,11 +22,39 @@
     </description>
   </class>
   <class name="pr2_interactive_manipulation_frontend/PublishClickCamera"
-         type="pr2_interactive_manipulation_frontend::PublishClickCameraDisplay"
+         type="pr2_interactive_manipulation::PublishClickCameraDisplay"
          base_class_type="rviz::Display">
     <description>
       Displays an image from a camera, with the visualized world rendered behind it.
       A click into the display window publish the coordinates of the point on a specified topic.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation_frontend/InvisibleRobot"
+         type="pr2_interactive_manipulation::InvisibleRobotDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Draws an invisible robot.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation_frontend/LookAt"
+         type="pr2_interactive_manipulation::LookAtTool"
+         base_class_type="rviz::Tool">
+    <description>
+      Makes the robot look at a specific location.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation_frontend/SetGripper"
+         type="pr2_interactive_manipulation::SetGripperTool"
+         base_class_type="rviz::Tool">
+    <description>
+      Puts the virtual gripper to a specific location.
+    </description>
+  </class>
+  <class name="pr2_interactive_manipulation_frontend/NavigateTo"
+         type="pr2_interactive_manipulation::NavigateToTool"
+         base_class_type="rviz::Tool">
+    <description>
+      Sets the navgation goal to a specific location.
     </description>
   </class>
 </library>

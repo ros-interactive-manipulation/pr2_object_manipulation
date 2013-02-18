@@ -160,4 +160,5 @@ void CameraFocusFrontend::processButtonClick(const std::string &name)
 }  // namespace
 
 
-
+#include <pluginlib/class_list_macros.h>
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::CameraFocusFrontend,rviz::Display )

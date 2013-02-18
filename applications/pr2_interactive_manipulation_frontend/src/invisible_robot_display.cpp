@@ -27,27 +27,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <pluginlib/class_list_macros.h>
+#include "pr2_interactive_manipulation/invisible_robot_display.h"
 
-// aleeper: Why does this file exist? Why isn't each plugin declared in its own file?
+#include <rviz/robot/robot_link.h>
+#include <rviz/robot/robot.h>
+#include <rviz/properties/float_property.h>
 
-
-#include "pr2_interactive_manipulation/interactive_manipulation_frontend_display.h"
-#include "pr2_interactive_manipulation/publish_click_camera_display.h"
-#include "pr2_interactive_manipulation/point_head_camera_display.h"
-#include "pr2_interactive_manipulation/camera_focus_frontend.h"
-
-/* move plugins to a unique namespace so they don't conflict with the ones in the old deb installs of pr2_interactive_manipulation */
-namespace pr2_interactive_manipulation_frontend
+namespace pr2_interactive_manipulation
 {
-  typedef pr2_interactive_manipulation::InteractiveManipulationFrontendDisplay InteractiveManipulationFrontendDisplay;
-  typedef pr2_interactive_manipulation::PointHeadCameraDisplay PointHeadCameraDisplay;
-  typedef pr2_interactive_manipulation::PublishClickCameraDisplay PublishClickCameraDisplay;
-  typedef pr2_interactive_manipulation::CameraFocusFrontend CameraFocusFrontend;
+
+InvisibleRobotDisplay::InvisibleRobotDisplay()
+{
 }
 
+InvisibleRobotDisplay::~InvisibleRobotDisplay()
+{
+}
 
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::InteractiveManipulationFrontendDisplay,rviz::Display )
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PointHeadCameraDisplay,rviz::Display )
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::PublishClickCameraDisplay,rviz::Display )
-PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation_frontend::CameraFocusFrontend,rviz::Display )
+void InvisibleRobotDisplay::onInitialize()
+{
+  RobotModelDisplay::onInitialize();
+  alpha_property_->setHidden(true);
+}
+
+void InvisibleRobotDisplay::load()
+{
+  RobotModelDisplay::load();
+
+  std::map< std::string, rviz::RobotLink* > links = robot_->getLinks();
+
+  std::map< std::string, rviz::RobotLink* >::iterator it;
+  for( it=links.begin(); it!=links.end(); it++ )
+  {
+    it->second->setOnlyRenderDepth(true);
+  }
+}
+
+}
+
+#include <pluginlib/class_list_macros.h>
+PLUGINLIB_EXPORT_CLASS(pr2_interactive_manipulation::InvisibleRobotDisplay,rviz::Display )
