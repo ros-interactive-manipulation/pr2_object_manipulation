@@ -1,7 +1,9 @@
 <launch>
+  <arg name="machine" default="c2"/>
+  <include file="$(find pr2_machine)/pr2.machine" />
 
   <node name="pr2_gripper_grasp_planner_cluster" pkg="pr2_gripper_grasp_planner_cluster" 
-    type="point_cluster_grasp_planner_server.py" respawn="false" output="screen">
+    type="point_cluster_grasp_planner_server.py" respawn="false" output="screen" machine="$(arg machine)">
     <rosparam command="load" file="$(find pr2_gripper_grasp_planner_cluster)/config/pr2_gripper_model.yaml" />
 	<param name="z_up_frame" value="/base_link"/>
 	<param name="backoff_depth_steps" value="8"/>
