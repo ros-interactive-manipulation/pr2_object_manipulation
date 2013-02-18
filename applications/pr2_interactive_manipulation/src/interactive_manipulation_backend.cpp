@@ -90,7 +90,9 @@ InteractiveManipulationBackend::InteractiveManipulationBackend() :
   get_gripper_pose_client_("/get_pose_server", true),
   run_script_client_("run_rcommander_action", true),
   move_base_client_("move_base", true),
-  collider_node_reset_srv_("/collider_node/reset")
+  collider_node_reset_srv_("/collider_node/reset"),
+  lookat_sub_("/rviz/look_here", 5, 
+              boost::bind(InteractiveManipulationBackend::lookAtCallback, this, _1))
 {
   priv_nh_.param<double>("cartesian_dist_tol", cartesian_dist_tol_, .01);
   priv_nh_.param<double>("cartesian_angle_tol", cartesian_angle_tol_, .087);
@@ -1291,6 +1293,25 @@ void InteractiveManipulationBackend::lookAtTable()
     setStatusLabel("a needed service or action server was not found");
   }
 }
+
+void InteractiveManipulationBackend::lookAtCallback(const geometry_msgs::PointStampedConstPtr & lookatPS)
+{
+  setStatusLabel( "moving head" );
+  try
+  {
+    if ( !mech_interface_.pointHeadAction( lookatPS, "/narrow_stereo_optical_frame" ) ) 
+    {
+      setStatusLabel( "head movement failed");
+    }
+    else setStatusLabel( "head movement completed");
+  }
+  catch (object_manipulator::ServiceNotFoundException &ex)
+  {
+    setStatusLabel("a needed service or action server was not found");
+  }
+  
+}
+
 
 
 }
