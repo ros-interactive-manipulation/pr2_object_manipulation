@@ -159,7 +159,7 @@ public:
       pose_state_(UNTESTED),
       nh_("/"),
       pnh_("~"),
-      server_("pr2_marker_control", "server 2", false),
+      server_(ros::names::resolve("interactive_gripper"), "server 2", false),
       tfl_(nh_),
       test_pose_client_("test_gripper_pose", true),
       grasp_plan_client_("grasp_plan_action", true),

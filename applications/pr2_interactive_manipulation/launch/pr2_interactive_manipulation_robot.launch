@@ -316,8 +316,8 @@
     <param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
   </node>  
 
-  <!-- Interactive Marker Teleop -->
   <group if="$(arg marker_control)">
+    <!-- Interactive Marker Teleop -->
     <include file="$(find pr2_marker_control)/launch/marker_control.launch">
       <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
       <arg name="stereo" value="$(arg stereo)"/>
@@ -331,6 +331,22 @@
       <arg name="nav_3d" value="$(arg nav_3d)"/>
       <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
       <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)"/>
+    </include>
+    <!-- Interactive Marker Teleop (Transparent Mode) -->
+    <include file="$(find pr2_marker_control)/launch/marker_control.launch">
+      <arg name="use_slip_controllers" value="$(arg use_slip_controllers)"/>
+      <arg name="stereo" value="$(arg stereo)"/>
+      <arg name="use_right_arm" value="$(arg use_right_arm)"/>
+      <arg name="use_left_arm" value="$(arg use_left_arm)"/>
+      <arg name="use_state_validator" value="false"/>
+      <arg name="kinect_frame_prefix" value="$(arg kinect_frame_prefix)"/>
+      <arg name="kinect_camera_name" value="$(arg kinect_camera_name)"/>
+      <arg name="nav_local" value="$(arg nav_local)"/>
+      <arg name="slow_movement" value="$(arg slow_movement)"/>
+      <arg name="nav_3d" value="$(arg nav_3d)"/>
+      <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+      <arg name="name" value="pr2_marker_control_transparent"/>
+      <arg name="transparent" value="true"/>
     </include>
   </group>
 
