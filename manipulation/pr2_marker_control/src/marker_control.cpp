@@ -184,7 +184,7 @@ PR2MarkerControl::PR2MarkerControl() :
 
   nav_goal_point_sub_ = nh_.subscribe("/rviz/navigate_to", 1, &PR2MarkerControl::processNavGoalPoint, this);
 
-  base_pose_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("cloud_click_point",1);
+  base_pose_goal_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("/cloud_click_point",1);
 
   ROS_INFO("***************************** %s *****************************", manipulator_base_frame_.c_str());
 
@@ -1817,11 +1817,13 @@ void PR2MarkerControl::sendLastNavGoal()
 void PR2MarkerControl::processNavGoalPoint(const geometry_msgs::PointStampedConstPtr & goal_pt)
 {
   tf::StampedTransform base_stamped;
-  geometry_msgs::Pose goal_pose;
+  geometry_msgs::PoseStamped goal_pose;
   tfl_.lookupTransform("base_link", goal_pt->header.frame_id, ros::Time(0), base_stamped);
-  tf::poseTFToMsg(base_stamped, goal_pose);
-  goal_pose.position.x = goal_pt->point.x;
-  goal_pose.position.y = goal_pt->point.y;
+  tf::poseTFToMsg(base_stamped, goal_pose.pose);
+  goal_pose.pose.position.x = goal_pt->point.x;
+  goal_pose.pose.position.y = goal_pt->point.y;
+  goal_pose.header.frame_id = goal_pt->header.frame_id;
+ 
   //requestNavGoal(true);
   base_pose_goal_pub_.publish(goal_pose);
 
