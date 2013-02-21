@@ -347,6 +347,7 @@
       <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
       <arg name="name" value="pr2_marker_control_transparent"/>
       <arg name="transparent" value="true"/>
+      <arg name="launch_nav_action" value="false"/> 
     </include>
   </group>
 
