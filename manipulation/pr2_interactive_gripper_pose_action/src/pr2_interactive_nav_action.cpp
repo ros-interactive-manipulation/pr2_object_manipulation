@@ -61,6 +61,10 @@
 
 #include <interactive_marker_helpers/interactive_marker_helpers.h>
 
+#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/PoseStamped.h>
+
+
 using namespace object_manipulator;
 using namespace visualization_msgs;
 using namespace interactive_markers;
@@ -147,7 +151,8 @@ public:
 
     fast_update_timer_ =  nh_.createTimer(ros::Duration(0.05), boost::bind( &BasePoseAction::fast_update, this ) );
 
-    sub_seed_ = nh_.subscribe<geometry_msgs::PoseStamped>("cloud_click_point", 1, boost::bind(&BasePoseAction::setSeed, this, _1));
+    sub_seed_pose_ = nh_.subscribe<geometry_msgs::PoseStamped>("/cloud_click_point", 1, boost::bind(&BasePoseAction::setSeedPose, this, _1));
+    sub_seed_point_ = nh_.subscribe<geometry_msgs::PointStamped>("/rviz/navigate_to", 1, boost::bind(&BasePoseAction::setSeedPoint, this, _1));
 
     // Initialization must happen at the end!
     initMenus();
@@ -163,15 +168,32 @@ public:
   {
   }
 
-  void setSeed(const geometry_msgs::PoseStampedConstPtr &seed)
+  void setSeedPoseCallback(const geometry_msgs::PoseStampedConstPtr &seedPose)
   {
     if(!active_) return;
     ROS_DEBUG("Setting seed.");
-    base_pose_ = *seed;
+    base_pose_ = *seedPose;
     base_pose_.pose.orientation = geometry_msgs::Quaternion();
 
+    updateSeed();
+  }
+  
+  void setSeedPointCallback setSeed(const geometry_msgs::PointStampedConstPtr &seedPoint)
+  {
+    if(!active_) return;
+    ROS_DEBUG("Setting seed point.");
+    base_pose_.pose.position= seedPoint->point;
+    base_pose_.pose.orientation = geometry_msgs::Quaternion();
+
+    updateSeed();
+  }
+
+  void updateSeed()
+  {
     initMarkers();
   }
+
+  
 
   //! Remove the markers.
   void setIdle(){
