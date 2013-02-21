@@ -120,7 +120,7 @@ public:
       max_direct_move_radius_(10.0),
       nh_("/"),
       pnh_("~"),
-      server_("/pr2_marker_nav_control", "nav_action", false),
+      server_(ros::names::resolve("pr2_marker_control"), "nav_action", false),
       tfl_(nh_),
       get_pose_name_(ros::this_node::getName()),
       get_pose_server_(nh_, get_pose_name_, false)
@@ -147,8 +147,8 @@ public:
 
     fast_update_timer_ =  nh_.createTimer(ros::Duration(0.05), boost::bind( &BasePoseAction::fast_update, this ) );
 
-    sub_seed_ = nh_.subscribe<geometry_msgs::PoseStamped>("/cloud_click_point", 1, boost::bind(&BasePoseAction::setSeed, this, _1));
-    
+    sub_seed_ = nh_.subscribe<geometry_msgs::PoseStamped>("cloud_click_point", 1, boost::bind(&BasePoseAction::setSeed, this, _1));
+
     // Initialization must happen at the end!
     initMenus();
 
@@ -166,13 +166,12 @@ public:
   void setSeed(const geometry_msgs::PoseStampedConstPtr &seed)
   {
     if(!active_) return;
-    ROS_DEBUG("Setting BASE seed.");
+    ROS_DEBUG("Setting seed.");
     base_pose_ = *seed;
     base_pose_.pose.orientation = geometry_msgs::Quaternion();
 
     initMarkers();
   }
-
 
   //! Remove the markers.
   void setIdle(){
@@ -228,7 +227,7 @@ public:
     */
   void updatePoses()
   {
-    server_.setPose( "meshes", base_pose_.pose, base_pose_.header);
+    server_.setPose("meshes", base_pose_.pose, base_pose_.header);
   }
 
   geometry_msgs::PoseStamped getDefaultPose()
