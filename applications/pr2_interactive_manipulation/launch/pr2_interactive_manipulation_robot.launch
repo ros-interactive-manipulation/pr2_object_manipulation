@@ -382,7 +382,9 @@
   </include>
 
   <!-- segmented_clutter_grasp_planner action server -->
-  <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch" />
+  <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch">
+    <arg name="machine" value="c2"/>
+  </include>
 
   <!-- tabletop collision map processing -->
   <node pkg="tabletop_collision_map_processing" name="tabletop_collision_map_processing" 
@@ -393,7 +395,7 @@
   </node>
 
   <!-- reachable zones marker broadcaster -->
-  <node pkg="pr2_marker_control" name="draw_reachable_zones" type="draw_reachable_zones.py" />
+  <node pkg="pr2_marker_control" name="draw_reachable_zones" type="draw_reachable_zones.py" machine="c2"/>
 
   <!-- PR2 plugs -->
   <group if="$(arg plugs)" >
