@@ -97,7 +97,8 @@ protected:
 
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
-  ros::Subscriber sub_seed_;
+  ros::Subscriber sub_seed_pose_;
+  ros::Subscriber sub_seed_point_;
 
   ros::Timer fast_update_timer_;
   ros::Timer slow_update_timer_;
@@ -151,8 +152,8 @@ public:
 
     fast_update_timer_ =  nh_.createTimer(ros::Duration(0.05), boost::bind( &BasePoseAction::fast_update, this ) );
 
-    sub_seed_pose_ = nh_.subscribe<geometry_msgs::PoseStamped>("/cloud_click_point", 1, boost::bind(&BasePoseAction::setSeedPose, this, _1));
-    sub_seed_point_ = nh_.subscribe<geometry_msgs::PointStamped>("/rviz/navigate_to", 1, boost::bind(&BasePoseAction::setSeedPoint, this, _1));
+    sub_seed_pose_ = nh_.subscribe<geometry_msgs::PoseStamped>("/cloud_click_point", 1, boost::bind(&BasePoseAction::setSeedPoseCallback, this, _1));
+    sub_seed_point_ = nh_.subscribe<geometry_msgs::PointStamped>("/rviz/navigate_to", 1, boost::bind(&BasePoseAction::setSeedPointCallback, this, _1));
 
     // Initialization must happen at the end!
     initMenus();
@@ -178,7 +179,7 @@ public:
     updateSeed();
   }
   
-  void setSeedPointCallback setSeed(const geometry_msgs::PointStampedConstPtr &seedPoint)
+  void setSeedPointCallback(const geometry_msgs::PointStampedConstPtr &seedPoint)
   {
     if(!active_) return;
     ROS_DEBUG("Setting seed point.");
