@@ -354,6 +354,8 @@
   <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_gripper_pose_action.launch" >
     <arg name="planner_action" value="segmented_clutter_grasp_planner_server" />
     <!-- <arg name="planner_action" value="grasp_adjust_action_node" /> -->
+    <arg name="machine" value="c2"/>
+    <arg unless="$(arg sim)" name="use_machine" value="true"/>
   </include>
 
   <!-- cloud server -->

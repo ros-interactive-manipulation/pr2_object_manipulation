@@ -28,6 +28,7 @@
   
   <include file="$(find pr2_gripper_grasp_planner_cluster)/launch/pr2_gripper_grasp_planner_cluster_server.launch">
     <arg name="machine" value="c2"/>
+    <arg unless="$(arg sim)" name="use_machine" value="true"/>
   </include>
 
   <include if="$(arg use_probabilistic_grasp_planner)" 
