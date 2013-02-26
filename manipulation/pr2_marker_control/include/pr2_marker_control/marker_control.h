@@ -393,9 +393,6 @@ protected:
   //! Subscriber for nav goal point
   ros::Subscriber nav_goal_point_sub_;
 
-  //! Publisher for nav goal point to controller
-  ros::Publisher base_pose_goal_pub_;
-
   //! Client for getting a base pose
   object_manipulator::ActionWrapper<pr2_object_manipulation_msgs::GetNavPoseAction> base_pose_client_;
 
