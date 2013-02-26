@@ -152,6 +152,7 @@ private:
   void lookAtTable();
   void armMotion(int arm_selection_choice, int arm_action_choice, 
                  int arm_planner_choice, bool collision, object_manipulation_msgs::ManipulationResult &result);
+  void lookAtCallback(const geometry_msgs::PointStampedConstPtr & lookatPS);
   void openCloseGripper(pr2_object_manipulation_msgs::IMGUIOptions options);
   int modelObject(pr2_object_manipulation_msgs::IMGUIOptions options);
   int runScriptedAction(std::string action_name, std::string group_name, pr2_object_manipulation_msgs::IMGUIOptions options);
@@ -195,6 +196,8 @@ private:
 
   // Topic subscribers
   ros::Subscriber image_click_sub_;
+  ros::Subscriber lookat_sub_;
+  
 
   // Topic publishers
   ros::Publisher in_hand_object_right_pub_;

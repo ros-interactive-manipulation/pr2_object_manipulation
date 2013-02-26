@@ -123,6 +123,8 @@ InteractiveManipulationBackend::InteractiveManipulationBackend() :
   create_model_client_.setInterruptFunction(boost::bind(&InteractiveManipulationBackend::interruptRequested, this));
   get_gripper_pose_client_.setInterruptFunction(boost::bind(&InteractiveManipulationBackend::interruptRequested, this));
   
+  lookat_sub_= root_nh_.subscribe("/rviz/look_here", 5, &InteractiveManipulationBackend::lookAtCallback, this);
+
   ROS_INFO("IM Backend ready");
 }
 
@@ -1291,6 +1293,25 @@ void InteractiveManipulationBackend::lookAtTable()
     setStatusLabel("a needed service or action server was not found");
   }
 }
+
+void InteractiveManipulationBackend::lookAtCallback(const geometry_msgs::PointStampedConstPtr & lookatPS)
+{
+  setStatusLabel( "moving head" );
+  try
+  {
+    if ( !mech_interface_.pointHeadAction( *lookatPS, "/narrow_stereo_optical_frame" ) ) 
+    {
+      setStatusLabel( "head movement failed");
+    }
+    else setStatusLabel( "head movement completed");
+  }
+  catch (object_manipulator::ServiceNotFoundException &ex)
+  {
+    setStatusLabel("a needed service or action server was not found");
+  }
+  
+}
+
 
 
 }

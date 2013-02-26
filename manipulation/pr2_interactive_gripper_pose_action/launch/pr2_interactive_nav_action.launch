@@ -6,7 +6,7 @@
     <arg if="$(arg debug)" name="debug_prefix" value="xterm -e gdb -ex run --args"/>
     <arg unless="$(arg debug)" name="debug_prefix" value=""/>
 
-    <node name="$(anon pr2_interactive_nav_action)" launch-prefix="$(arg debug_prefix)" type="pr2_interactive_nav_action" pkg="pr2_interactive_gripper_pose_action" output="screen" respawn="true">
+    <node name="pr2_interactive_nav_action" launch-prefix="$(arg debug_prefix)" type="pr2_interactive_nav_action" pkg="pr2_interactive_gripper_pose_action" output="screen" respawn="true">
     </node>
 
 </launch>
