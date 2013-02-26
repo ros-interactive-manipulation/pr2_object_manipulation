@@ -264,8 +264,6 @@ protected:
 
   void inHandObjectLeftCallback( const sensor_msgs::PointCloud2ConstPtr &cloud);
 
-  void processNavGoalPoint(const geometry_msgs::PointStampedConstPtr & goal_pt);
-
 protected:
 
   ros::NodeHandle nh_;
@@ -389,9 +387,6 @@ protected:
   //! Subscribers for in-hand object clouds
   ros::Subscriber object_cloud_left_sub_;
   ros::Subscriber object_cloud_right_sub_;
-
-  //! Subscriber for nav goal point
-  ros::Subscriber nav_goal_point_sub_;
 
   //! Client for getting a base pose
   object_manipulator::ActionWrapper<pr2_object_manipulation_msgs::GetNavPoseAction> base_pose_client_;
