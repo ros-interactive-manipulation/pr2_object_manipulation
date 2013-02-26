@@ -123,6 +123,7 @@ protected:
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
   ros::Subscriber sub_seed_;
+  ros::Subscriber sub_point_seed_;
   ros::ServiceClient get_model_mesh_client_;
   ros::Timer spin_timer_;
   ros::Timer slow_sync_timer_;
@@ -205,8 +206,10 @@ public:
 
     spin_timer_ =  nh_.createTimer(ros::Duration(0.05), boost::bind( &GripperPoseAction::spinOnce, this ) );
 
-    sub_seed_ = nh_.subscribe<geometry_msgs::PoseStamped>("cloud_click_point", 1, boost::bind(&GripperPoseAction::setSeed, this, _1));
-    
+    sub_seed_ = nh_.subscribe<geometry_msgs::PoseStamped>("/cloud_click_point", 1, boost::bind(&GripperPoseAction::setSeed, this, _1));
+    sub_point_seed_ = nh_.subscribe<geometry_msgs::PointStamped>("/rviz/set_gripper", 1, boost::bind(&GripperPoseAction::setSeedPoint, this, _1));
+
+
     // Initialization must happen at the end!
     initMenus();
     //initMarkers();
@@ -247,9 +250,24 @@ public:
     gripper_angle_ = gripper_opening_ * 5.834;
   }
 
+  void setSeedPoint(const geometry_msgs::PointStampedConstPtr &seed_point)
+  {    
+    geometry_msgs::PoseStampedPtr seed(new geometry_msgs::PoseStamped());
+    seed->header = seed_point->header;
+    seed->pose.orientation = geometry_msgs::Quaternion();
+    seed->pose.orientation.w = 1.0;
+    seed->pose.position = seed_point->point;
+    setSeed(seed);
+    
+  }
+
   void setSeed(const geometry_msgs::PoseStampedConstPtr &seed)
   {
-    if(!active_) return;
+    if(!active_) 
+      {
+	ROS_DEBUG("No active gripper goal pose.");
+	return;
+      }
     ROS_DEBUG("Setting seed.");
     geometry_msgs::PoseStamped ps = *seed;
     ROS_DEBUG_STREAM("Input seed was \n" << ps);
