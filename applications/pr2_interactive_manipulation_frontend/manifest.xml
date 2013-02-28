@@ -10,34 +10,23 @@
   <url>http://ros.org/wiki/pr2_interactive_manipulation_frontend</url>
 
   <depend package="rviz"/>
+
+  <depend package="object_manipulator"/>
+  <depend package="tf"/>
+  <depend package="pr2_interactive_object_detection_frontend"/>
+  <depend package="object_recognition_gui"/>
+  <depend package="tf_throttle"/>
+
   <depend package="view_controller_msgs"/>
   <depend package="pr2_controllers_msgs"/>
-  <depend package="object_manipulator"/>
   <depend package="pr2_object_manipulation_msgs"/>
-
-
-  <depend package="tf"/>
   <depend package="object_manipulation_msgs"/>
-  <depend package="pr2_controllers_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="std_msgs"/>
   <depend package="std_srvs"/>
   <depend package="pr2_msgs"/>
-  <depend package="pr2_create_object_model"/>
-  <depend package="pr2_interactive_object_detection"/>
-  <depend package="pr2_interactive_object_detection_frontend"/>
-  <depend package="object_recognition_gui"/>
-  <!--depend package="pr2_grasp_adjust"/-->
-  <depend package="pr2_wrappers"/>
-  <depend package="move_base_msgs"/>
-  <depend package="tf_throttle"/>
-
-  <!-- The straight-up pr2_teleop app built on rviz. We may want to reverse this. -->
-  <depend package="pr2_marker_control"/>
-
-  <!-- The formerly so-called "ghosted gripper" --> 
   <depend package="pr2_object_manipulation_msgs"/>
-  <depend package="pr2_interactive_gripper_pose_action"/>
+
 
   <export>
     <rviz plugin="${prefix}/plugin_description.xml"/>
