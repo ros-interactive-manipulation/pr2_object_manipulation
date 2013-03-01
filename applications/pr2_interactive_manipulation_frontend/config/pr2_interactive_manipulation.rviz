@@ -670,7 +670,7 @@ Visualization Manager:
       Publish Click Topic: /interactive_manipulation_image_click
       Queue Size: 2
       Show Panel: false
-      Transport Hint: theora
+      Transport Hint: compressed
       Value: true
       Visibility:
         Debug Displays:
@@ -932,6 +932,7 @@ Visualization Manager:
     - Class: pr2_interactive_manipulation_frontend/SetGripper
       Single click: true
       Topic: /rviz/set_gripper
+      Pose Topic: /cloud_click_point
     - Class: pr2_interactive_manipulation_frontend/LookAt
       Single click: true
       Topic: /rviz/look_here
