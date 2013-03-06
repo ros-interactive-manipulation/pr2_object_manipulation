@@ -101,7 +101,7 @@ private:
   void resetMarkers( );
 
   /// model info console output
-  int printObjects(const std::vector<object_manipulation_msgs::GraspableObject> &objects);
+  int printObjects(const std::vector<manipulation_msgs::GraspableObject> &objects);
 
   /// retrieve info from model database
   bool getModelInfo(const household_objects_database_msgs::DatabaseModelPose &model_pose,

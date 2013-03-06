@@ -75,7 +75,7 @@ class CollisionMapProcessor
         //thinks it should have been merged with another cluster
         for (size_t c=0; c<request.detection_result.clusters.size(); c++)
         {
-          object_manipulation_msgs::GraspableObject object;
+          manipulation_msgs::GraspableObject object;
 
           //------------- process the cluster part -------------------
           object.cluster = request.detection_result.clusters[c];
