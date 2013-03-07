@@ -118,6 +118,8 @@ protected:
   double grasp_plan_region_len_x_;
   double grasp_plan_region_len_y_;
   double grasp_plan_region_len_z_;
+ 
+  std::string point_cloud_topic_;
 
   PoseState pose_state_;
   ros::NodeHandle nh_;
@@ -190,6 +192,7 @@ public:
     pnh_.param<double>("grasp_plan_region_len_x", grasp_plan_region_len_x_, 0.3);
     pnh_.param<double>("grasp_plan_region_len_y", grasp_plan_region_len_y_, 0.3);
     pnh_.param<double>("grasp_plan_region_len_z", grasp_plan_region_len_z_, 0.3);
+    pnh_.param<std::string>("point_cloud_topic", point_cloud_topic_, "/head_mount_kinect/depth_registered/points");
 
     if(interface_number_ == 4) always_call_planner_ = true;
     else if(interface_number_ >= 1) always_call_planner_ = false;
@@ -849,13 +852,18 @@ protected:
     point_cloud_server::StoreCloudGoal cloud_goal;
     cloud_goal.action = cloud_goal.GET;
     cloud_goal.name = "interactive_manipulation_snapshot";
+    cloud_goal.topic = point_cloud_topic_;
     cloud_server_client_.client().sendGoal(cloud_goal);
     if(!cloud_server_client_.client().waitForResult(ros::Duration(3.0)))
     {
-      ROS_WARN("Timed-out while waiting for cloud from server!");
+      ROS_WARN("Interactive gripper pose action: timed out while waiting for cloud from server!");
       return;
     }
-
+    if(cloud_server_client_.client().getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
+    {
+      ROS_WARN("Interactive gripper pose action: getting cloud did not succeed!");
+      return;
+    }
     manipulation_msgs::GraspPlanningGoal plan_goal;
     plan_goal.target.region.cloud = cloud_server_client_.client().getResult()->cloud;
     plan_goal.target.region.roi_box_pose = fromWrist(gripper_pose_);
