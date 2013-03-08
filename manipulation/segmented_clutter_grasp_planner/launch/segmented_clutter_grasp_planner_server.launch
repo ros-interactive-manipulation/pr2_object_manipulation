@@ -1,8 +1,16 @@
 <launch>
-    <arg name="machine" default="c1" />
+    <arg name="use_machine" default="false"/>
+    <arg name="machine" default="c2" />
 
-    <node pkg="segmented_clutter_grasp_planner" name="segmented_clutter_grasp_planner_server" type="segmented_clutter_grasp_planner_server.py" respawn="false" output="screen" machine="$(arg machine)"/>
+    <group if="$(arg use_machine)">
+      <node pkg="segmented_clutter_grasp_planner" name="segmented_clutter_grasp_planner_server" type="segmented_clutter_grasp_planner_server.py" respawn="false" output="screen" machine="$(arg machine)"/>
 
-    <node pkg="segmented_clutter_grasp_planner" name="find_container_action" type="find_container_action" respawn="false" output="screen" machine="$(arg machine)"/>
+      <node pkg="segmented_clutter_grasp_planner" name="find_container_action" type="find_container_action" respawn="false" output="screen" machine="$(arg machine)"/>
+    </group>
 
+    <group unless="$(arg use_machine)">
+      <node pkg="segmented_clutter_grasp_planner" name="segmented_clutter_grasp_planner_server" type="segmented_clutter_grasp_planner_server.py" respawn="false" output="screen"/>
+
+      <node pkg="segmented_clutter_grasp_planner" name="find_container_action" type="find_container_action" respawn="false" output="screen"/>
+    </group>
 </launch>
