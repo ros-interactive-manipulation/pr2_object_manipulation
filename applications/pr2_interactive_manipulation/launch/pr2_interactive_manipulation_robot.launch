@@ -386,6 +386,7 @@
   <!-- segmented_clutter_grasp_planner action server -->
   <include file="$(find segmented_clutter_grasp_planner)/launch/segmented_clutter_grasp_planner_server.launch">
     <arg name="machine" value="c2"/>
+    <arg unless="$(arg sim)" name="use_machine" value="true"/>
   </include>
 
   <!-- tabletop collision map processing -->
