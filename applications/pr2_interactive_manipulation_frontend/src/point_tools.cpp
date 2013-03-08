@@ -130,7 +130,7 @@ int SetGripperTool::processMouseEvent( rviz::ViewportMouseEvent& event )
       
       // Get patch of points in region around click point
       std::vector<Ogre::Vector3> box_pos;
-      bool success_box = context_->getSelectionManager()->get3DPatch( event.viewport, event.x, event.y, bp, true, box_pos );
+      bool success_box = context_->getSelectionManager()->get3DPatch(event.viewport, event.x - bp, event.y - bp, box_width, box_width, true, box_pos);
       
       // Pack ogre points in to point cloud
       for (unsigned int i = 0; i < box_pos.size(); ++ i)
