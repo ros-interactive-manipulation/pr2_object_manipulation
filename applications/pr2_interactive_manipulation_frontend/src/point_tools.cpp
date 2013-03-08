@@ -201,6 +201,8 @@ int SetGripperTool::processMouseEvent( rviz::ViewportMouseEvent& event )
       {
         flags |= Finished;
       }
+
+      // Reset clipping distance to default distance.
       event.viewport->getCamera()->setFarClipDistance(starting_max_depth); 
     }
      
@@ -209,7 +211,7 @@ int SetGripperTool::processMouseEvent( rviz::ViewportMouseEvent& event )
   {
     setStatus( "Move over an object to select the target point." );
   }
-  // Reset clipping distance to default distance.
+  
 
   return flags;
   
