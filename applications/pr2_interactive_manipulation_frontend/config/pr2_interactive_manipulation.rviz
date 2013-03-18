@@ -954,6 +954,7 @@ Visualization Manager:
     - Class: pr2_interactive_manipulation_frontend/SetGripper
       Single click: true
       Topic: /rviz/set_gripper
+      Pose Topic: /cloud_click_point
     - Class: pr2_interactive_manipulation_frontend/LookAt
       Single click: true
       Topic: /rviz/look_here

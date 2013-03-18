@@ -48,6 +48,7 @@ qt4_wrap_cpp(MOC_FILES
   include/pr2_interactive_manipulation/publish_click_camera_display.h
   include/pr2_interactive_manipulation/awesome_camera_display.h
   include/pr2_interactive_manipulation/invisible_robot_display.h
+  include/pr2_interactive_manipulation/point_tools.h
 )
 
 # rviz plugin
