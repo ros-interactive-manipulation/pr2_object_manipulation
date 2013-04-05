@@ -33,7 +33,7 @@
 
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
-#include <object_manipulation_msgs/Grasp.h>
+#include <manipulation_msgs/Grasp.h>
 #include <object_manipulation_msgs/ClusterBoundingBox.h>
 #include <object_manipulation_msgs/tools.h>
 
@@ -212,7 +212,7 @@ void InteractiveManipulationBackend::actionCallback(const pr2_object_manipulatio
   }
 }
 
-bool InteractiveManipulationBackend::getGrasp(object_manipulation_msgs::Grasp &grasp, std::string arm_name,
+bool InteractiveManipulationBackend::getGrasp(manipulation_msgs::Grasp &grasp, std::string arm_name,
                                               geometry_msgs::PoseStamped grasp_pose, float gripper_opening)
 {
   std::vector<std::string> joint_names = object_manipulator::handDescription().handJointNames(arm_name);
@@ -223,14 +223,13 @@ bool InteractiveManipulationBackend::getGrasp(object_manipulation_msgs::Grasp &g
   grasp.grasp_posture.position.resize( joint_names.size(), 0.0);     
   grasp.grasp_posture.effort.resize(joint_names.size(), 50);
   grasp.pre_grasp_posture.effort.resize(joint_names.size(), 100);
-  grasp.desired_approach_distance = options_.adv_options.desired_approach / 100.;
-  grasp.min_approach_distance = options_.adv_options.min_approach / 100.;
-  geometry_msgs::PoseStamped pose_stamped_in = grasp_pose;
-  pose_stamped_in.header.stamp = ros::Time(0);
-  geometry_msgs::PoseStamped pose_stamped;
+  grasp.approach.desired_distance = options_.adv_options.desired_approach / 100.;
+  grasp.approach.min_distance = options_.adv_options.min_approach / 100.;
+  grasp.grasp_pose = grasp_pose;
+  grasp_pose.header.stamp = ros::Time(0);
   try
   {
-    listener_.transformPose("base_link", pose_stamped_in, pose_stamped);
+    listener_.transformPose("base_link", grasp.grasp_pose, grasp.grasp_pose);
   }
   catch (tf::TransformException ex)
   {
@@ -239,8 +238,7 @@ bool InteractiveManipulationBackend::getGrasp(object_manipulation_msgs::Grasp &g
     setStatusLabel("Failed to transform gripper click grasp");
     return false;
   }
-  grasp.grasp_pose = pose_stamped.pose;
-  grasp.success_probability = 1.0;
+  grasp.grasp_quality = 1.0;
   return true;
 }
 
@@ -404,7 +402,7 @@ void InteractiveManipulationBackend::testGripperPoseForGraspCallback(const TestG
   current_pickup_goal_.only_perform_feasibility_test = true;
   for (size_t i=0; i<goal->gripper_poses.size(); i++)
   {
-    object_manipulation_msgs::Grasp grasp;  
+    manipulation_msgs::Grasp grasp;  
     if (!getGrasp(grasp, current_pickup_goal_.arm_name, goal->gripper_poses[i], goal->gripper_openings[i]))
     {
       setStatusLabel("Grasp test error (conversion to grasp failed)");
@@ -634,7 +632,7 @@ int InteractiveManipulationBackend::plannedMove(const pr2_object_manipulation_ms
 
 
 int InteractiveManipulationBackend::pickupObject(const pr2_object_manipulation_msgs::IMGUIOptions &options,
-                                                 object_manipulation_msgs::GraspableObject object)
+                                                 manipulation_msgs::GraspableObject object)
 {
   options_ = options;
   ROS_INFO("Graspable object has %d points and %d database models",
@@ -670,11 +668,11 @@ int InteractiveManipulationBackend::pickupObject(const pr2_object_manipulation_m
     //if the object is empty, ask the user for help on desired grasps
     if ( object.cluster.points.empty() && object.potential_models.empty() )
     {
-      object_manipulation_msgs::Grasp grasp;
+      manipulation_msgs::Grasp grasp;
       int success = callGhostedGripperPickup( pickup_goal.arm_name, grasp );
       if ( success != object_manipulation_msgs::ManipulationResult::SUCCESS ) return success;
-      grasp.desired_approach_distance = options_.adv_options.desired_approach / 100.;
-      grasp.min_approach_distance = options_.adv_options.min_approach / 100.;
+      grasp.approach.desired_distance = options_.adv_options.desired_approach / 100.;
+      grasp.approach.min_distance = options_.adv_options.min_approach / 100.;
       pickup_goal.desired_grasps.push_back(grasp);
     }
     
@@ -778,8 +776,6 @@ int InteractiveManipulationBackend::placeObject(const pr2_object_manipulation_ms
 {
   //prepare place goal
   object_manipulation_msgs::PlaceGoal place_goal;
-  //note identity grasp; we will be going to the gripper pose specified by the user
-  place_goal.grasp.grasp_pose.orientation.w = 1;
   populatePlaceOptions(place_goal, options);
   if (!options.collision_checked)
   {
@@ -816,11 +812,8 @@ int InteractiveManipulationBackend::placeObject(const pr2_object_manipulation_ms
   place_goal.place_locations.push_back(location);
 
   //debug output
-  geometry_msgs::Pose grasp_pose = place_goal.grasp.grasp_pose;
-  ROS_INFO("Placing object %s on support %s using grasp: %f %f %f; %f %f %f %f", 
-           place_goal.collision_object_name.c_str(), place_goal.collision_support_surface_name.c_str(),
-           grasp_pose.position.x, grasp_pose.position.y, grasp_pose.position.z,
-           grasp_pose.orientation.x, grasp_pose.orientation.y, grasp_pose.orientation.z, grasp_pose.orientation.w);
+  ROS_INFO("Placing object %s on support %s", 
+           place_goal.collision_object_name.c_str(), place_goal.collision_support_surface_name.c_str());
 
   //send the goal
   setStatusLabel("calling place action.");
@@ -1147,7 +1140,7 @@ int InteractiveManipulationBackend::modelObject(pr2_object_manipulation_msgs::IM
       setStatusLabel("modeling object in hand completed");
       ROS_INFO("modeled object with collision name %s",
                result.collision_name.c_str());
-      object_manipulation_msgs::GraspableObject object;
+      manipulation_msgs::GraspableObject object;
       sensor_msgs::convertPointCloud2ToPointCloud( result.cluster, object.cluster );
       object.reference_frame_id = result.cluster.header.frame_id;
       if (object.reference_frame_id != "r_wrist_roll_link" && 
@@ -1172,7 +1165,7 @@ int InteractiveManipulationBackend::modelObject(pr2_object_manipulation_msgs::IM
       }
       getGraspInfo(arm_name)->object_ = object;
       //grasp is identity since object is in gripper frame
-      getGraspInfo(arm_name)->grasp_.grasp_pose = GraspInfo::identityPose();
+      getGraspInfo(arm_name)->grasp_.grasp_pose = GraspInfo::identityPose(object.reference_frame_id);
       getGraspInfo(arm_name)->object_collision_name_ = create_model_client_.client().getResult()->collision_name;
       return object_manipulation_msgs::ManipulationResult::SUCCESS;
     }
@@ -1221,7 +1214,7 @@ int InteractiveManipulationBackend::callGhostedGripper( const GetGripperPoseGoal
 }
 
 int InteractiveManipulationBackend::callGhostedGripperPickup( std::string arm_name, 
-                                                              object_manipulation_msgs::Grasp &grasp )
+                                                              manipulation_msgs::Grasp &grasp )
 {
   GetGripperPoseResult result;
   GetGripperPoseGoal goal;

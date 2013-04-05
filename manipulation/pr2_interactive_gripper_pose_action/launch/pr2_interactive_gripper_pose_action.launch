@@ -2,12 +2,12 @@
  
     <arg name="use_slip_controllers" default="false"/>
     <arg name="always_call_planner" default="false"/>
-    <arg name="stereo" default="true"/>
     <arg name="debug" default="false"/>
     <arg name="planner_action" default="planner_action"/>
       <!-- "grasp_adjust_action_node" -->
       <!-- "segmented_clutter_grasp_planner_server" -->
-    
+    <arg name="point_cloud_topic" default="/head_mount_kinect/depth_registered/points"/>
+
     <arg if="$(arg debug)" name="debug_prefix" value="xterm -e gdb -ex run --args"/>
     <arg unless="$(arg debug)" name="debug_prefix" value=""/>
 
@@ -15,6 +15,7 @@
       <remap from="grasp_plan_action" to="$(arg planner_action)" />
       <param if="$(arg always_call_planner)"        name="always_call_planner" value="true" />
       <param unless="$(arg always_call_planner)"    name="always_call_planner" value="false" />
+      <param name="point_cloud_topic" value="$(arg point_cloud_topic)" />
     </node>
 
 </launch>

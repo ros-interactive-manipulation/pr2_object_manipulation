@@ -355,11 +355,12 @@
   <include file="$(find pr2_interactive_gripper_pose_action)/launch/pr2_interactive_gripper_pose_action.launch" >
     <arg name="planner_action" value="segmented_clutter_grasp_planner_server" />
     <!-- <arg name="planner_action" value="grasp_adjust_action_node" /> -->
+    <arg name="point_cloud_topic" value="$(arg main_camera_namespace)/object_modeling_points_filtered"/>
   </include>
 
   <!-- cloud server -->
   <include file="$(find point_cloud_server)/launch/cloud_server.launch" >
-    <arg name="stereo" value="$(arg stereo)"/>
+    <arg name="point_cloud_topic" value="$(arg main_camera_namespace)/object_modeling_points_filtered"/>
   </include>
   
   <!-- Interactive Object Detection incl. sensor data assembler -->
