@@ -47,7 +47,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/server/simple_action_server.h>
 #include <point_cloud_server/StoreCloudAction.h>
-#include <object_manipulation_msgs/GraspPlanningAction.h>
+#include <manipulation_msgs/GraspPlanningAction.h>
 
 #include <pr2_object_manipulation_msgs/TestGripperPoseAction.h>
 #include <pr2_object_manipulation_msgs/GetGripperPoseAction.h>
@@ -118,6 +118,8 @@ protected:
   double grasp_plan_region_len_x_;
   double grasp_plan_region_len_y_;
   double grasp_plan_region_len_z_;
+ 
+  std::string point_cloud_topic_;
 
   PoseState pose_state_;
   ros::NodeHandle nh_;
@@ -143,7 +145,7 @@ protected:
   object_manipulator::MechanismInterface mechanism_;
 
   object_manipulator::ActionWrapper<pr2_object_manipulation_msgs::TestGripperPoseAction> test_pose_client_;
-  object_manipulator::ActionWrapper<object_manipulation_msgs::GraspPlanningAction> grasp_plan_client_;
+  object_manipulator::ActionWrapper<manipulation_msgs::GraspPlanningAction> grasp_plan_client_;
   object_manipulator::ActionWrapper<point_cloud_server::StoreCloudAction> cloud_server_client_;
 
   std::string get_pose_name_;
@@ -190,6 +192,7 @@ public:
     pnh_.param<double>("grasp_plan_region_len_x", grasp_plan_region_len_x_, 0.3);
     pnh_.param<double>("grasp_plan_region_len_y", grasp_plan_region_len_y_, 0.3);
     pnh_.param<double>("grasp_plan_region_len_z", grasp_plan_region_len_z_, 0.3);
+    pnh_.param<std::string>("point_cloud_topic", point_cloud_topic_, "/head_mount_kinect/depth_registered/points");
 
     if(interface_number_ == 4) always_call_planner_ = true;
     else if(interface_number_ >= 1) always_call_planner_ = false;
@@ -355,7 +358,21 @@ public:
     {
       ROS_INFO("Goal object contains %d cluster and %d models.",
                !goal.object.cluster.points.empty(), (int)goal.object.potential_models.size() );
-      // Something to draw...
+      //convert grasp_pose to object reference frame
+      geometry_msgs::PoseStamped grasp_pose = goal.grasp.grasp_pose;
+      grasp_pose.header.stamp = ros::Time(0);
+      if (grasp_pose.header.frame_id != goal.object.reference_frame_id)
+      {
+        try
+        {
+          tfl_.transformPose(goal.object.reference_frame_id, grasp_pose, grasp_pose);
+        }
+        catch(...)
+        {
+          ROS_ERROR("Interactive pose action: can not transfom grasp pose from frame %s into frame %s",
+                    grasp_pose.header.frame_id.c_str(), goal.object.reference_frame_id.c_str());
+        }
+      }      
       try
       {
         ROS_INFO("Converting to reference_frame...");
@@ -403,7 +420,7 @@ public:
 
             tf::Transform T_o, T_g;
             tf::poseMsgToTF(goal.object.potential_models[0].pose.pose, T_o);
-            tf::poseMsgToTF(goal.grasp.grasp_pose, T_g);
+            tf::poseMsgToTF(grasp_pose.pose, T_g);
             tf::Transform T = T_g.inverse()*T_o;
             tf::poseTFToMsg(T, control_offset_.pose);
 
@@ -420,7 +437,7 @@ public:
           pcl::fromROSMsg(converted_cloud, *cloud);
         }
 
-        geometry_msgs::Pose &m = goal.grasp.grasp_pose;
+        geometry_msgs::Pose &m = grasp_pose.pose;
         Eigen::Affine3f affine = Eigen::Translation3f(m.position.x,
                                                             m.position.y,
                                                             m.position.z) *
@@ -835,14 +852,19 @@ protected:
     point_cloud_server::StoreCloudGoal cloud_goal;
     cloud_goal.action = cloud_goal.GET;
     cloud_goal.name = "interactive_manipulation_snapshot";
+    cloud_goal.topic = point_cloud_topic_;
     cloud_server_client_.client().sendGoal(cloud_goal);
     if(!cloud_server_client_.client().waitForResult(ros::Duration(3.0)))
     {
-      ROS_WARN("Timed-out while waiting for cloud from server!");
+      ROS_WARN("Interactive gripper pose action: timed out while waiting for cloud from server!");
       return;
     }
-
-    object_manipulation_msgs::GraspPlanningGoal plan_goal;
+    if(cloud_server_client_.client().getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
+    {
+      ROS_WARN("Interactive gripper pose action: getting cloud did not succeed!");
+      return;
+    }
+    manipulation_msgs::GraspPlanningGoal plan_goal;
     plan_goal.target.region.cloud = cloud_server_client_.client().getResult()->cloud;
     plan_goal.target.region.roi_box_pose = fromWrist(gripper_pose_);
     plan_goal.target.region.roi_box_dims = object_manipulator::msg::createVector3Msg(grasp_plan_region_len_x_, 
@@ -850,8 +872,8 @@ protected:
                                                                                      grasp_plan_region_len_z_);
     int cloud_size = plan_goal.target.region.cloud.width * plan_goal.target.region.cloud.height;
     plan_goal.target.reference_frame_id = gripper_pose_.header.frame_id;
-    object_manipulation_msgs::Grasp seed;
-    seed.grasp_pose = gripper_pose_.pose;
+    manipulation_msgs::Grasp seed;
+    seed.grasp_pose = gripper_pose_;
     plan_goal.grasps_to_evaluate.push_back(seed);
 
     ROS_DEBUG_STREAM("Requesting adjustment on cloud with " << cloud_size << " points, pose \n" << seed);
@@ -870,7 +892,7 @@ protected:
 
   //! Callback that receives the result of a TestGripperPose action.
   void graspPlanResultCB(const actionlib::SimpleClientGoalState& state,
-                         const object_manipulation_msgs::GraspPlanningResultConstPtr &result)
+                         const manipulation_msgs::GraspPlanningResultConstPtr &result)
   {
     planner_index_ = 0;
 
@@ -886,7 +908,7 @@ protected:
 
       for(int i = 0; i < num; i++)
       {
-        planner_poses_[i].pose = result->grasps[i].grasp_pose;
+        planner_poses_[i].pose = result->grasps[i].grasp_pose.pose;
         planner_poses_[i].header = gripper_pose_.header;
         planner_poses_[i].header.stamp = ros::Time(0);
         planner_states_[i] = UNTESTED;

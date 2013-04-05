@@ -43,9 +43,9 @@
 #include <interactive_markers/interactive_marker_server.h>
 #include <interactive_markers/menu_handler.h>
 
-#include <object_manipulation_msgs/GraspableObject.h>
+#include <manipulation_msgs/GraspableObject.h>
 
-#include <object_manipulation_msgs/GraspableObjectList.h>
+#include <manipulation_msgs/GraspableObjectList.h>
 
 #include <pr2_interactive_manipulation/PickupConfig.h>
 
@@ -61,11 +61,11 @@ public:
   InteractiveMarkerNode();
   ~InteractiveMarkerNode();
 
-  std::vector<object_manipulation_msgs::GraspableObject> getMovableObstacles();
+  std::vector<manipulation_msgs::GraspableObject> getMovableObstacles();
 
 private:
 
-  void processGraspableObjects(const object_manipulation_msgs::GraspableObjectListConstPtr &objects);
+  void processGraspableObjects(const manipulation_msgs::GraspableObjectListConstPtr &objects);
 
   void processConfig(PickupConfig &config, uint32_t level);
 

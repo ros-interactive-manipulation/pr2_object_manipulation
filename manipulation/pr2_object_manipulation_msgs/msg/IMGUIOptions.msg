@@ -30,11 +30,11 @@ int32 arm_planner_choice
 int32 gripper_slider_position
 
 # used if grasp_selection == 1
-object_manipulation_msgs/GraspableObject selected_object
+manipulation_msgs/GraspableObject selected_object
 
 # indicates obstacles that can be moved during grasping
 # presumably, the operator has marked these in some fashion
-object_manipulation_msgs/GraspableObject[] movable_obstacles
+manipulation_msgs/GraspableObject[] movable_obstacles
 
 # more options..
 IMGUIAdvancedOptions adv_options

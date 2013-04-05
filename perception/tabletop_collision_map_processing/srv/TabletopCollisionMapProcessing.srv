@@ -20,7 +20,7 @@ string desired_frame
 ---
 
 # the objects added to the collision environment and packaged as graspable objects
-object_manipulation_msgs/GraspableObject[] graspable_objects
+manipulation_msgs/GraspableObject[] graspable_objects
 
 # the list of collision names that the objects got in the environment
 # in the same order as graspable_objects

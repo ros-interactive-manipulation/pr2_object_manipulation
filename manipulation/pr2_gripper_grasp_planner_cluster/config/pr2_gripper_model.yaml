@@ -15,12 +15,12 @@
 #gripper_boxes = [palm_box, left_finger_box, right_finger_box]
 #space_boxes = [[space_box,],]
 
+#a few other params (such as the hand joints and the name of the hand frames for each arm) are gotten from 
+#pr2_hand_description.yaml in pr2_object_manipulation_launch/config
+
 gripper_boxes: [[[.04, -0.0755, -0.026], [.138, .0755, .026]], [[.138, .0425, -0.0115], [.185, .0755, .0115]], [[.138, -0.0755, -0.0115], [.185, -0.0425, .0115]]]
 space_boxes: [[ [[.138, -0.0405, -0.005], [.180, .0405, .005]] ]]
 
-joint_names: 
-  right_arm: ['r_gripper_l_finger_joint', 'r_gripper_r_finger_joint', 'r_gripper_r_finger_tip_joint', 'r_gripper_l_finger_tip_joint']
-  left_arm: ['l_gripper_l_finger_joint', 'l_gripper_r_finger_joint', 'l_gripper_r_finger_tip_joint', 'l_gripper_l_finger_tip_joint']
 pregrasp_joint_angles:
   right_arm: [0.5, 0.5, 0.5, 0.5]
   left_arm: [0.5, 0.5, 0.5, 0.5]
