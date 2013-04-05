@@ -40,8 +40,8 @@ import roslib
 roslib.load_manifest('pr2_gripper_grasp_planner_cluster')
 import rospy
 import actionlib
-from object_manipulation_msgs.srv import GraspPlanning, GraspPlanningResponse
-from object_manipulation_msgs.msg import Grasp, GraspPlanningAction, GraspPlanningErrorCode, GraspPlanningResult
+from manipulation_msgs.srv import GraspPlanning, GraspPlanningResponse
+from manipulation_msgs.msg import Grasp, GraspPlanningAction, GraspPlanningErrorCode, GraspPlanningResult, GripperTranslation
 from pr2_gripper_grasp_planner_cluster.srv import SetPointClusterGraspParams, SetPointClusterGraspParamsResponse
 import pr2_gripper_grasp_planner_cluster.point_cluster_grasp_planner as grasp_planner_cluster
 from sensor_msgs.msg import JointState
@@ -158,20 +158,30 @@ class PointClusterGraspPlannerServer:
         grasps = []
 
         #get the hand joint names from the param server (loaded from yaml config file)
-        joint_names_dict = rospy.get_param('~joint_names')
+        hand_description = rospy.get_param('hand_description')
         pregrasp_joint_angles_dict = rospy.get_param('~pregrasp_joint_angles')
         grasp_joint_angles_dict = rospy.get_param('~grasp_joint_angles')
         pregrasp_joint_efforts_dict = rospy.get_param('~pregrasp_joint_efforts')
         grasp_joint_efforts_dict = rospy.get_param('~grasp_joint_efforts')
         if not arm_name:
-            arm_name = joint_names_dict.keys()[0]
+            arm_name = hand_description.keys()[0]
             rospy.logerr("point cluster grasp planner: missing arm_name in request!  Using "+arm_name)
         try:
-            hand_joints = joint_names_dict[arm_name]
+            hand_joints = hand_description[arm_name]["hand_joints"]
         except KeyError:
-            arm_name = joint_names_dict.keys()[0]
+            arm_name = hand_description.keys()[0]
             rospy.logerr("arm_name "+arm_name+" not found!  Using joint names from "+arm_name)
-            hand_joints = joint_names_dict[arm_name]
+            try:
+                hand_joints = hand_description[arm_name]["hand_joints"]
+            except KeyError:
+                rospy.logerr("no hand joints found for %s!"%arm_name)
+                return ([], error_code.OTHER_ERROR)
+        try:
+            hand_frame = hand_description[arm_name]["hand_frame"]
+            hand_approach_direction = hand_description[arm_name]["hand_approach_direction"]
+        except KeyError:
+            rospy.logerr("couldn't find hand_frame or hand_approach_direction!")
+            return ([], error_code.OTHER_ERROR)
         pregrasp_joint_angles = pregrasp_joint_angles_dict[arm_name]
         grasp_joint_angles = grasp_joint_angles_dict[arm_name]
         pregrasp_joint_efforts = pregrasp_joint_efforts_dict[arm_name]
@@ -216,18 +226,20 @@ class PointClusterGraspPlannerServer:
             #if the cluster isn't in the same frame as the graspable object reference frame,
             #transform the grasps to be in the reference frame
             if cluster_frame == target.reference_frame_id:
-                transformed_grasp_pose = grasp_pose
+                transformed_grasp_pose = stamp_pose(grasp_pose, cluster_frame)
             else:
                 transformed_grasp_pose = change_pose_stamped_frame(self.pcgp.tf_listener, 
                                          stamp_pose(grasp_pose, cluster_frame), 
-                                         target.reference_frame_id).pose
+                                         target.reference_frame_id)
             if self.pcgp.pregrasp_just_outside_box:
                 min_approach_distance = pregrasp_dist
             else:
                 min_approach_distance = max(pregrasp_dist-.05, .05)
-            grasp_list.append(Grasp(pre_grasp_posture=pre_grasp_joint_state, grasp_posture=grasp_joint_state, 
-                                    grasp_pose=transformed_grasp_pose, success_probability=quality, 
-                                    desired_approach_distance = pregrasp_dist, min_approach_distance = min_approach_distance))
+            approach = GripperTranslation(create_vector3_stamped(hand_approach_direction, hand_frame), pregrasp_dist, min_approach_distance)
+            retreat = GripperTranslation(create_vector3_stamped([-1.*x for x in hand_approach_direction], hand_frame), pregrasp_dist, min_approach_distance)
+            grasp_list.append(Grasp(id="id", pre_grasp_posture=pre_grasp_joint_state, grasp_posture=grasp_joint_state, 
+                                    grasp_pose=transformed_grasp_pose, grasp_quality=quality, 
+                                    approach=approach, retreat=retreat, max_contact_force=-1))
 
         #if requested, randomize the first few grasps
         if self.randomize_grasps:

@@ -84,23 +84,27 @@ private:
   
   struct GraspInfo
   {
-    static geometry_msgs::Pose verticalGripper()
+    static geometry_msgs::PoseStamped verticalGripper()
     {
-      geometry_msgs::Pose pose;
-      pose.position.x = 0;
-      pose.position.y = 0;
-      pose.position.z = 0.2;
-      pose.orientation.x = 0;
-      pose.orientation.y = sqrt(0.5);
-      pose.orientation.z = 0;
-      pose.orientation.w = sqrt(0.5);
+      geometry_msgs::PoseStamped pose;
+      pose.pose.position.x = 0;
+      pose.pose.position.y = 0;
+      pose.pose.position.z = 0.2;
+      pose.pose.orientation.x = 0;
+      pose.pose.orientation.y = sqrt(0.5);
+      pose.pose.orientation.z = 0;
+      pose.pose.orientation.w = sqrt(0.5);
+      pose.header.frame_id="base_link";
+      pose.header.stamp = ros::Time::now();
       return pose;
     }
-    static geometry_msgs::Pose identityPose()
+    static geometry_msgs::PoseStamped identityPose(std::string frame_id)
     {
-      geometry_msgs::Pose pose;
-      pose.position.x = pose.position.y = pose.position.z = 0.0;
-      pose.orientation = identityQuaternion();
+      geometry_msgs::PoseStamped pose;
+      pose.pose.position.x = pose.pose.position.y = pose.pose.position.z = 0.0;
+      pose.pose.orientation = identityQuaternion();
+      pose.header.frame_id=frame_id;
+      pose.header.stamp = ros::Time::now();
       return pose;
     }
     static geometry_msgs::Quaternion identityQuaternion()
@@ -117,15 +121,15 @@ private:
     }
     void reset()
     {
-      object_manipulation_msgs::GraspableObject foo;
+      manipulation_msgs::GraspableObject foo;
       object_ = foo;
       grasp_.grasp_pose = verticalGripper();
       object_.reference_frame_id = "base_link";
       object_orientation_ = identityQuaternion();
     }
     std::string object_collision_name_;
-    object_manipulation_msgs::GraspableObject object_;
-    object_manipulation_msgs::Grasp grasp_;
+    manipulation_msgs::GraspableObject object_;
+    manipulation_msgs::Grasp grasp_;
     geometry_msgs::Quaternion object_orientation_;
   };
 
@@ -145,7 +149,7 @@ private:
 
   // Main functions
   int pickupObject(const pr2_object_manipulation_msgs::IMGUIOptions &options,
-                   object_manipulation_msgs::GraspableObject object = object_manipulation_msgs::GraspableObject() );
+                   manipulation_msgs::GraspableObject object = manipulation_msgs::GraspableObject() );
   int placeObject(const pr2_object_manipulation_msgs::IMGUIOptions &options);
   int plannedMove(const pr2_object_manipulation_msgs::IMGUIOptions &options);
   void collisionReset(int reset_choice, int arm_selection_choice);
@@ -159,11 +163,11 @@ private:
 
   // Helper functions
   bool processCollisionMapForPickup(const pr2_object_manipulation_msgs::IMGUIOptions &options, object_manipulation_msgs::PickupGoal &goal);
-  int callGhostedGripperPickup( std::string arm_name, object_manipulation_msgs::Grasp &grasp );
+  int callGhostedGripperPickup( std::string arm_name, manipulation_msgs::Grasp &grasp );
   int callGhostedGripperMove( std::string arm_name, geometry_msgs::PoseStamped &location );
   int callGhostedGripper(const pr2_object_manipulation_msgs::GetGripperPoseGoal &goal,
                          pr2_object_manipulation_msgs::GetGripperPoseResult &result );
-  bool getGrasp(object_manipulation_msgs::Grasp &grasp, std::string arm_name,
+  bool getGrasp(manipulation_msgs::Grasp &grasp, std::string arm_name,
                 geometry_msgs::PoseStamped grasp_pose, float gripper_opening);
 
   // Test gripper pose

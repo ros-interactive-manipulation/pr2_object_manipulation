@@ -45,11 +45,11 @@ import tf
 import time
 
 from sensor_msgs.msg import CameraInfo, JointState, RegionOfInterest, PointCloud2
-from object_manipulation_msgs.msg import Grasp
+from manipulation_msgs.msg import Grasp
 from object_manipulator.convert_functions import *
 from object_manipulator.image_region_functions import *
-from object_manipulation_msgs.srv import GraspPlanning, GraspPlanningResponse, GraspPlanningRequest
-from object_manipulation_msgs.msg import GraspPlanningAction, GraspPlanningResult, GraspPlanningErrorCode
+from manipulation_msgs.srv import GraspPlanning, GraspPlanningResponse, GraspPlanningRequest
+from manipulation_msgs.msg import GraspPlanningAction, GraspPlanningResult, GraspPlanningErrorCode
 from pr2_gripper_grasp_planner_cluster.srv import SetPointClusterGraspParams, SetPointClusterGraspParamsRequest
 from object_manipulation_msgs.msg import FindContainerAction, FindContainerGoal
 from arm_navigation_msgs.srv import SetPlanningSceneDiff, SetPlanningSceneDiffRequest
@@ -263,7 +263,7 @@ class ClusteredClutterGraspPlanner(object):
         rospy.loginfo("total cluster planning time elapsed: %.2f"%(grasp_plan_end_time-grasp_plan_start_time))
 
         #sort the grasps by quality
-        sorted(grasps, key=lambda t:t.success_probability, reverse=True)
+        sorted(grasps, key=lambda t:t.grasp_quality, reverse=True)
 
         #filter out grasps pointing the wrong way
         filtered_grasps = [] 
@@ -273,7 +273,7 @@ class ClusteredClutterGraspPlanner(object):
 
             #if side, filter out ones that are pointing the wrong way
             if side_opening:                
-                grasp_mat = pose_to_mat(grasp.grasp_pose)
+                grasp_mat = pose_to_mat(grasp.grasp_pose.pose)
 
                 ### TODO: compare to opening dir
                 if grasp_mat[0,0] < 0.7:

@@ -38,7 +38,7 @@
 #include <interactive_markers/interactive_marker_server.h>
 #include <interactive_markers/menu_handler.h>
 
-#include <object_manipulation_msgs/GraspableObjectList.h>
+#include <manipulation_msgs/GraspableObjectList.h>
 
 #include <tabletop_collision_map_processing/collision_map_interface.h>
 
@@ -53,7 +53,7 @@ public:
 
   GraspableObjectHandler( std::string name,
       InteractiveMarkerNode *node,
-      const object_manipulation_msgs::GraspableObject &object,
+      const manipulation_msgs::GraspableObject &object,
       const shape_msgs::Mesh &mesh,
       interactive_markers::InteractiveMarkerServer &marker_server,
       pr2_object_manipulation_msgs::IMGUIOptions &options,
@@ -61,7 +61,7 @@ public:
 
   ~GraspableObjectHandler();
 
-  object_manipulation_msgs::GraspableObject getGraspableObject() {return object_;}
+  manipulation_msgs::GraspableObject getGraspableObject() {return object_;}
 
   std::string getCollisionName() {return collision_object_name_;}
 
@@ -87,7 +87,7 @@ private:
 
   pr2_object_manipulation_msgs::IMGUIOptions &options_;
 
-  object_manipulation_msgs::GraspableObject object_;
+  manipulation_msgs::GraspableObject object_;
   const shape_msgs::Mesh mesh_;
 
   bool use_rec_result_;

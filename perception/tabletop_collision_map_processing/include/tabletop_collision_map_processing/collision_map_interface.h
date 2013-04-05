@@ -45,13 +45,15 @@
 #include <household_objects_database_msgs/DatabaseModelPose.h>
 
 #include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/PointCloud2.h>
 
 #include <arm_navigation_msgs/Shape.h>
 
 #include <tabletop_object_detector/Table.h>
 #include <tabletop_object_detector/TabletopDetectionResult.h>
 
-#include <object_manipulation_msgs/GraspableObject.h>
+//#include <manipulation_msgs/GraspableObject.h>
+
 #include <object_manipulation_msgs/ClusterBoundingBox.h>
 
 namespace tabletop_collision_map_processing {

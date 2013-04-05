@@ -47,8 +47,6 @@ import random
 import math
 import scipy.linalg
 from geometry_msgs.msg import PoseStamped, Point, Pose, Vector3
-from object_manipulation_msgs.srv import GraspPlanning, GraspPlanningResponse
-from object_manipulation_msgs.msg import Grasp
 from sensor_msgs.msg import JointState
 from visualization_msgs.msg import Marker
 from interpolated_ik_motion_planner import ik_utilities

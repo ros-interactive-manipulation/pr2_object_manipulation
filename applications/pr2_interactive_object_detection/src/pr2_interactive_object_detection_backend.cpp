@@ -30,7 +30,8 @@
 #include <ros/ros.h>
 
 #include "pr2_interactive_object_detection/pr2_interactive_object_detection_backend.h"
-#include "object_manipulation_msgs/GraspableObjectList.h"
+
+#include <manipulation_msgs/GraspableObjectList.h>
 
 #include <household_objects_database_msgs/GetModelDescription.h>
 #include <household_objects_database_msgs/GetModelMesh.h>
@@ -48,6 +49,7 @@
 
 using namespace tabletop_object_detector;
 using namespace interactive_perception_msgs;
+using namespace manipulation_msgs;
 using namespace object_manipulation_msgs;
 using namespace household_objects_database_msgs;
 using namespace pr2_interactive_object_detection;
@@ -656,7 +658,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
   //store the info as graspable object
   for ( unsigned cluster_index=0; cluster_index<num_clusters; ++cluster_index )
   {
-    object_manipulation_msgs::GraspableObject graspable_object;
+    manipulation_msgs::GraspableObject graspable_object;
     shape_msgs::Mesh mesh;
 
     //populate cluster
@@ -751,7 +753,7 @@ bool InteractiveObjDetBackend::publishResult( int &num_recognized )
 
     used_model_indices.insert( model_index );
 
-    object_manipulation_msgs::GraspableObject graspable_object;
+    manipulation_msgs::GraspableObject graspable_object;
     shape_msgs::Mesh mesh;
 
     graspable_object.reference_frame_id = reference_frame_id;
@@ -992,7 +994,7 @@ bool InteractiveObjDetBackend::getModelInfo(const DatabaseModelPose &model_pose,
 }
 
 
-int InteractiveObjDetBackend::printObjects(const std::vector<object_manipulation_msgs::GraspableObject> &objects)
+int InteractiveObjDetBackend::printObjects(const std::vector<manipulation_msgs::GraspableObject> &objects)
 {
   ROS_INFO_STREAM( "Detected " << objects.size() << " graspable object(s):\n" );
   for (size_t m=0; m<objects.size(); m++)
