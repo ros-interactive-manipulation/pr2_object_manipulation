@@ -42,7 +42,7 @@ namespace pr2_interactive_manipulation
 
   GraspableObjectHandler::GraspableObjectHandler( std::string name,
       InteractiveMarkerNode *node,
-      const object_manipulation_msgs::GraspableObject &object,
+      const manipulation_msgs::GraspableObject &object,
       const shape_msgs::Mesh &mesh,
       interactive_markers::InteractiveMarkerServer &marker_server,
       pr2_object_manipulation_msgs::IMGUIOptions &options,
@@ -153,7 +153,7 @@ namespace pr2_interactive_manipulation
   void GraspableObjectHandler::callPickup(int arm_selection)
   {
     options_.arm_selection = arm_selection;
-    object_manipulation_msgs::GraspableObject object = object_;
+    manipulation_msgs::GraspableObject object = object_;
 
     if ( !use_rec_result_ )
     {

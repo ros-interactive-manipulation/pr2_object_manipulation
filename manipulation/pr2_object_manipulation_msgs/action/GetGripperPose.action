@@ -9,10 +9,10 @@ geometry_msgs/PoseStamped gripper_pose
 float32 gripper_opening
 
 # An object that the gripper is holding. May be empty.
-object_manipulation_msgs/GraspableObject object
+manipulation_msgs/GraspableObject object
 
 # how we are holding the object, if any.
-object_manipulation_msgs/Grasp grasp
+manipulation_msgs/Grasp grasp
 
 ---
 # the returned gripper pose, assuming the user has clicked "accept"

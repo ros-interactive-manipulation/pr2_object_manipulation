@@ -98,7 +98,7 @@ void InteractiveMarkerNode::processConfig(PickupConfig &config, uint32_t level)
 }
 
 void InteractiveMarkerNode::processGraspableObjects(
-                                          const object_manipulation_msgs::GraspableObjectListConstPtr &objects)
+                                          const manipulation_msgs::GraspableObjectListConstPtr &objects)
 {
   object_handlers_.clear();
 
@@ -118,9 +118,9 @@ void InteractiveMarkerNode::processGraspableObjects(
   marker_server_.applyChanges();
 }
 
-std::vector<object_manipulation_msgs::GraspableObject> InteractiveMarkerNode::getMovableObstacles()
+std::vector<manipulation_msgs::GraspableObject> InteractiveMarkerNode::getMovableObstacles()
 {
-  std::vector<object_manipulation_msgs::GraspableObject> movable_obstacles;
+  std::vector<manipulation_msgs::GraspableObject> movable_obstacles;
   for (size_t i=0; i<object_handlers_.size(); i++)
   {
     if (!object_handlers_[i]->getCollisionName().empty())

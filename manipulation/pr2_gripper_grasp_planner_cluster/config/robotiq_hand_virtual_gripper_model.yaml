@@ -28,8 +28,9 @@ space_boxes: [[[[0.160, -0.0675, -0.0175], [0.210, 0.0675, 0.0175]], [[0.090, -0
               [[[0.160, 0.0, 0.0175], [0.210, 0.0675, 0.0525]], [[0.090, 0.0, 0.0175],[0.160, 0.045, 0.0525]]],
               [[[0.160, 0.0, -0.0525], [0.210, 0.0675, -0.0175]], [[0.090, 0.0, -0.0525],[0.160, 0.045, -0.0175]]]]
 
-joint_names: 
-  manipulator: ["joint_1", "joint_2", "joint_3"]
+#joint names should be gotten from the hand_description param dictionary now, defined in a separate .yaml file
+#joint_names: 
+#  manipulator: ["joint_1", "joint_2", "joint_3"]
 
 pregrasp_joint_angles: 
   manipulator: [0.0,0.0,0.0]

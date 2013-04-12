@@ -28,6 +28,10 @@
  */
 
 #include <rviz/default_plugin/tools/point_tool.h>
+#include <rviz/properties/int_property.h>
+#include <rviz/properties/float_property.h>
+#include <rviz/properties/bool_property.h>
+#include <rviz/viewport_mouse_event.h>
 
 namespace pr2_interactive_manipulation
 {
@@ -38,10 +42,35 @@ public:
   LookAtTool();
 };
 
+
+
+
 class SetGripperTool: public rviz::PointTool
 {
+Q_OBJECT
+
 public:
   SetGripperTool();
+  virtual int processMouseEvent( rviz::ViewportMouseEvent& event );
+
+public Q_SLOTS:
+  virtual void updatePoseTopic();
+
+protected:
+  void createProperties();
+
+  //! number of pixels around point to sample for depth image
+  rviz::IntProperty *normal_box_padding_;
+
+  //! Maximum far distance for depth image
+  rviz::FloatProperty *far_clip_distance_;
+
+  //! Name of topic on which to publish the full pose.
+  rviz::StringProperty * topic_property_pose_;
+
+  //! Publisher for pose.
+  ros::Publisher pub_pose_;
+
 };
 
 class NavigateToTool: public rviz::PointTool

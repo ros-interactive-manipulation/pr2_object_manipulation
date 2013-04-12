@@ -22,8 +22,9 @@ gripper_boxes: [[[0.125, -0.1125, -0.0175], [0.15, -0.0475, 0.0175]], [[0.15, -0
 
 space_boxes: [[[[0.150, -0.0825, -0.0175], [0.210, 0.0825, 0.0175]]], [[[0.15, 0.0, 0.0215], [0.21, 0.0825, 0.0465]]], [[[0.15, 0.0, -0.0465], [0.21, 0.0825, 0.0215]]]]
 
-joint_names: 
-  arm: ["sdh_knuckle_joint", "sdh_thumb_2_joint", "sdh_thumb_3_joint", "sdh_finger_12_joint", "sdh_finger_13_joint", "sdh_finger_22_joint", "sdh_finger_23_joint"]
+#joint names should be gotten from the hand_description param dictionary now, defined in a separate .yaml file 
+#joint_names: 
+#  arm: ["sdh_knuckle_joint", "sdh_thumb_2_joint", "sdh_thumb_3_joint", "sdh_finger_12_joint", "sdh_finger_13_joint", "sdh_finger_22_joint", "sdh_finger_23_joint"]
 
 pregrasp_joint_angles: 
   arm: [0.0,-0.9854,0.9472,-0.9854,0.9472,-0.9854,0.9472]

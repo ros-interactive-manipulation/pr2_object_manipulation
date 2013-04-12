@@ -3,22 +3,25 @@ Panels:
     Help Height: 156
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Kinect Stream1
+      Expanded: ~
       Splitter Ratio: 0.645977
-    Tree Height: 557
+    Tree Height: 392
   - Class: rviz/Views
     Expanded:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
   - Class: rviz/Time
+    Experimental: false
     Name: Time
+    SyncMode: 0
+    SyncSource: Kinect Stream
   - Class: rviz/Tool Properties
     Expanded:
       - /Navigate To1
       - /Set Gripper1
       - /Look At1
+      - /2D Pose Estimate1
     Name: Tool Properties
     Splitter Ratio: 0.5
 Visualization Manager:
@@ -49,6 +52,7 @@ Visualization Manager:
           Name: Pick Up Objects
           Show Axes: false
           Show Descriptions: true
+          Show Visual Aids: false
           Update Topic: /interactive_manipulation/update
           Value: true
         - Class: rviz/InteractiveMarkers
@@ -56,6 +60,7 @@ Visualization Manager:
           Name: PR2 Teleop (Transparent)
           Show Axes: false
           Show Descriptions: false
+          Show Visual Aids: true
           Update Topic: /pr2_marker_control_transparent/update
           Value: true
         - Class: rviz/InteractiveMarkers
@@ -63,13 +68,23 @@ Visualization Manager:
           Name: Interactive Gripper
           Show Axes: false
           Show Descriptions: true
+          Show Visual Aids: true
           Update Topic: /interactive_gripper/update
+          Value: true
+        - Class: rviz/InteractiveMarkers
+          Enabled: true
+          Name: PR2 Nav
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: /pr2_nav_marker_control/update
           Value: true
         - Class: rviz/InteractiveMarkers
           Enabled: false
           Name: PR2 Teleop
           Show Axes: false
           Show Descriptions: true
+          Show Visual Aids: false
           Update Topic: /pr2_marker_control/update
           Value: false
       Enabled: true
@@ -670,7 +685,7 @@ Visualization Manager:
       Publish Click Topic: /interactive_manipulation_image_click
       Queue Size: 2
       Show Panel: false
-      Transport Hint: theora
+      Transport Hint: compressed
       Value: true
       Visibility:
         Debug Displays:
@@ -686,13 +701,14 @@ Visualization Manager:
         Grid: true
         Interactive Markers:
           Interactive Gripper: true
+          PR2 Nav: true
           PR2 Teleop: true
           PR2 Teleop (Transparent): true
           Pick Up Objects: true
           Value: true
-        Kinect Stream: false
+        Kinect Stream: true
         Navigation:
-          Map: true
+          Map: false
           Nav Global Path: true
           Nav Obstacles: true
           Value: true
@@ -712,8 +728,9 @@ Visualization Manager:
         Value: true
       Zoom Factor: 1
     - Alpha: 1
-      Auto Size: true
-      Auto Size Factor: 3
+      Auto Size:
+        Auto Size Factor: 1
+        Value: true
       Autocompute Intensity Bounds:
         Max Intensity: 4096
         Min Intensity: 0
@@ -734,6 +751,9 @@ Visualization Manager:
       Depth Map Transport Hint: compressedDepth
       Enabled: true
       Name: Kinect Stream
+      Occlusion Compensation:
+        Occlusion Time-Out: 30
+        Value: false
       Position Transformer: XYZ
       Queue Size: 3
       Selectable: true
@@ -887,6 +907,7 @@ Visualization Manager:
           Name: InteractiveMarkers
           Show Axes: false
           Show Descriptions: true
+          Show Visual Aids: false
           Update Topic: ""
           Value: true
       Enabled: false
@@ -896,34 +917,35 @@ Visualization Manager:
         - Alpha: 0.7
           Class: rviz/Map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: Map
           Topic: /map
-          Value: false
+          Value: true
         - Alpha: 1
           Class: rviz/GridCells
           Color: 255; 255; 127
-          Enabled: false
+          Enabled: true
           Name: Nav Obstacles
           Topic: /move_base_node/local_costmap/obstacles
-          Value: false
+          Value: true
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
           Color: 25; 255; 0
-          Enabled: false
+          Enabled: true
           Name: Nav Global Path
           Topic: /move_base_node/NavfnROS/plan
-          Value: false
+          Value: true
       Enabled: true
       Name: Navigation
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: /odom_combined
+    Fixed Frame: /map
   Name: root
   Tools:
     - Class: rviz/Interact
+      Hide Inactive Objects: true
     - Class: rviz/MoveCamera
     - Class: rviz/FocusCamera
     - Class: pr2_interactive_manipulation_frontend/NavigateTo
@@ -932,29 +954,32 @@ Visualization Manager:
     - Class: pr2_interactive_manipulation_frontend/SetGripper
       Single click: true
       Topic: /rviz/set_gripper
+      Pose Topic: /cloud_click_point
     - Class: pr2_interactive_manipulation_frontend/LookAt
       Single click: true
       Topic: /rviz/look_here
+    - Class: rviz/SetInitialPose
+      Topic: initialpose
   Value: true
   Views:
     Current:
       Class: rviz_animated_view_controller/Animated
       Control Mode: Orbit
-      Distance: 0.01
+      Distance: 6.70756
       Eye:
-        X: -0.00989531
-        Y: -0.000195916
-        Z: -0.000229669
+        X: 27.8493
+        Y: 43.0939
+        Z: 3.93133
       Focus:
-        X: 0.00010014
-        Y: 1.77388e-08
-        Z: 2.31594e-07
+        X: 22.1573
+        Y: 44.8555
+        Z: 0.850982
       Maintain Vertical Axis: true
       Mouse Enabled: true
       Name: Current View
       Near Clip Distance: 0.01
       Placement Topic: /rviz/camera_placement
-      Target Frame: /head_mount_kinect_rgb_link
+      Target Frame: <Fixed Frame>
       Transition Time: 0.5
       Up:
         X: 0
@@ -967,20 +992,20 @@ Window Geometry:
     collapsed: false
   Head Camera:
     collapsed: false
-  Height: 939
+  Height: 1003
   Hide Left Dock: false
   Hide Right Dock: false
   Manipulation:
     collapsed: false
   Object Detection:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000013e000002bcfc0200000007fc0000014e000000ad0000000000fffffffa000000000100000001fb000000300049006e0074006500720061006300740069007600650020004d0061006e006900700075006c006100740069006f006e0100000000ffffffff0000000000000000fb000000160048006500610064002000430061006d0065007200610000000041000001190000001600fffffffb0000000800540069006d0065020000028f00000446000002c700000046fb000000380049006e0074006500720061006300740069007600650020004f0062006a00650063007400200044006500740065006300740069006f006e0100000268000000cc0000000000000000fb0000000a0049006d0061006700650000000221000000b80000000000000000fb0000000a0049006d006100670065020000046900000366000002f80000028bfb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000023f0000009a0000006400ffffff000000010000012800000328fc0200000002fc0000004100000328000000fb0100001dfa000000010100000002fb0000000a005600690065007700730100000000ffffffff0000010f00fffffffb000000100044006900730070006c00610079007301000006080000011d0000010f00fffffffc00000041000003740000000000fffffffa000000000100000001fb0000001200530065006c0065006300740069006f006e0100000000ffffffff0000000000000000000000020000019a00000031fc0100000002fb0000001800430061006d00650072006100200046006f00630075007301000001440000019a0000000000000000fb0000002a00430061006d00650072006100200046006f006300750073002000460072006f006e00740065006e006401000001440000029c0000000000000000000000030000034f000000dbfc0100000001fc000000000000034f0000013e00fffffffa000000010200000002fb00000020004f0062006a00650063007400200044006500740065006300740069006f006e0100000000ffffffff000000aa00fffffffb00000018004d0061006e006900700075006c006100740069006f006e0100000240000000bd000000bd00ffffff0000034f0000024700000001000000020000000100000002fc00000003000000020000000000000002000000020000000a0054006f006f006c007301000000000000028100000000000000000000001600430061006d0065007200610046006f00630075007301000002810000022300000000000000000000000300000000
+  QMainWindow State: 000000ff00000000fd00000003000000000000013e000002bcfc0200000007fc0000014e000000ad0000000000fffffffa000000000100000001fb000000300049006e0074006500720061006300740069007600650020004d0061006e006900700075006c006100740069006f006e0100000000ffffffff0000000000000000fb000000160048006500610064002000430061006d0065007200610000000041000001190000001600fffffffb0000000800540069006d0065020000028f00000446000002c700000046fb000000380049006e0074006500720061006300740069007600650020004f0062006a00650063007400200044006500740065006300740069006f006e0100000268000000cc0000000000000000fb0000000a0049006d0061006700650000000221000000b80000000000000000fb0000000a0049006d006100670065020000046900000366000002f80000028bfb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000023f0000009a0000006400ffffff000000010000013e0000036cfc0200000003fc0000004100000283000000fb0100001dfa000000010100000002fb0000000a005600690065007700730100000000ffffffff0000010f00fffffffb000000100044006900730070006c00610079007301000006080000011d0000010f00fffffffc000002ca000000e3000000db0100001dfa000000010100000002fb00000020004f0062006a00650063007400200044006500740065006300740069006f006e0100000000ffffffff000000cc00fffffffb00000018004d0061006e006900700075006c006100740069006f006e010000034f0000013e0000013e00fffffffc00000041000003740000000000fffffffa000000000100000001fb0000001200530065006c0065006300740069006f006e0100000000ffffffff0000000000000000000000020000019a00000031fc0100000002fb0000001800430061006d00650072006100200046006f00630075007301000001440000019a0000000000000000fb0000002a00430061006d00650072006100200046006f006300750073002000460072006f006e00740065006e006401000001440000029c0000000000000000000004f20000036c00000001000000020000000100000002fc00000003000000020000000000000002000000020000000a0054006f006f006c007301000000000000034f00000000000000000000001600430061006d0065007200610046006f006300750073010000034f0000015500000000000000000000000300000000
   Time:
     collapsed: false
   Tool Properties:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1165
-  X: 128
-  Y: -11
+  Width: 1596
+  X: 122
+  Y: -69
