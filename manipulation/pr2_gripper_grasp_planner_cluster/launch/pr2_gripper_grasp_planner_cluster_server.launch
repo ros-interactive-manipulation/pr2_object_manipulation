@@ -2,7 +2,7 @@
   <arg name="use_machine" default="false"/>
   <arg name="machine" default="c2"/>
   <group if="$(arg use_machine)">
-    <include file="$(find pr2_machine)/pr2.machine" />
+    <include file="$(find pr2_machine)/$(env ROBOT).machine" />
     <node name="pr2_gripper_grasp_planner_cluster" pkg="pr2_gripper_grasp_planner_cluster" 
       type="point_cluster_grasp_planner_server.py" respawn="false" output="screen" machine="$(arg machine)">
       <rosparam command="load" file="$(find pr2_gripper_grasp_planner_cluster)/config/pr2_gripper_model.yaml" />
