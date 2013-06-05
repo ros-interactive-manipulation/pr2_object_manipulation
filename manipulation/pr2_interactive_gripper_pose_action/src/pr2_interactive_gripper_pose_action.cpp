@@ -1234,7 +1234,6 @@ protected:
 
     if(object_cloud_->points.size())
     {
-      //int_marker.header = object_cloud_->header;
       marker.scale.x = point_size;
       marker.scale.y = point_size;
       marker.scale.z = point_size;
@@ -1242,24 +1241,19 @@ protected:
 
       int num_points = object_cloud_->points.size();
       marker.points.resize( num_points );
-      marker.colors.resize( num_points );
-
-      //ROS_INFO_STREAM( "Adding point cluster. #points=" << object_.cluster.points.size() );
-
+      //note that we not touching the marker.colors field
+      //it stays empty, which forces the marker to use the general color above
+      ROS_DEBUG_STREAM( "Adding point cluster. #points=" << object_cloud_->points.size() );
       for ( int i=0; i<num_points; i++)
       {
         marker.points[i].x = object_cloud_->points[i].x;
         marker.points[i].y = object_cloud_->points[i].y;
         marker.points[i].z = object_cloud_->points[i].z;
-//        marker.colors[i].r = object_cloud_->points[i].r/255.;
-//        marker.colors[i].g = object_cloud_->points[i].g/255.;
-//        marker.colors[i].b = object_cloud_->points[i].b/255.;
-//        marker.colors[i].a = 1.0;
       }
     }
     else
     {
-
+      ROS_WARN("Make cloud marker requested with empty point cloud");
     }
 
     InteractiveMarkerControl control;

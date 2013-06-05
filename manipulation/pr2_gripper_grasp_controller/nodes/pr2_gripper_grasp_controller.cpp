@@ -73,6 +73,12 @@ private:
   //! The name of the virtual joint of the gripper 
   std::string gripper_virtual_joint_name_;
 
+  //! Whether we are in simulation or on a real robot
+  bool sim_;
+
+  //! How long we wait for the gripper to settle in simulation
+  double sim_wait_;
+
   //-------------------------------- Constants ---------------------------------
 
   //! Gap value for gripper fully open
@@ -216,7 +222,21 @@ private:
 
     //send the command to the gripper
     gripper_action_client_->sendGoal(gripper_command);
-    gripper_action_client_->waitForResult();
+    if (!sim_) 
+    {
+      gripper_action_client_->waitForResult();
+    }
+    else 
+    {
+      //simulated gripper has a habit of never settling and thus never returning
+      //so in sim we just continue after a hard-coded interval here
+      bool withinWait = gripper_action_client_->waitForResult(ros::Duration(sim_wait_));
+      if (!withinWait)
+      {
+        ROS_WARN("pr2 gripper grasp execution: controller has not returned within limit, "
+                 "but since we are in simulation we are continuing anyway.");
+      }
+    }
 
     //process the result
     if(gripper_action_client_->getState() == actionlib::SimpleClientGoalState::SUCCEEDED) 
@@ -293,6 +313,8 @@ public:
     priv_nh_.param<double>("gripper_closed_gap_value", gripper_closed_gap_value_, DEFAULT_GRIPPER_CLOSED);
     priv_nh_.param<double>("gripper_max_effort", gripper_max_effort_, DEFAULT_GRIPPER_MAX_EFFORT);
     priv_nh_.param<std::string>("gripper_type", gripper_type_, "pr2");
+    priv_nh_.param<bool>("sim", sim_, false);
+    priv_nh_.param<double>("sim_wait", sim_wait_, 8.0);
 
     std::string query_service_name = root_nh_.resolveName("grasp_query_name");   
     query_srv_ = root_nh_.advertiseService(query_service_name, &PR2GripperGraspController::serviceCallback, this);    

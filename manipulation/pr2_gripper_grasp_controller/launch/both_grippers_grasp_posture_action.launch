@@ -1,6 +1,7 @@
 <launch>
   <arg name="use_right_arm" default="true" />
   <arg name="use_left_arm" default="true" />
+  <arg name="sim" default="false" />
 
   <arg name="lcg_left_gripper" default="false"/>
   <arg name="lcg_right_gripper" default="false"/>
@@ -15,6 +16,9 @@
 	 thin objects-it's up to the application to decide when the grasp failed, and to remove the attached
 	 collision object if any --> 
     <param name="gripper_object_presence_threshold" value="-.01" />
+    <param if="$(arg sim)" name="sim" value="true"/>
+    <param unless="$(arg sim)" name="sim" value="false"/>
+    <param name="sim_wait" value="8.0"/>
   </node> 
   <group unless="$(arg lcg_right_gripper)">
     <param name="r_gripper_grasp_posture_controller/gripper_type" value="pr2"/>
@@ -36,6 +40,9 @@
     <remap from="grasp_query_name" to="/l_gripper_grasp_status" />
     <param name="gripper_virtual_joint_name" value="l_gripper_joint" />
     <param name="gripper_object_presence_threshold" value="-.01" />    
+    <param if="$(arg sim)" name="sim" value="true"/>
+    <param unless="$(arg sim)" name="sim" value="false"/>
+    <param name="sim_wait" value="8.0"/>
   </node>
   <group unless="$(arg lcg_left_gripper)">
     <param name="l_gripper_grasp_posture_controller/gripper_type" value="pr2"/>
