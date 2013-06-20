@@ -63,7 +63,7 @@
 
     <node pkg="rviz" launch-prefix="$(arg rviz_prefix)" name="$(anon rviz-1)" type="rviz" respawn="false" output="screen"
 	  args="-d $(arg rviz_config_file) -s $(find pr2_interactive_manipulation_frontend)/images/splash.png $(arg rviz_args) 
-		$(arg large_menu_arg)"> 
+		$(arg large_menu_arg)" required="true"> 
 
       <remap if="$(arg tf_throttled)" from="tf" to="tf_republished"/>
 
