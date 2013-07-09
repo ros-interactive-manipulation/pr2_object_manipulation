@@ -35,9 +35,16 @@
 #include <algorithm>
 #include <sstream>
 #include <climits>
+
+#if defined(IS_ASSIMP3)
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#else
 #include <assimp/assimp.hpp>     
 #include <assimp/aiScene.h>      
 #include <assimp/aiPostProcess.h>
+#endif
 
 void robot_self_filter_color::SelfMask::freeMemory (void)
 {
