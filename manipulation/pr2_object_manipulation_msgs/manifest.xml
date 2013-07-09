@@ -11,6 +11,7 @@
 
 
   <depend package="geometry_msgs"/>
+  <depend package="manipulation_msgs"/>
   <depend package="object_manipulation_msgs"/>
 
 </package>
