@@ -61,6 +61,7 @@
     <arg name="use_left_arm" value="$(arg use_left_arm)" />
     <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)" />
     <arg name="lcg_right_gripper" value="$(arg lcg_right_gripper)" />
+    <arg name="sim" value="$(arg sim)"/>
   </include>  
   <include if="$(arg use_slip_controllers)" 
    file="$(find pr2_gripper_grasp_controller)/launch/both_grippers_finger_sensor_grasp_posture_action.launch" >
