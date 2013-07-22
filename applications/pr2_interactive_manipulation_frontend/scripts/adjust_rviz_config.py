@@ -39,6 +39,17 @@ else:
     fixed_frame = '/odom_combined'
     map_enabled = False
     
+if sim:
+    kinect_color_topic = '/head_mount_kinect/rgb/image_raw'
+    kinect_color_hint = 'raw'
+    kinect_depth_topic = '/head_mount_kinect_rgb/depth/image_raw'
+    kinect_depth_hint = 'raw'
+else:
+    kinect_color_topic = '/head_mount_kinect/rgb/image_color'
+    kinect_color_hint ='compressed'
+    kinect_depth_topic = '/head_mount_kinect/depth_registered/image'
+    kinect_depth_hint = 'compressedDepth'
+
 # read yaml and modify properties 
 
 in_stream = open(sys.argv[1], 'r')
@@ -61,6 +72,12 @@ for display in rviz_yaml['Visualization Manager']['Displays']:
                 nav_display['Enabled'] = nav_enabled
                 if nav_local:
                     nav_display['Topic'] = nav_display['Topic'].replace('move_base_node','move_base_local_node')
+
+    if display['Name'] == 'Kinect Stream':
+        display['Color Image Topic'] = kinect_color_topic
+        display['Color Transport Hint'] = kinect_color_hint
+        display['Depth Map Topic'] = kinect_depth_topic
+        display['Depth Map Transport Hint'] = kinect_depth_hint
 
 # dump yaml to output file
 
