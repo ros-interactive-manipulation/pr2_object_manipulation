@@ -698,7 +698,7 @@ class PickAndPlaceManager():
             #point cluster, saved grasp pose is wrist pose in cluster frame
             # else:
                 #(wrist to base link) = (object to base_link) * (cluster origin to object) * (wrist to cluster)
-            wrist_to_cluster_mat = pose_to_mat(self.held_objects[whicharm].grasp_pose)
+            wrist_to_cluster_mat = pose_to_mat(self.held_objects[whicharm].grasp_pose.pose)
             cluster_to_object_mat = self.held_objects[whicharm].cluster_origin_to_bounding_box
             object_to_base_link_mat = pose_to_mat(pose.pose)
             wrist_to_base_link_mat = object_to_base_link_mat * cluster_to_object_mat * wrist_to_cluster_mat
