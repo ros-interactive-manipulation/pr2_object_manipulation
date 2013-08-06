@@ -10,6 +10,8 @@
   <arg name="kinect_frame_prefix" default="/head_mount_kinect" />
   <arg name="kinect_camera_name" default="head_mount_kinect" />
   <arg name="sim" default="false"/>
+  <arg name="reactive_grasping" default="false" />
+
 
   <!-- client for object database running on remote server at Willow Garage -->
   <!-- DOES NOT WORK IN TRUNK RIGHT NOW -->
@@ -40,6 +42,7 @@
     <arg name="use_right_arm" value="$(arg use_right_arm)"/>
     <arg name="use_task_cartesian" value="$(arg use_task_cartesian)"/>
     <arg name="sim" value="$(arg sim)"/>
+    <arg name="reactive_grasping" value="$(arg reactive_grasping)" />
   </include>
 
   <!-- tabletop collision map processing -->
