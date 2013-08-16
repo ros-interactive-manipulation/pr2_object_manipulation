@@ -418,7 +418,7 @@ class PickAndPlaceDemo(PickAndPlaceManager):
 
         #run the autonomous thread
         if input == 'start':
-            self.start_autonomous_thread(True)    
+            self.start_autonomous_thread(False)    
 
             while not rospy.is_shutdown():
                 print "type s to preempt the autonomous demo, p to pause"

@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
         #start the pick and place demo
         rospy.loginfo("starting pick and place demo")
-        pick_and_place_demo.start_autonomous_thread(True)
+        pick_and_place_demo.start_autonomous_thread(False)
         rospy.spin()
     else:
         rospy.loginfo("starting pick and place keyboard interface")

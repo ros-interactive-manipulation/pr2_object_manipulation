@@ -49,6 +49,7 @@ from tabletop_object_detector.msg import TabletopDetectionResult
 from tabletop_collision_map_processing.srv import \
     TabletopCollisionMapProcessing, TabletopCollisionMapProcessingRequest
 from pr2_controllers_msgs.msg import PointHeadAction, PointHeadGoal
+from arm_navigation_msgs.msg import LinkPadding
 import tf
 import actionlib
 import scipy
@@ -114,7 +115,7 @@ class PickAndPlaceManager():
         if self.arms_to_use != "both":
             rospy.loginfo("grasp_executive: using only %s arm"%self.arms_to_use)
         
-        self.stereo_camera_frame = rospy.get_param("~stereo_camera_frame", "/narrow_stereo_optical_frame")
+        self.stereo_camera_frame = rospy.get_param("~stereo_camera_frame", "/head_mount_kinect_rgb_optical_frame")
 
         #should we use the slip detecting gripper controller?
         self.use_slip_controller = use_slip_controller
@@ -573,8 +574,23 @@ class PickAndPlaceManager():
                             self.place_grid[i][j] = 1
                             rospy.loginfo("grid point %d %d is not above the table"%(i,j))
                             break                
-                    
-                        
+                
+   
+    ##return a LinkPadding list with the gripper touch links for whicharm (right = 0, left = 1) and padding pad
+    def create_gripper_link_padding(self, whicharm, pad):
+        link_name_list = ["_gripper_palm_link", "_gripper_r_finger_tip_link", "_gripper_l_finger_tip_link", "_gripper_l_finger_link", 
+                          "_gripper_r_finger_link", "_wrist_roll_link"]
+        if whicharm == 1:
+            prefix = 'l'
+        else:
+            prefix = 'r'
+        if pad < 0:
+            rospy.logerr("pad was less than 0!  Using 0")
+            pad = 0.
+        arm_link_names = [prefix + link_name for link_name in link_name_list]
+        link_padding_list = [LinkPadding(link_name, pad) for link_name in arm_link_names]
+        return link_padding_list            
+
 
     ##tell the place service to place an object held by whicharm at a particular location (right = 0, left = 1)
     #expressed as a PoseStamped
@@ -585,25 +601,17 @@ class PickAndPlaceManager():
         rospy.loginfo("attempting to place object")
         if constrained == True:
             rospy.loginfo("using constrained place");
-        #print "requested pose:", pose
 
-        # #recognized object, just send the object pose
-        # if self.held_objects[whicharm].type == 'mesh':
-        #     msg_pose = pose
+        #send in where the wrist ought to be in base_link frame to put the object there
+        wrist_to_cluster_mat = pose_to_mat(self.held_objects[whicharm].grasp_pose.pose)
+        cluster_to_object_mat = self.held_objects[whicharm].cluster_origin_to_bounding_box
+        object_to_base_link_mat = pose_to_mat(pose.pose)
+        wrist_to_base_link_mat = object_to_base_link_mat * cluster_to_object_mat * wrist_to_cluster_mat        
+        wrist_pose = stamp_pose(mat_to_pose(wrist_to_base_link_mat), 'base_link')
+        wrist_pose.header.stamp = rospy.Time.now()
 
-        #point cluster, send back the cluster frame origin relative to the new desired pose
-        #(cluster origin to base_link) = (new object to base_link) * (cluster to object)
-        # else:
-        pose_mat = pose_to_mat(pose.pose)
-        cluster_to_base_link_mat = pose_mat * self.held_objects[whicharm].cluster_origin_to_bounding_box
-        cluster_to_base_link_pose = mat_to_pose(cluster_to_base_link_mat)
-        msg_pose = stamp_pose(cluster_to_base_link_pose, 'base_link')
-        # print "cluster_origin_to_bounding_box:\n", ppmat(self.held_objects[whicharm].cluster_origin_to_bounding_box)
-        # print "pose_mat:\n", ppmat(pose_mat)
-        # print "cluster_to_base_link_mat:\n", ppmat(cluster_to_base_link_mat)
-
-        #re-stamp the pose
-        msg_pose.header.stamp = rospy.Time.now()
+        #draw the wrist pose
+        self.draw_functions.draw_rviz_axes(wrist_to_base_link_mat, 'base_link', id = 0, duration = 60.)
 
         goal = PlaceGoal()
         if whicharm == 0:  
@@ -614,8 +622,8 @@ class PickAndPlaceManager():
             goal.arm_name = "left_arm"
             rospy.loginfo("asking the left arm to place")
 
-        goal.place_locations = [msg_pose]
-        goal.grasp = self.held_objects[whicharm].grasp
+        goal.place_locations = [wrist_pose]
+        
         goal.desired_retreat_distance = 0.1
         goal.min_retreat_distance = 0.05
 
@@ -625,9 +633,14 @@ class PickAndPlaceManager():
         goal.approach.direction = create_vector3_stamped([0.,0.,-1.], 'base_link')
 
         goal.collision_object_name = self.held_objects[whicharm].collision_name
-        goal.collision_support_surface_name = self.collision_support_surface_name
-        goal.place_padding = padding
-        #goal.use_reactive_place = False
+
+        #take the gripper link paddings down to 0 and disable collisions between the gripper and 
+        #everything for the move from the pre-place to the place
+        goal.place_padding = 0.        
+        goal.additional_link_padding = self.create_gripper_link_padding(whicharm, 0.0)
+        goal.collision_support_surface_name = "all"
+        goal.allow_gripper_support_collision = True
+
         goal.use_reactive_place = self.use_slip_detection
         if constrained == True:
             current_pose = self.cms[whicharm].get_current_wrist_pose_stamped('base_link')
