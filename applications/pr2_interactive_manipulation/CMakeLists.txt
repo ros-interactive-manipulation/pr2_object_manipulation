@@ -38,3 +38,6 @@ rosbuild_add_executable(interactive_marker_node
   src/interactive_marker_node.cpp
   src/graspable_object_handler.cpp
 )
+
+rosbuild_add_roslaunch_check( launch/joy.launch)
+rosbuild_add_roslaunch_check( launch/pr2_interactive_manipulation_robot.launch ROBOT=sim)

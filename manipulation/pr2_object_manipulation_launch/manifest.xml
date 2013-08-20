@@ -19,10 +19,22 @@
   <depend package="pr2_arm_navigation_actions"/>
   <depend package="pr2_arm_navigation_filtering"/>
   <depend package="pr2_arm_navigation_kinematics"/>
+  <depend package="pr2_arm_navigation_config"/>
   <depend package="interpolated_ik_motion_planner"/>
   <depend package="trajectory_filter_server"/>
   <depend package="pr2_manipulation_controllers"/>
-  <!--depend package="current_state_validator"/-->
+  <depend package="pr2_controller_manager"/>
+  <depend package="pr2_gripper_reactive_approach"/>
+  <depend package="pr2_machine"/>
+  <depend package="robot_self_filter"/>
+  <depend package="robot_self_filter_color"/>
+  <depend package="collider"/>
+  <depend package="pr2_mechanism_controllers"/>
+  <depend package="laser_filters"/>
+  <depend package="openni_launch"/>
+  <depend package="planning_environment"/>
+  <depend package="move_arm_head_monitor"/>
+  <depend package="mongodb"/>
   
 
   <!-- manipulation -->

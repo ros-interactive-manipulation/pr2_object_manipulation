@@ -18,13 +18,23 @@
   <depend package="std_msgs"/>
   <depend package="std_srvs"/>
   <depend package="pr2_create_object_model"/>
-  <!--depend package="pr2_grasp_adjust"/-->
   <depend package="pr2_wrappers"/>
   <depend package="robot_self_filter_color"/>
   <depend package="move_base_msgs"/>
   <depend package="segmented_clutter_grasp_planner"/>
   <depend package="tf_throttle"/>
   <depend package="pr2_interactive_object_detection"/>
+  <depend package="joy"/>
+  <depend package="pr2_2dnav"/>
+  <depend package="joint_trajectory_generator"/>
+  <depend package="map_server"/>
+  <depend package="image_rotate"/>
+  <depend package="point_cloud_server"/>
+  <depend package="pr2_2dnav_local"/>
+  <depend package="pr2_teleop"/>
+  <depend package="topic_tools"/>
+  <depend package="pr2_2dnav_slam"/>
+  <depend package="pr2_tuck_arms_action"/>
 
   <!-- The straight-up pr2_teleop app built on rviz. We may want to reverse this. -->
   <depend package="pr2_marker_control"/>
