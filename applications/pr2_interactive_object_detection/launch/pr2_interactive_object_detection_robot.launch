@@ -1,7 +1,6 @@
 <launch>
 
   <arg name="stereo" default="true"/>
-  <arg name="cvfh" default="false"/>
   <arg name="tod" default="false"/>
   <arg name="high_res" default="false"/>
   <arg name="sim" default="false"/>
@@ -42,9 +41,11 @@
 
   <!-- Launch TOD (textured object detection) -->
   <group if="$(arg tod)">
+    <!-- TODO: update for new TOD
     <include file="$(find object_recognition_server)/server.robot.launch"/>
     <node type="recognition_translator" name="recognition_translator" pkg="pr2_interactive_object_detection" 
 	  output="screen"/>
+    -->
   </group>
 
   <!-- Narrow stereo -->
@@ -54,16 +55,10 @@
     <include file="$(find rgbd_assembler)/launch/rgbd_assembler.launch"/> 
 
     <!-- Launch default tabletop detector -->
-    <include unless="$(arg cvfh)" file="$(find tabletop_object_detector)/launch/tabletop_complete.launch">
+    <include file="$(find tabletop_object_detector)/launch/tabletop_complete.launch">
       <arg name="tabletop_segmentation_points_input" value="narrow_stereo_textured/points2"/>
       <arg name="flatten_table" value="$(arg flatten_table)"/>	
       <arg name="model_set" value="$(arg model_set)"/>
-    </include>
-
-    <!-- Launch CVFH -->
-    <include if="$(arg cvfh)" file="$(find tabletop_vfh_cluster_detector)/launch/tabletop_complete.launch">
-      <arg name="tabletop_segmentation_points_input" value="narrow_stereo_textured/points2"/>
-      <arg name="flatten_table" value="$(arg flatten_table)"/>	
     </include>
     
   </group>
@@ -80,16 +75,10 @@
     </include>
 
     <!-- Launch default tabletop detector -->
-    <include unless="$(arg cvfh)" file="$(find tabletop_object_detector)/launch/tabletop_complete.launch">
+    <include file="$(find tabletop_object_detector)/launch/tabletop_complete.launch">
       <arg name="tabletop_segmentation_points_input" value="$(arg kinect_camera_name)/depth_registered/points"/>
       <arg name="flatten_table" value="$(arg flatten_table)"/>	
       <arg name="model_set" value="$(arg model_set)"/> 
-    </include>
-
-    <!-- Launch CVFH -->
-    <include if="$(arg cvfh)" file="$(find tabletop_vfh_cluster_detector)/launch/tabletop_complete.launch">
-      <arg name="tabletop_segmentation_points_input" value="$(arg kinect_camera_name)/depth_registered/points"/>
-      <arg name="flatten_table" value="$(arg flatten_table)"/>	
     </include>
 
     <node if="$(arg new_object_rec)" name="object_recognizer" type="detection" pkg="object_recognition_core"

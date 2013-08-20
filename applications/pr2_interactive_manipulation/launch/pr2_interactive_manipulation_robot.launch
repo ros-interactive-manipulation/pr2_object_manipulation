@@ -34,10 +34,8 @@
   <arg name="throttle_cameras" default="true" />
   <arg name="im_debug" default="false" />
   <arg name="reactive_grasping" default="false" />		
-  <arg name="compress_point_clouds" default="false" />
   <arg name="new_object_rec" default="false" />
   <arg name="plugs" default="false" />
-  <arg name="track_people" default="false" />
   <arg name="launch_kinect" default="true" />
   <arg name="use_freenect" default="false" />
   <arg name="kinect_data_skip" default="1" />
@@ -90,9 +88,6 @@
       <arg name="rate" value="10.0"/>
     </include>
   </group>
-
-  <!-- point cloud compression -->
-  <include if="$(arg compress_point_clouds)" file="$(find compressed_pointcloud_transport)/launch/compress.launch"/>
 
   <!-- grasping study -->
   <arg name="interface" default="0"/>
@@ -366,7 +361,6 @@
   <!-- Interactive Object Detection incl. sensor data assembler -->
   <include file="$(find pr2_interactive_object_detection)/launch/pr2_interactive_object_detection_robot.launch">
     <arg name="stereo" value="$(arg stereo)"/>
-    <arg name="cvfh" value="$(arg cvfh)"/>
     <arg name="tod" value="$(arg tod)"/>
     <arg name="sim" value="$(arg sim)"/>
     <arg name="flatten_table" value="$(arg flatten_table)"/>	
@@ -405,8 +399,4 @@
     <include file="$(find pr2_plugs_actions)/launch/pr2_arm_ik.launch"/>
     <include file="$(find pr2_plugs_actions)/launch/plug_actions.launch"/>
   </group>
-
-  <!-- Caroline's People Tracking node -->
-  <include if="$(arg track_people)" file="$(find pr2_ped_tracker)/launch/robot_interactive.launch" />
-
 </launch>
