@@ -1,6 +1,6 @@
 <launch>
   <node name="joy_node_local" pkg="joy" type="joy_node" >
-  <remap from="joy" to="joy_local" />
+    <remap from="joy" to="joy_local" />
     <rosparam>
       autorepeat_rate: 10
       deadzone: 0.12

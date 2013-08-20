@@ -19,6 +19,7 @@
   <depend package="interpolated_ik_motion_planner"/>
   <depend package="object_manipulator"/>
   <depend package="object_manipulation_msgs"/>
+  <depend package="pr2_machine"/>
 
   <export>
     <cpp cflags="-I${prefix}/srv/cpp" />

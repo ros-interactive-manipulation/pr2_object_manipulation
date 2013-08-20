@@ -19,6 +19,7 @@
   <depend package="rgbd_assembler"/>
   <depend package="tabletop_collision_map_processing"/>
   <depend package="interactive_perception_msgs"/>
+  <depend package="object_recognition_core"/>
 
 </package>
 

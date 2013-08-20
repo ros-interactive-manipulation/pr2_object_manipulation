@@ -48,3 +48,10 @@ TestGripperPoseActionResult.msg
 TestGripperPoseFeedback.msg
 TestGripperPoseGoal.msg
 TestGripperPoseResult.msg
+PickupIMObjectAction.msg
+PickupIMObjectActionFeedback.msg
+PickupIMObjectActionGoal.msg
+PickupIMObjectActionResult.msg
+PickupIMObjectFeedback.msg
+PickupIMObjectGoal.msg
+PickupIMObjectResult.msg

@@ -27,3 +27,5 @@ rosbuild_genmsg()
 ###backend node
 
 rosbuild_add_executable(pr2_interactive_object_detection_backend src/pr2_interactive_object_detection_backend.cpp)
+
+rosbuild_add_roslaunch_check(launch)
