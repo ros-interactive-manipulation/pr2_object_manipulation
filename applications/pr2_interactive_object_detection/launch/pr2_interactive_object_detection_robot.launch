@@ -9,13 +9,14 @@
   <arg name="kinect_camera_name" default="head_mount_kinect" />
   <arg name="im_debug" default="false"/>
   <arg name="new_object_rec" default="false"/>
+  <arg name="hod_cfg" default="$(find household_objects_database)/config/wgs36.yaml" />
 
   <!-- we need to know if we are using the lcg since we start the database connection node here
     which should not randomize grasps when using the lcg, since we want the envelopping grasps first -->
   <arg name="lcg_left_gripper" default="false"/>
 
   <!-- database communication node -->
-  <rosparam command="load" file="$(find household_objects_database)/config/wgs36.yaml"/>
+  <rosparam command="load" file="$(arg hod_cfg)"/>
   <node pkg="household_objects_database" name="objects_database_node" type="objects_database_node" 
     respawn="true" output="screen">
     <param if="$(arg lcg_left_gripper)" name="grasp_ordering_method" value="quality"/>

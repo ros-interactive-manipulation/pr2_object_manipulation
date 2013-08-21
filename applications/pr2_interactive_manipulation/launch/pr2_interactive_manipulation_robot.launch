@@ -59,6 +59,9 @@
   <arg name="lcg_left_gripper" default="false"/>
   <arg name="lcg_right_gripper" default="false"/>
 
+  <!-- Household objects database cfg file -->
+  <arg name="hod_cfg" default="$(find household_objects_database)/config/wgs36.yaml" />
+
   <!-- tf throttling -->
   <include if="$(arg tf_throttled)" file="$(find tf_throttle)/launch/tf_throttled.launch"/>
 
@@ -369,6 +372,7 @@
     <arg name="im_debug" value="$(arg im_debug)"/>
     <arg name="new_object_rec" value="$(arg new_object_rec)"/>
     <arg name="lcg_left_gripper" value="$(arg lcg_left_gripper)"/>
+    <arg name="hod_cfg" value="$(arg hod_cfg)"/>
   </include>
 
   <!-- in-hand object modeling -->
