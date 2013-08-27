@@ -79,7 +79,7 @@ for display in rviz_yaml['Visualization Manager']['Displays']:
         display['Depth Map Topic'] = kinect_depth_topic
         display['Depth Map Transport Hint'] = kinect_depth_hint
 
-    if display['Name'] == 'Head Camera':
+    if display['Name'] == 'Head Camera' and not stereo:
         display['Image Topic'] = kinect_color_topic
         display['Transport Hint'] = kinect_color_hint
 
