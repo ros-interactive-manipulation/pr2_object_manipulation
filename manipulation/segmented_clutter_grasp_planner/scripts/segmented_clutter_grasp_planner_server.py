@@ -44,5 +44,5 @@ from segmented_clutter_grasp_planner.segmented_clutter_grasp_planner import *
 if __name__ == '__main__':
     rospy.init_node('segmented_clutter_grasp_planner_server', anonymous=False)
 
-    ccgps = ClusteredClutterGraspPlanner(advertise_service = True, advertise_action = True)    
+    SCGP = SegmentedClutterGraspPlanner(advertise_service = True, advertise_action = True)    
     rospy.spin()

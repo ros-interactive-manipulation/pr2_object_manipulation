@@ -33,22 +33,19 @@
 #
 # author: Kaijen Hsiao
 
-## @package segmented_clutter_grasp_planner
-# Test script for the segmented_clutter_grasp_planner_server
+"""Test script for the segmented_clutter_grasp_planner_server"""
 
 from __future__ import division
 import roslib
 roslib.load_manifest('segmented_clutter_grasp_planner')
 import rospy
-from object_manipulation_msgs.srv import GraspPlanning, GraspPlanningRequest
+from manipulation_msgs.srv import GraspPlanning, GraspPlanningRequest
 import object_manipulator.draw_functions as draw_functions
 from sensor_msgs.msg import PointCloud2
 from geometry_msgs.msg import PoseStamped, Vector3
 
-
-#call plan_point_cluster_grasp to get candidate grasps for a cluster
 def call_plan_segmented_clutter_grasps(point_cloud, box_pose, box_dims, arm_name):
-    
+    """call plan_point_cluster_grasp to get candidate grasps for a cluster"""
     req = GraspPlanningRequest()
     req.arm_name = arm_name
     req.target.reference_frame_id = box_pose.header.frame_id
@@ -93,7 +90,7 @@ if __name__ == "__main__":
     #keep going until the user says to quit (or until Ctrl-C is pressed)
     while(not rospy.is_shutdown()):
 
-        cloud_topic = "/camera/rgb/points"
+        cloud_topic = "/head_mount_kinect/depth_registered/points"
         #cloud_topic = "/narrow_stereo_textured/points2"
 
         #grab a point cloud from cloud_topic
@@ -115,14 +112,14 @@ if __name__ == "__main__":
             box_dims.y = 0.4
             box_dims.z = 0.6
 
-        # (right-arm reachable table in front of robot) x: .41 to .84 y: -0.38 to +0.18  z: 0.68 to 1.0
+        # (right-arm reachable table in front of robot) x: .41 to .84 y: -0.38 to +0.18  z: 0.48 to 1.0
         elif mode == 'table':
             box_pose.pose.position.x = (.41+.84)/2.
             box_pose.pose.position.y = (-.38+.18)/2.
-            box_pose.pose.position.z = (.68+1.0)/2.
+            box_pose.pose.position.z = (.48+1.0)/2.
             box_dims.x = .84-.41
             box_dims.y = .18+.38;
-            box_dims.z = 1.0-.68;
+            box_dims.z = 1.0-.48;
 
         # (right-arm reachable shelf in front of robot) x: .42 to .84 y: -0.17 to +0.07  z: 0.70 to 1.247
         else:
@@ -138,7 +135,7 @@ if __name__ == "__main__":
 
         #draw the resulting grasps (all at once, or one at a time)
         print "number of grasps returned:", len(grasps)
-        grasp_poses = [grasp.grasp_pose for grasp in grasps]
+        grasp_poses = [grasp.grasp_pose.pose for grasp in grasps]
         draw_functions.draw_grasps(grasp_poses, box_pose.header.frame_id, pause = 0)
         print "done drawing grasps, press enter to continue"
         raw_input()
