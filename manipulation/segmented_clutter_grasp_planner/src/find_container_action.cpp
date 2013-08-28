@@ -34,7 +34,6 @@
 // Author(s): Kaijen Hsiao
 
 #include <ros/ros.h>
-
 #include <actionlib/server/simple_action_server.h>
 #include <object_manipulation_msgs/FindContainerAction.h>
 #include <pcl/common/common.h>
@@ -53,49 +52,53 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
-
 #include <tf/transform_listener.h>
-
-
 #include <pcl_ros/transforms.h>
 #include <Eigen/Geometry>
-
+#include <string>
+#include <vector>
 
 typedef pcl::PointXYZRGB PointT;
+
+//* A node for finding vertical and horizontal surfaces in point clouds
+/**
+* The FindContainerNode provides an action for splitting point clouds
+* into vertical and horizontal surfaces (the 'walls' and 'contents' of
+* a container).
+*/
 
 class FindContainerNode
 {
 protected:
-
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
   actionlib::SimpleActionServer<object_manipulation_msgs::FindContainerAction> as_;
   std::string action_name_;
-  // create messages that are used to published feedback/result
-  object_manipulation_msgs::FindContainerFeedback feedback_;
-  //object_manipulation_msgs::FindContainerResult result_;
-
   tf::TransformListener tfl_;
-
   ros::Publisher pub_cloud_, pub_contents_, pub_container_;
   ros::Publisher pub_marker_, pub_clusters_;
 
-  //the direction taken to be 'vertical' (can actually be horizontal in the world)
+  // the direction taken to be 'vertical' (can really be horizontal in the world)
   geometry_msgs::Vector3 opening_dir_;
 
 public:
-
-  FindContainerNode(std::string name) :
+  explicit FindContainerNode(std::string name):
     pnh_("~"),
     as_(nh_, name, boost::bind(&FindContainerNode::executeCB, this, _1), false),
     action_name_(name)
   {
     as_.start();
-    pub_cloud_ = pnh_.advertise<sensor_msgs::PointCloud2>("cloud", 1, true);
-    pub_contents_ = pnh_.advertise<sensor_msgs::PointCloud2>("contents", 1, true);
-    pub_container_ = pnh_.advertise<sensor_msgs::PointCloud2>("container", 1, true);
-    pub_marker_ = pnh_.advertise<visualization_msgs::Marker>("box", 1, true);
-    pub_clusters_ = pnh_.advertise<visualization_msgs::MarkerArray>("clusters_array", 100, true);
+    pub_cloud_ = 
+      pnh_.advertise<sensor_msgs::PointCloud2>("cloud", 1, true);
+    pub_contents_ = 
+      pnh_.advertise<sensor_msgs::PointCloud2>("contents", 1, true);
+    pub_container_ = 
+      pnh_.advertise<sensor_msgs::PointCloud2>("container", 1, true);
+    pub_marker_ = 
+      pnh_.advertise<visualization_msgs::Marker>("box", 1, true);
+    pub_clusters_ = 
+      pnh_.advertise<visualization_msgs::MarkerArray>("clusters_array", 
+                                                      100, true);
     ROS_INFO("%s: Server ready.", action_name_.c_str());
   }
 
@@ -103,23 +106,26 @@ public:
   {
   }
 
-
-  void splitCloudRegions( const pcl::PointCloud<PointT>::Ptr &cloud_in,
-                              const pcl::PointCloud<PointT>::Ptr &horizontal_cloud,
-                              const pcl::PointCloud<PointT>::Ptr &vertical_cloud)
+  /*!
+  Split a PointCloud into parts that are closer to horizontal and parts
+  that are closer to vertical
+  */
+  void splitCloudRegions(const pcl::PointCloud<PointT>::Ptr &cloud_in,
+			 const pcl::PointCloud<PointT>::Ptr &horizontal_cloud,
+			 const pcl::PointCloud<PointT>::Ptr &vertical_cloud)
   {
     pcl::PointCloud<pcl::PointNormal> mls_points;
 
     // Estimate point normals
-    pcl::search::KdTree<PointT>::Ptr tree (new pcl::search::KdTree<PointT> ());
+    pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>());
     pcl::MovingLeastSquares<PointT, pcl::PointNormal> ne;
-    ne.setSearchMethod (tree);
-    ne.setComputeNormals (true);
-    ne.setInputCloud (cloud_in);
-    ne.setSearchRadius (0.012);
-    ne.process (mls_points);
+    ne.setSearchMethod(tree);
+    ne.setComputeNormals(true);
+    ne.setInputCloud(cloud_in);
+    ne.setSearchRadius(0.012);
+    ne.process(mls_points);
 
-    for(size_t i = 0; i < mls_points.points.size(); i++)
+    for (size_t i = 0; i < mls_points.points.size(); i++)
     {
 
       PointT point;
@@ -128,7 +134,10 @@ public:
       point.z = mls_points.points[i].z;
       //point.rgba = mls_points.points[i].rgba;
 
-      if(fabs(mls_points[i].normal_x*opening_dir_.x + mls_points[i].normal_y*opening_dir_.y + mls_points[i].normal_z*opening_dir_.z) > 0.7)
+      // check if opening_dir is within 45 deg of horizontal
+      if (fabs(mls_points[i].normal_x*opening_dir_.x + 
+	       mls_points[i].normal_y*opening_dir_.y + 
+	       mls_points[i].normal_z*opening_dir_.z) > 0.7)
       {
         horizontal_cloud->points.push_back(point);
       }
@@ -148,20 +157,26 @@ public:
 
   }
 
+  /*!
+  Create a filtering object and use it to remove outliers
+  */
   void removeOutliers(const pcl::PointCloud<PointT>::Ptr &cloud_in,
                       const pcl::PointCloud<PointT>::Ptr &cloud_out)
   {
-    // Create the filtering object
     pcl::StatisticalOutlierRemoval<PointT> sor;
-    sor.setInputCloud (cloud_in);
-    sor.setMeanK (50);
-    sor.setStddevMulThresh (1.0);
-    sor.filter (*cloud_out);
+    sor.setInputCloud(cloud_in);
+    sor.setMeanK(50);
+    sor.setStddevMulThresh(1.0);
+    sor.filter(*cloud_out);
   }
 
-  void findClusters(const pcl::PointCloud<PointT>::Ptr &cloud, std::vector< pcl::PointCloud<PointT>::Ptr > &clusters)
+  /*!
+  Use Euclidean clustering to find clusters in a point cloud
+  */
+  void findClusters(const pcl::PointCloud<PointT>::Ptr &cloud, 
+		    std::vector< pcl::PointCloud<PointT>::Ptr > &clusters)
   {
-    if(cloud->points.size() == 0) return;
+    if (cloud->points.size() == 0) return;
 
     // Create a KdTree for the search method of the extraction
     pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
@@ -177,16 +192,22 @@ public:
     ec.extract(cluster_indices);
 
     int j = 0;
-    for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
+    for (std::vector<pcl::PointIndices>::const_iterator it = 
+	   cluster_indices.begin(); it != cluster_indices.end(); ++it)
     {
-      pcl::PointCloud<PointT>::Ptr cloud_cluster (new pcl::PointCloud<PointT>);
-      pcl::copyPointCloud(*cloud, *it, *cloud_cluster );
+      pcl::PointCloud<PointT>::Ptr cloud_cluster(new pcl::PointCloud<PointT>);
+      pcl::copyPointCloud(*cloud, *it, *cloud_cluster);
       clusters.push_back(cloud_cluster);
       j++;
     }
   }
 
-  visualization_msgs::Marker makeMarkerFromCloud( const pcl::PointCloud<PointT>::Ptr &cloud_ptr, const std::string &ns, int id = 0, float scale = 0.03)
+  /*!
+  Make an rviz Marker out of a pcl PointCloud
+  */
+  visualization_msgs::Marker 
+  makeMarkerFromCloud(const pcl::PointCloud<PointT>::Ptr &cloud_ptr, 
+		      const std::string &ns, int id = 0, float scale = 0.03)
   {
     pcl::PointCloud<PointT>& cloud = *cloud_ptr;
     ROS_DEBUG("Making a marker with %d points.", (int)cloud.points.size());
@@ -203,7 +224,7 @@ public:
     marker.color.a = 1.0;
     marker.frame_locked = false;
 
-    if(cloud.points.size())
+    if (cloud.points.size())
     {
       marker.scale.x = scale;
       marker.scale.y = scale;
@@ -211,10 +232,10 @@ public:
       marker.type = visualization_msgs::Marker::SPHERE_LIST;
 
       int num_points = cloud.points.size();
-      marker.points.resize( num_points );
-      marker.colors.resize( num_points );
+      marker.points.resize(num_points);
+      marker.colors.resize(num_points);
 
-      for ( int i=0; i<num_points; i++)
+      for (int i = 0; i < num_points; i++)
       {
         marker.points[i].x = cloud.points[i].x;
         marker.points[i].y = cloud.points[i].y;
@@ -229,6 +250,9 @@ public:
     return marker;
   }
 
+  /*!
+  Find the axis-aligned bounding box of a PointCloud
+  */
   void findBoundingBox(const pcl::PointCloud<PointT>::Ptr &cloud,
                        geometry_msgs::Vector3 &box_dims,
                        geometry_msgs::PoseStamped &box_pose)
@@ -247,11 +271,17 @@ public:
     box_pose.pose.position.z = (max_pt.z + min_pt.z)/2.0;
   }
 
-  int boxFilter(const pcl::PointCloud<PointT>::Ptr &cloud, const pcl::PointCloud<PointT>::Ptr &cloud_filtered,
-                 const geometry_msgs::Vector3 &dims,
-                 const geometry_msgs::Pose &pose)
+  /*!
+  Filter out points in a PointCloud that are not within axis-aligned
+  dims around a pose
+  */
+  int boxFilter(const pcl::PointCloud<PointT>::Ptr &cloud, 
+		const pcl::PointCloud<PointT>::Ptr &cloud_filtered,
+		const geometry_msgs::Vector3 &dims,
+		const geometry_msgs::Pose &pose)
   {
-    Eigen::Vector4f center(pose.position.x, pose.position.y, pose.position.z, 0);
+    Eigen::Vector4f center(pose.position.x, pose.position.y, 
+			   pose.position.z, 0);
 
     // TODO: maybe allow for box pose that is not aligned with its header frame
     Eigen::Vector4f min_pt;
@@ -266,8 +296,12 @@ public:
     return cloud_filtered->points.size();
   }
 
+  /*!
+  Draw an rviz box 
+  */
   void drawBox(const geometry_msgs::Vector3 &box_dims,
-               const geometry_msgs::PoseStamped &box_pose, const std::string &ns = "box")
+               const geometry_msgs::PoseStamped &box_pose, 
+	       const std::string &ns = "box")
   {
     visualization_msgs::Marker marker;
     marker.header = box_pose.header;
@@ -284,7 +318,11 @@ public:
     pub_marker_.publish(marker);
   }
 
-  void executeCB(const object_manipulation_msgs::FindContainerGoalConstPtr &goal)
+  /*!
+  Callback function for the FindContainerAction
+  */
+  void 
+  executeCB(const object_manipulation_msgs::FindContainerGoalConstPtr &goal)
   {
     object_manipulation_msgs::FindContainerResult result;
 
@@ -292,36 +330,45 @@ public:
 
     opening_dir_ = goal->opening_dir;
 
-    pcl::PointCloud<PointT>::Ptr cloud              (new pcl::PointCloud<PointT>());
-    pcl::PointCloud<PointT>::Ptr cloud_filtered     (new pcl::PointCloud<PointT>());
-    pcl::PointCloud<PointT>::Ptr cloud_ds           (new pcl::PointCloud<PointT>());
-    pcl::PointCloud<PointT>::Ptr contents           (new pcl::PointCloud<PointT>());
-    pcl::PointCloud<PointT>::Ptr container          (new pcl::PointCloud<PointT>());
+    pcl::PointCloud<PointT>::Ptr cloud(new pcl::PointCloud<PointT>());
+    pcl::PointCloud<PointT>::Ptr cloud_filtered(new pcl::PointCloud<PointT>());
+    pcl::PointCloud<PointT>::Ptr cloud_ds(new pcl::PointCloud<PointT>());
+    pcl::PointCloud<PointT>::Ptr contents(new pcl::PointCloud<PointT>());
+    pcl::PointCloud<PointT>::Ptr container(new pcl::PointCloud<PointT>());
 
-    if( goal->cloud.data.size() == 0 )
+    if (goal->cloud.data.size() == 0)
     {
       ROS_ERROR("%s: No points in input cloud!", action_name_.c_str());
       as_.setAborted();
       return;
     }
 
+    // Remove NaNs from the cloud
     pcl::fromROSMsg(goal->cloud, *cloud);
     std::vector<int> non_NaN_indices;
     pcl::removeNaNFromPointCloud(*cloud, *cloud, non_NaN_indices);
     cloud->header.stamp = ros::Time(0);
 
+    // Transform the cloud into box_pose frame
     tf::StampedTransform T;
     Eigen::Matrix4f M;
-    tfl_.waitForTransform(goal->box_pose.header.frame_id, cloud->header.frame_id, ros::Time(0), ros::Duration(2.0));
-    tfl_.lookupTransform(goal->box_pose.header.frame_id, cloud->header.frame_id, ros::Time(0), T);
-    pcl_ros::transformAsMatrix( T, M);
-    pcl::transformPointCloud( *cloud, *cloud, M);
+    tfl_.waitForTransform(goal->box_pose.header.frame_id, 
+			  cloud->header.frame_id, ros::Time(0), 
+			  ros::Duration(2.0));
+    tfl_.lookupTransform(goal->box_pose.header.frame_id, 
+			 cloud->header.frame_id, ros::Time(0), T);
+    pcl_ros::transformAsMatrix(T, M);
+    pcl::transformPointCloud(*cloud, *cloud, M);
     cloud->header.frame_id = goal->box_pose.header.frame_id;
 
+    // Draw the region of interest box in rviz
     drawBox(goal->box_dims, goal->box_pose, "input_bounds");
-    if( !boxFilter(cloud, cloud_filtered, goal->box_dims, goal->box_pose.pose) )
+
+    // Filter out points not in the region of interest
+    if (!boxFilter(cloud, cloud_filtered, goal->box_dims, goal->box_pose.pose))
     {
-      ROS_ERROR("%s: No cloud points found in input bounding box.", action_name_.c_str());
+      ROS_ERROR("%s: No cloud points found in input bounding box.", 
+		action_name_.c_str());
       as_.setAborted();
       return;
     }
@@ -333,18 +380,18 @@ public:
 
     // Down-sample the cloud on a grid
     pcl::VoxelGrid<PointT> vox;
-    vox.setInputCloud (cloud_filtered);
-    vox.setLeafSize (0.002, 0.002, 0.002);
+    vox.setInputCloud(cloud_filtered);
+    vox.setLeafSize(0.002, 0.002, 0.002);
     vox.setFilterFieldName("z");
     vox.setFilterLimits(-100, 100);
-    vox.filter (*cloud_ds);
+    vox.filter(*cloud_ds);
 
     // Remove outlier points (speckles)
     removeOutliers(cloud_ds, cloud_ds);
-
-    if(cloud_ds->points.size() == 0)
+    if (cloud_ds->points.size() == 0)
     {
-      ROS_ERROR("%s: No cloud points remain after outlier removal.", action_name_.c_str());
+      ROS_ERROR("%s: No cloud points remain after outlier removal.", 
+		action_name_.c_str());
       as_.setSucceeded(result);
     }
 
@@ -354,29 +401,24 @@ public:
     // Find the bounding box for all the points
     findBoundingBox(cloud_ds, result.box_dims, result.box_pose);
 
-    std::vector< pcl::PointCloud<PointT>::Ptr > clusters;
-
     // Split the contents into clusters 
+    std::vector< pcl::PointCloud<PointT>::Ptr > clusters;
     findClusters(contents, clusters);
-
     result.clusters.resize(clusters.size());
-    visualization_msgs::MarkerArray cluster_markers;
-
-    for(size_t i = 0; i < clusters.size(); i++)
-    {
-      pcl::toROSMsg( *(clusters[i]), result.clusters[i]);
-      cluster_markers.markers.push_back( makeMarkerFromCloud(clusters[i], "clusters", i, 0.003));
-    }
-    pub_clusters_.publish(cluster_markers);
 
     // Publish the clouds and box
+    visualization_msgs::MarkerArray cluster_markers;
+    for (size_t i = 0; i < clusters.size(); i++)
+    {
+      pcl::toROSMsg(*(clusters[i]), result.clusters[i]);
+      cluster_markers.markers.push_back(makeMarkerFromCloud(clusters[i], 
+							    "clusters", 
+							    i, 0.003));
+    }
+    pub_clusters_.publish(cluster_markers);
     drawBox(result.box_dims, result.box_pose, "container_box");
-    sensor_msgs::PointCloud2 cloud_debug;
-    pcl::toROSMsg(*cloud_ds, cloud_debug);
     pcl::toROSMsg(*contents, result.contents);
     pcl::toROSMsg(*container, result.container);
-
-    pub_cloud_.publish(cloud_debug);
     pub_contents_.publish(result.contents);
     pub_container_.publish(result.container);
 
@@ -384,9 +426,7 @@ public:
     ROS_INFO("%s: Succeeded", action_name_.c_str());
     // set the action state to succeeded
     as_.setSucceeded(result);
-
   }
-
 
 };
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2011, Willow Garage, Inc.
+# Copyright (c) 2012, Willow Garage, Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -44,5 +44,5 @@ from segmented_clutter_grasp_planner.segmented_clutter_grasp_planner import *
 if __name__ == '__main__':
     rospy.init_node('segmented_clutter_grasp_planner_server', anonymous=False)
 
-    ccgps = ClusteredClutterGraspPlanner(advertise_service = True, advertise_action = True)    
+    SCGP = SegmentedClutterGraspPlanner(advertise_service = True, advertise_action = True)    
     rospy.spin()
